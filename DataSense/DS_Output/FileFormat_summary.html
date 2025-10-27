@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<meta charset="utf-8"/>
+<title>Data Quality Summary</title>
+<style>
+body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; margin:20px;color:#111}
+h1{font-size:24px;margin:0 0 12px}
+h2{font-size:18px;margin:24px 0 8px}
+.kpi{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 16px}
+.card{border:1px solid #e5e7eb;border-radius:10px;padding:12px;min-width:200px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card h3{font-size:13px;margin:0 0 4px;color:#374151}
+.card .v{font-size:20px;font-weight:700}
+table{border-collapse:collapse;width:100%;margin:6px 0 18px;background:#fff}
+th,td{border:1px solid #e5e7eb;padding:8px 10px;text-align:left;font-size:13px}
+th{background:#f3f4f6}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #e5e7eb;background:#f9fafb}
+.small{color:#6b7280;font-size:12px}
+</style>
+<body>
+  <h1>Data Quality Summary</h1>
+
+  <div class="kpi">
+    <div class="card"><h3>Average DQ Score</h3><div class="v">73.18</div></div>
+    <div class="card"><h3>Total Columns</h3><div class="v">1911</div></div>
+    <div class="card"><h3>Columns with Issues</h3><div class="v">1643</div></div>
+    <div class="card"><h3>Rule Fail Rows</h3><div class="v">84</div></div>
+    <div class="card"><h3>Significant Drift Count</h3><div class="v">3</div></div>
+    <div class="card"><h3>Worst Column</h3><div class="v">택배_고객.csv · 카페24MAILID (10.30)</div></div>
+  </div>
+
+  <h2>Top Issues (Worst Columns)</h2>
+  <table><thead><tr><th>FileName</th><th>ColumnName</th><th>DQ_Score</th><th>DQ_Issues</th><th>Null_pct</th><th>TypeMixed_pct</th><th>LengthVol_pct</th><th>Duplicate_pct</th><th>RuleFail_pct</th></tr></thead><tbody><tr><td>택배_고객.csv</td><td>카페24MAILID</td><td>10.30</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness, Rule failures</td><td>99.69</td><td>87.10</td><td>53.85</td><td>99.69</td><td>100.00</td></tr>
+<tr><td>CUSTOMER.csv</td><td>1ST_STREET</td><td>12.52</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.78</td><td>95.50</td><td>98.00</td><td>97.89</td><td>0.00</td></tr>
+<tr><td>택배_고객.csv</td><td>1ST_STREET</td><td>12.52</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.78</td><td>95.50</td><td>98.00</td><td>97.89</td><td>0.00</td></tr>
+<tr><td>기업고객.csv</td><td>1ST_STREET</td><td>12.90</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.08</td><td>95.37</td><td>98.00</td><td>97.23</td><td>0.00</td></tr>
+<tr><td>CUSTOMER.csv</td><td>영문고객명</td><td>13.28</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.23</td><td>93.86</td><td>97.56</td><td>97.31</td><td>0.00</td></tr>
+<tr><td>택배_고객.csv</td><td>영문고객명</td><td>13.28</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.23</td><td>93.86</td><td>97.56</td><td>97.31</td><td>0.00</td></tr>
+<tr><td>택배_고객.csv</td><td>2ND_STREET</td><td>13.49</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>97.93</td><td>91.79</td><td>97.06</td><td>98.32</td><td>0.00</td></tr>
+<tr><td>기업고객.csv</td><td>영문고객명</td><td>13.76</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>96.33</td><td>93.73</td><td>97.56</td><td>96.44</td><td>0.00</td></tr>
+<tr><td>상품분류.csv</td><td>서비스지역 및 요율</td><td>14.01</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>92.11</td><td>100.00</td><td>99.57</td><td>92.11</td><td>0.00</td></tr>
+<tr><td>상품코드.csv</td><td>서비스지역 및 요율</td><td>14.01</td><td>High NULLs, Mixed formats, Length volatility, Very low uniqueness</td><td>92.11</td><td>100.00</td><td>99.57</td><td>92.11</td><td>0.00</td></tr>
+<tr><td>조직코드관리.csv</td><td>최초생성자ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>사업자등록번호정보.csv</td><td>생성자ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>사업자등록번호정보.csv</td><td>최종업데이트ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>조직코드관리.csv</td><td>최초생성자ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>조직터미널마스터.csv</td><td>첨부파일ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>WAM_도메인.csv</td><td>상위도메인ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>WAM_도메인.csv</td><td>주제영역ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>WAM_도메인.csv</td><td>목록엔터티ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>WAM_도메인.csv</td><td>목록어트리뷰트ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>WAM_도메인.csv</td><td>담당사용자ID</td><td>15.00</td><td>High NULLs, Mixed formats, Very low uniqueness, Rule failures</td><td>100.00</td><td>100.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr></tbody></table>
+
+  <h2>By File Summary</h2>
+  <table><thead><tr><th>FileName</th><th>Columns</th><th>DQ_Avg</th><th>DQ_P10</th><th>DQ_Min</th></tr></thead><tbody><tr><td>ALLOCATE_SOURCE_TYPE_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>CALC_LABOR_ACCOUNT_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>CUSTOMER_SUBACCOUNT_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>EDI_ERR_name.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>FOCUSIF_CUS_MAIL_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>FOCUSIF_EDI_CUST_NM_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>FOCUSIF_REPLACE_CHAR_name.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>FOCUSIF_SVC_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>INFORM_CYCLE_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>MSG_TYP_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>NHX_MSG_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>REPORT_SEARCH_POV_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>SUBACCOUNT_CD_desc.csv</td><td>1</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>허브터미널.csv</td><td>13</td><td>25.00</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>서브터미널.csv</td><td>13</td><td>50.00</td><td>50.00</td><td>50.00</td></tr>
+<tr><td>WAM_코드값.csv</td><td>37</td><td>52.59</td><td>25.00</td><td>15.00</td></tr>
+<tr><td>상품코드.csv</td><td>16</td><td>53.46</td><td>25.00</td><td>14.01</td></tr>
+<tr><td>사원기본.csv</td><td>30</td><td>53.74</td><td>25.00</td><td>22.15</td></tr>
+<tr><td>WAM_도메인.csv</td><td>46</td><td>55.22</td><td>20.00</td><td>15.00</td></tr>
+<tr><td>관리회계_공통코드.csv</td><td>15</td><td>56.49</td><td>32.59</td><td>25.82</td></tr>
+<tr><td>고객마스터.csv</td><td>15</td><td>59.49</td><td>25.08</td><td>16.16</td></tr>
+<tr><td>사업자등록번호정보.csv</td><td>9</td><td>60.04</td><td>15.00</td><td>15.00</td></tr>
+<tr><td>원재료_영문명9.csv</td><td>1</td><td>60.39</td><td>60.39</td><td>60.39</td></tr>
+<tr><td>상품분류.csv</td><td>11</td><td>60.51</td><td>25.00</td><td>14.01</td></tr>
+<tr><td>HS영문품목명9.csv</td><td>1</td><td>60.66</td><td>60.66</td><td>60.66</td></tr>
+<tr><td>QUICKTEXT_ID.csv</td><td>1</td><td>60.75</td><td>60.75</td><td>60.75</td></tr>
+<tr><td>품목_영문명.csv</td><td>1</td><td>60.88</td><td>60.88</td><td>60.88</td></tr>
+<tr><td>Aircraft_Model.csv</td><td>1</td><td>60.94</td><td>60.94</td><td>60.94</td></tr>
+<tr><td>Aircraft_Manufacturer_Name.csv</td><td>1</td><td>61.03</td><td>61.03</td><td>61.03</td></tr>
+<tr><td>Airline_Name_Eng.csv</td><td>1</td><td>61.37</td><td>61.37</td><td>61.37</td></tr>
+<tr><td>원재료_학명9.csv</td><td>1</td><td>61.50</td><td>61.50</td><td>61.50</td></tr>
+<tr><td>택배_조직도.csv</td><td>41</td><td>61.65</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>Aircraft_Manufacturer.csv</td><td>1</td><td>61.84</td><td>61.84</td><td>61.84</td></tr>
+<tr><td>HS한글품목명9.csv</td><td>1</td><td>61.95</td><td>61.95</td><td>61.95</td></tr>
+<tr><td>선박명5.csv</td><td>1</td><td>62.02</td><td>62.02</td><td>62.02</td></tr>
+<tr><td>택배_고객.csv</td><td>98</td><td>62.11</td><td>25.00</td><td>10.30</td></tr>
+<tr><td>Airport_Name.csv</td><td>1</td><td>62.22</td><td>62.22</td><td>62.22</td></tr>
+<tr><td>사용자.csv</td><td>42</td><td>62.24</td><td>25.33</td><td>21.19</td></tr>
+<tr><td>ETR_CURRENCY_CODE_name.csv</td><td>1</td><td>62.29</td><td>62.29</td><td>62.29</td></tr>
+<tr><td>OneClick고객.csv</td><td>11</td><td>62.30</td><td>34.83</td><td>29.78</td></tr>
+<tr><td>업종.csv</td><td>1</td><td>62.62</td><td>62.62</td><td>62.62</td></tr>
+<tr><td>시설물.csv</td><td>1</td><td>62.63</td><td>62.63</td><td>62.63</td></tr>
+<tr><td>표준산업소분류.csv</td><td>1</td><td>62.68</td><td>62.68</td><td>62.68</td></tr>
+<tr><td>표준산업세분류.csv</td><td>1</td><td>62.72</td><td>62.72</td><td>62.72</td></tr>
+<tr><td>표준산업세세분류.csv</td><td>1</td><td>62.72</td><td>62.72</td><td>62.72</td></tr>
+<tr><td>농약명9.csv</td><td>1</td><td>62.73</td><td>62.73</td><td>62.73</td></tr>
+<tr><td>Currency_Name.csv</td><td>1</td><td>62.90</td><td>62.90</td><td>62.90</td></tr>
+<tr><td>원재료명9.csv</td><td>1</td><td>63.34</td><td>63.34</td><td>63.34</td></tr>
+<tr><td>ETR_CURRENCY_CODE_desc.csv</td><td>1</td><td>63.40</td><td>63.40</td><td>63.40</td></tr>
+<tr><td>SHOP_CAT.csv</td><td>1</td><td>63.70</td><td>63.70</td><td>63.70</td></tr>
+<tr><td>Seaport_Name9.csv</td><td>1</td><td>63.72</td><td>63.72</td><td>63.72</td></tr>
+<tr><td>EMAIL_SND_RCV_CAT_name.csv</td><td>1</td><td>63.75</td><td>63.75</td><td>63.75</td></tr>
+<tr><td>SVC.csv</td><td>1</td><td>63.90</td><td>63.90</td><td>63.90</td></tr>
+<tr><td>VENDOR_name.csv</td><td>1</td><td>63.91</td><td>63.91</td><td>63.91</td></tr>
+<tr><td>전표종류.csv</td><td>1</td><td>63.96</td><td>63.96</td><td>63.96</td></tr>
+<tr><td>면허세.csv</td><td>1</td><td>64.17</td><td>64.17</td><td>64.17</td></tr>
+<tr><td>SRT_IF_ERR_desc.csv</td><td>1</td><td>64.18</td><td>64.18</td><td>64.18</td></tr>
+<tr><td>자격면허명.csv</td><td>1</td><td>64.23</td><td>64.23</td><td>64.23</td></tr>
+<tr><td>표준산업대분류.csv</td><td>1</td><td>64.23</td><td>64.23</td><td>64.23</td></tr>
+<tr><td>GL_INTERFACE_STATUS_desc.csv</td><td>1</td><td>64.25</td><td>64.25</td><td>64.25</td></tr>
+<tr><td>단위코드.csv</td><td>1</td><td>64.25</td><td>64.25</td><td>64.25</td></tr>
+<tr><td>UnitCode.csv</td><td>1</td><td>64.44</td><td>64.44</td><td>64.44</td></tr>
+<tr><td>ETR_SYSTEM_OPTION_desc.csv</td><td>1</td><td>64.63</td><td>64.63</td><td>64.63</td></tr>
+<tr><td>MNG_ACTN_CUST_ALLOCATE_FACTOR_CD_name.csv</td><td>1</td><td>64.70</td><td>64.70</td><td>64.70</td></tr>
+<tr><td>WRK.csv</td><td>1</td><td>64.88</td><td>64.88</td><td>64.88</td></tr>
+<tr><td>NOWSTUS.csv</td><td>1</td><td>64.90</td><td>64.90</td><td>64.90</td></tr>
+<tr><td>기관명.csv</td><td>1</td><td>64.93</td><td>64.93</td><td>64.93</td></tr>
+<tr><td>항공기제작사9.csv</td><td>1</td><td>65.08</td><td>65.08</td><td>65.08</td></tr>
+<tr><td>Airline_Name.csv</td><td>1</td><td>65.10</td><td>65.10</td><td>65.10</td></tr>
+<tr><td>EQUIP_KIND_name.csv</td><td>1</td><td>65.18</td><td>65.18</td><td>65.18</td></tr>
+<tr><td>직업분류.csv</td><td>1</td><td>65.19</td><td>65.19</td><td>65.19</td></tr>
+<tr><td>GL_COA_SEGMENT5_desc.csv</td><td>1</td><td>65.23</td><td>65.23</td><td>65.23</td></tr>
+<tr><td>도로명.csv</td><td>1</td><td>65.26</td><td>65.26</td><td>65.26</td></tr>
+<tr><td>SVC_name.csv</td><td>1</td><td>65.28</td><td>65.28</td><td>65.28</td></tr>
+<tr><td>품목명.csv</td><td>1</td><td>65.39</td><td>65.39</td><td>65.39</td></tr>
+<tr><td>조직_수입관리.csv</td><td>12</td><td>65.50</td><td>25.00</td><td>25.00</td></tr>
+<tr><td>City_Eng.csv</td><td>1</td><td>65.54</td><td>65.54</td><td>65.54</td></tr>
+<tr><td>항공기종류.csv</td><td>1</td><td>65.61</td><td>65.61</td><td>65.61</td></tr>
+<tr><td>ORGNIZATION.csv</td><td>22</td><td>65.74</td><td>40.42</td><td>36.02</td></tr>
+<tr><td>ETR_COUNTRY_CODE_name.csv</td><td>1</td><td>65.77</td><td>65.77</td><td>65.77</td></tr>
+<tr><td>MNG_ACTN_ALLOCATE_FACTOR_CD_name.csv</td><td>1</td><td>65.77</td><td>65.77</td><td>65.77</td></tr>
+<tr><td>지방세목.csv</td><td>1</td><td>65.82</td><td>65.82</td><td>65.82</td></tr>
+<tr><td>PARTNER_COLLATERAL_TYPE_name.csv</td><td>1</td><td>65.88</td><td>65.88</td><td>65.88</td></tr>
+<tr><td>LOST_RSN_name.csv</td><td>1</td><td>65.98</td><td>65.98</td><td>65.98</td></tr>
+<tr><td>ETR_BALANCE_MGT_ACCT_desc.csv</td><td>1</td><td>66.06</td><td>66.06</td><td>66.06</td></tr>
+<tr><td>Country_Eng.csv</td><td>1</td><td>66.09</td><td>66.09</td><td>66.09</td></tr>
+<tr><td>NHX_MSG_CD_name.csv</td><td>1</td><td>66.10</td><td>66.10</td><td>66.10</td></tr>
+<tr><td>사원마스터.csv</td><td>17</td><td>66.10</td><td>33.17</td><td>22.15</td></tr>
+<tr><td>사업자명5.csv</td><td>1</td><td>66.16</td><td>66.16</td><td>66.16</td></tr>
+<tr><td>JOB_KIND_desc.csv</td><td>1</td><td>66.22</td><td>66.22</td><td>66.22</td></tr>
+<tr><td>JOB_KIND_name.csv</td><td>1</td><td>66.22</td><td>66.22</td><td>66.22</td></tr>
+<tr><td>TML_CAT_desc.csv</td><td>1</td><td>66.25</td><td>66.25</td><td>66.25</td></tr>
+<tr><td>관리회계_조직_test.csv</td><td>13</td><td>66.29</td><td>54.58</td><td>25.00</td></tr>
+<tr><td>국가명.csv</td><td>1</td><td>66.36</td><td>66.36</td><td>66.36</td></tr>
+<tr><td>PARTNER_COLLATERAL_TYPE_desc.csv</td><td>1</td><td>66.48</td><td>66.48</td><td>66.48</td></tr>
+<tr><td>WORK_PLACE_CAT.csv</td><td>1</td><td>66.49</td><td>66.49</td><td>66.49</td></tr>
+<tr><td>지방세분류.csv</td><td>1</td><td>66.51</td><td>66.51</td><td>66.51</td></tr>
+<tr><td>RSN_CD_name.csv</td><td>1</td><td>66.53</td><td>66.53</td><td>66.53</td></tr>
+<tr><td>RSN_NOT_DLV_name.csv</td><td>1</td><td>66.57</td><td>66.57</td><td>66.57</td></tr>
+<tr><td>RSN_UN_DLV.csv</td><td>1</td><td>66.57</td><td>66.57</td><td>66.57</td></tr>
+<tr><td>RSN_UN_DLV_name.csv</td><td>1</td><td>66.57</td><td>66.57</td><td>66.57</td></tr>
+<tr><td>단위대문자.csv</td><td>1</td><td>66.60</td><td>66.60</td><td>66.60</td></tr>
+<tr><td>CUST_EDI_name.csv</td><td>1</td><td>66.85</td><td>66.85</td><td>66.85</td></tr>
+<tr><td>GL_COA_SEGMENT3_desc.csv</td><td>1</td><td>66.94</td><td>66.94</td><td>66.94</td></tr>
+<tr><td>GL_COA_SEGMENT4_desc.csv</td><td>1</td><td>66.94</td><td>66.94</td><td>66.94</td></tr>
+<tr><td>직업명.csv</td><td>1</td><td>66.96</td><td>66.96</td><td>66.96</td></tr>
+<tr><td>WRK_CAT.csv</td><td>1</td><td>67.14</td><td>67.14</td><td>67.14</td></tr>
+<tr><td>COMODITY.csv</td><td>1</td><td>67.17</td><td>67.17</td><td>67.17</td></tr>
+<tr><td>계정과목.csv</td><td>1</td><td>67.20</td><td>67.20</td><td>67.20</td></tr>
+<tr><td>식약업체명5.csv</td><td>1</td><td>67.26</td><td>67.26</td><td>67.26</td></tr>
+<tr><td>병원명.csv</td><td>1</td><td>67.28</td><td>67.28</td><td>67.28</td></tr>
+<tr><td>조직터미널마스터.csv</td><td>22</td><td>67.34</td><td>25.98</td><td>15.00</td></tr>
+<tr><td>ETR_COUNTRY_CODE_desc.csv</td><td>1</td><td>67.39</td><td>67.39</td><td>67.39</td></tr>
+<tr><td>농림축산품종명.csv</td><td>1</td><td>67.50</td><td>67.50</td><td>67.50</td></tr>
+<tr><td>선사명5.csv</td><td>1</td><td>67.51</td><td>67.51</td><td>67.51</td></tr>
+<tr><td>SCAN_ERR.csv</td><td>1</td><td>67.54</td><td>67.54</td><td>67.54</td></tr>
+<tr><td>직무.csv</td><td>1</td><td>67.58</td><td>67.58</td><td>67.58</td></tr>
+<tr><td>UNIT_WORK_name.csv</td><td>1</td><td>67.64</td><td>67.64</td><td>67.64</td></tr>
+<tr><td>EQUIP_CAT_name.csv</td><td>1</td><td>67.73</td><td>67.73</td><td>67.73</td></tr>
+<tr><td>GL_COA_SEGMENT2_desc.csv</td><td>1</td><td>67.73</td><td>67.73</td><td>67.73</td></tr>
+<tr><td>HDS_ACEPTANCE_TYP_CD_name.csv</td><td>1</td><td>67.73</td><td>67.73</td><td>67.73</td></tr>
+<tr><td>SNDR_TEL_NO_name.csv</td><td>1</td><td>67.74</td><td>67.74</td><td>67.74</td></tr>
+<tr><td>WRKCD_desc.csv</td><td>1</td><td>67.88</td><td>67.88</td><td>67.88</td></tr>
+<tr><td>ETR_TRANSACTION_TYPE_desc.csv</td><td>1</td><td>67.90</td><td>67.90</td><td>67.90</td></tr>
+<tr><td>SETTLE_CD_desc.csv</td><td>1</td><td>67.92</td><td>67.92</td><td>67.92</td></tr>
+<tr><td>Country.csv</td><td>1</td><td>67.93</td><td>67.93</td><td>67.93</td></tr>
+<tr><td>ACEPTANCE_TYP_name.csv</td><td>1</td><td>67.99</td><td>67.99</td><td>67.99</td></tr>
+<tr><td>TA_ACEPTANCE_TYP.csv</td><td>1</td><td>68.00</td><td>68.00</td><td>68.00</td></tr>
+<tr><td>FOCUSIF_CUS_MAIL_name.csv</td><td>1</td><td>68.06</td><td>68.06</td><td>68.06</td></tr>
+<tr><td>RSN_NOT_PICK.csv</td><td>1</td><td>68.08</td><td>68.08</td><td>68.08</td></tr>
+<tr><td>ORG_TYP_desc.csv</td><td>1</td><td>68.22</td><td>68.22</td><td>68.22</td></tr>
+<tr><td>EQUIP_KIND.csv</td><td>1</td><td>68.25</td><td>68.25</td><td>68.25</td></tr>
+<tr><td>ORG_TYP.csv</td><td>1</td><td>68.36</td><td>68.36</td><td>68.36</td></tr>
+<tr><td>WRK_CAT_name.csv</td><td>1</td><td>68.39</td><td>68.39</td><td>68.39</td></tr>
+<tr><td>WRKCD_name.csv</td><td>1</td><td>68.40</td><td>68.40</td><td>68.40</td></tr>
+<tr><td>보훈분류.csv</td><td>1</td><td>68.46</td><td>68.46</td><td>68.46</td></tr>
+<tr><td>CLM_DTL_CD_name.csv</td><td>1</td><td>68.50</td><td>68.50</td><td>68.50</td></tr>
+<tr><td>건설기계.csv</td><td>1</td><td>68.56</td><td>68.56</td><td>68.56</td></tr>
+<tr><td>LOGIN_FAIL_RSN_desc.csv</td><td>1</td><td>68.57</td><td>68.57</td><td>68.57</td></tr>
+<tr><td>LOGIN_FAIL_RSN_name.csv</td><td>1</td><td>68.57</td><td>68.57</td><td>68.57</td></tr>
+<tr><td>DISCARD_ASK_RSN_name.csv</td><td>1</td><td>68.69</td><td>68.69</td><td>68.69</td></tr>
+<tr><td>RSN_NOT_PICK_name.csv</td><td>1</td><td>68.75</td><td>68.75</td><td>68.75</td></tr>
+<tr><td>SRT_IF_ERR_name.csv</td><td>1</td><td>68.85</td><td>68.85</td><td>68.85</td></tr>
+<tr><td>MINUS_DTL_CAT_name.csv</td><td>1</td><td>68.89</td><td>68.89</td><td>68.89</td></tr>
+<tr><td>NOWSTUS_name.csv</td><td>1</td><td>68.91</td><td>68.91</td><td>68.91</td></tr>
+<tr><td>WRK_CAT_desc.csv</td><td>1</td><td>68.94</td><td>68.94</td><td>68.94</td></tr>
+<tr><td>선석.csv</td><td>19</td><td>68.97</td><td>31.35</td><td>25.00</td></tr>
+<tr><td>RSN_NOT_PICKUP_name.csv</td><td>1</td><td>69.01</td><td>69.01</td><td>69.01</td></tr>
+<tr><td>ETR_SYSTEM_OPTION_name.csv</td><td>1</td><td>69.02</td><td>69.02</td><td>69.02</td></tr>
+<tr><td>ORG_TYP_name.csv</td><td>1</td><td>69.11</td><td>69.11</td><td>69.11</td></tr>
+<tr><td>건축물구조.csv</td><td>1</td><td>69.16</td><td>69.16</td><td>69.16</td></tr>
+<tr><td>SVC_ISSUE.csv</td><td>1</td><td>69.17</td><td>69.17</td><td>69.17</td></tr>
+<tr><td>ORG_CAT.csv</td><td>1</td><td>69.25</td><td>69.25</td><td>69.25</td></tr>
+<tr><td>RSN_RSV_CNCL_name.csv</td><td>1</td><td>69.30</td><td>69.30</td><td>69.30</td></tr>
+<tr><td>TML_CAT.csv</td><td>1</td><td>69.38</td><td>69.38</td><td>69.38</td></tr>
+<tr><td>WRK_name.csv</td><td>1</td><td>69.46</td><td>69.46</td><td>69.46</td></tr>
+<tr><td>SHOP_TYP.csv</td><td>1</td><td>69.57</td><td>69.57</td><td>69.57</td></tr>
+<tr><td>DATA_CATEGORY_CD_desc.csv</td><td>1</td><td>69.58</td><td>69.58</td><td>69.58</td></tr>
+<tr><td>Region_Eng.csv</td><td>1</td><td>69.58</td><td>69.58</td><td>69.58</td></tr>
+<tr><td>VHCL_STRUCT_CHG.csv</td><td>1</td><td>69.58</td><td>69.58</td><td>69.58</td></tr>
+<tr><td>RSN_RSV_CNCL.csv</td><td>1</td><td>69.59</td><td>69.59</td><td>69.59</td></tr>
+<tr><td>ETR_BANK_CODE_desc.csv</td><td>1</td><td>69.62</td><td>69.62</td><td>69.62</td></tr>
+<tr><td>ORG_REG_TYP.csv</td><td>1</td><td>69.79</td><td>69.79</td><td>69.79</td></tr>
+<tr><td>CUSTOMER.csv</td><td>31</td><td>69.85</td><td>34.19</td><td>12.52</td></tr>
+<tr><td>ROLE_TYP_desc.csv</td><td>1</td><td>69.87</td><td>69.87</td><td>69.87</td></tr>
+<tr><td>COMPLAIN_RSN_CD_name.csv</td><td>1</td><td>70.00</td><td>70.00</td><td>70.00</td></tr>
+<tr><td>EMAIL_SND_RCV_CAT.csv</td><td>1</td><td>70.00</td><td>70.00</td><td>70.00</td></tr>
+<tr><td>JOIN_PATH_CAT.csv</td><td>1</td><td>70.00</td><td>70.00</td><td>70.00</td></tr>
+<tr><td>TML_CAT_name.csv</td><td>1</td><td>70.00</td><td>70.00</td><td>70.00</td></tr>
+<tr><td>WRK_DUPE_CAT_name.csv</td><td>1</td><td>70.00</td><td>70.00</td><td>70.00</td></tr>
+<tr><td>ETR_TRANSACTION_TYPE.csv</td><td>1</td><td>70.03</td><td>70.03</td><td>70.03</td></tr>
+<tr><td>수산업종.csv</td><td>1</td><td>70.07</td><td>70.07</td><td>70.07</td></tr>
+<tr><td>운송사업자5.csv</td><td>1</td><td>70.10</td><td>70.10</td><td>70.10</td></tr>
+<tr><td>SNDR_TEL_NO.csv</td><td>1</td><td>70.14</td><td>70.14</td><td>70.14</td></tr>
+<tr><td>UNIT_WORK_desc.csv</td><td>1</td><td>70.14</td><td>70.14</td><td>70.14</td></tr>
+<tr><td>ETR_TRANSACTION_SOURCE_desc.csv</td><td>1</td><td>70.25</td><td>70.25</td><td>70.25</td></tr>
+<tr><td>WORK_PLACE_CAT_name.csv</td><td>1</td><td>70.30</td><td>70.30</td><td>70.30</td></tr>
+<tr><td>ETR_TRANSACTION_SOURCE_name.csv</td><td>1</td><td>70.34</td><td>70.34</td><td>70.34</td></tr>
+<tr><td>EDI_CONFIG_name.csv</td><td>1</td><td>70.36</td><td>70.36</td><td>70.36</td></tr>
+<tr><td>선박코드.csv</td><td>1</td><td>70.44</td><td>70.44</td><td>70.44</td></tr>
+<tr><td>질병명5.csv</td><td>1</td><td>70.44</td><td>70.44</td><td>70.44</td></tr>
+<tr><td>GL_INTERFACE_STATUS_name.csv</td><td>1</td><td>70.45</td><td>70.45</td><td>70.45</td></tr>
+<tr><td>SPCL_WRK_CAT_name.csv</td><td>1</td><td>70.45</td><td>70.45</td><td>70.45</td></tr>
+<tr><td>ADD_SVC_TYP_desc.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>ADD_SVC_TYP_name.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>INSTALL_CO.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>PTNS_CAT.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>REG_PATH_name.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>SVC_TYP_CD2_name.csv</td><td>1</td><td>70.54</td><td>70.54</td><td>70.54</td></tr>
+<tr><td>PGM_KIND_name.csv</td><td>1</td><td>70.62</td><td>70.62</td><td>70.62</td></tr>
+<tr><td>TA_SALZ_STUS.csv</td><td>1</td><td>70.62</td><td>70.62</td><td>70.62</td></tr>
+<tr><td>RATE_TYP_name.csv</td><td>1</td><td>70.64</td><td>70.64</td><td>70.64</td></tr>
+<tr><td>건물용도.csv</td><td>1</td><td>70.71</td><td>70.71</td><td>70.71</td></tr>
+<tr><td>ADD_SVC_TYP.csv</td><td>1</td><td>70.75</td><td>70.75</td><td>70.75</td></tr>
+<tr><td>WORK_PLACE_TYP.csv</td><td>1</td><td>70.75</td><td>70.75</td><td>70.75</td></tr>
+<tr><td>ETR_SYSTEM_OPTION.csv</td><td>1</td><td>70.77</td><td>70.77</td><td>70.77</td></tr>
+<tr><td>EQUIP_MANUFACT_CO_name.csv</td><td>1</td><td>70.83</td><td>70.83</td><td>70.83</td></tr>
+<tr><td>PTNS_CAT_name.csv</td><td>1</td><td>70.87</td><td>70.87</td><td>70.87</td></tr>
+<tr><td>PAY_BANK.csv</td><td>1</td><td>70.89</td><td>70.89</td><td>70.89</td></tr>
+<tr><td>금융회사명.csv</td><td>1</td><td>70.99</td><td>70.99</td><td>70.99</td></tr></tbody></table>
+
+  <h2>Issue Catalog</h2>
+  <table><thead><tr><th>has_issue</th><th>Count</th><th>Ratio(%)</th></tr></thead><tbody><tr><td>False</td><td>268</td><td>14.02</td></tr>
+<tr><td>True</td><td>1643</td><td>85.98</td></tr></tbody></table>
+
+  <h2>Rule Failures</h2>
+  <table><thead><tr><th>FileName</th><th>ColumnName</th><th>RuleName</th><th>Severity</th><th>FailRate(%)</th><th>Message</th></tr></thead><tbody><tr><td>test.csv</td><td>Email</td><td>PATTERN</td><td>medium</td><td>6.25</td><td>Regex(^[^@\s]+@[^@\s]+\.[^@\s]{2,}$) fail 6.25% on samples(32)</td></tr>
+<tr><td>사용자.csv</td><td>EMAIL</td><td>PATTERN</td><td>medium</td><td>1.00</td><td>Regex(^[^@\s]+@[^@\s]+\.[^@\s]{2,}$) fail 1.00% on samples(200)</td></tr>
+<tr><td>EMAIL_SND_RCV_CAT_desc.csv</td><td>EMAIL_SND_RCV_CAT_desc</td><td>PATTERN</td><td>medium</td><td>100.00</td><td>Regex(^[^@\s]+@[^@\s]+\.[^@\s]{2,}$) fail 100.00% on samples(4)</td></tr>
+<tr><td>EMAIL_SND_RCV_CAT_name.csv</td><td>EMAIL_SND_RCV_CAT_name</td><td>PATTERN</td><td>medium</td><td>100.00</td><td>Regex(^[^@\s]+@[^@\s]+\.[^@\s]{2,}$) fail 100.00% on samples(4)</td></tr>
+<tr><td>EMAIL_SND_RCV_CAT.csv</td><td>EMAIL_SND_RCV_CAT</td><td>PATTERN</td><td>medium</td><td>100.00</td><td>Regex(^[^@\s]+@[^@\s]+\.[^@\s]{2,}$) fail 100.00% on samples(4)</td></tr>
+<tr><td>계정과목코드.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>계정과목코드.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_사업.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_사업.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_고객.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>관리회계_고객.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>고객마스터.csv</td><td>SFDC고객ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 18.0 > 12.0</td></tr>
+<tr><td>OneClick고객.csv</td><td>SFDC고객ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 18.0 > 12.0</td></tr>
+<tr><td>계약마스터.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 3.0 < 6.0</td></tr>
+<tr><td>수입관리_고객.csv</td><td>SFDC고객ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 18.0 > 12.0</td></tr>
+<tr><td>관리회계_계정그룹.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_계정그룹.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_분류공통코드.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_분류공통코드.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_계정그룹상세.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_계정그룹상세.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_공통코드.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_공통코드.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>관리회계_조직그룹.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직그룹.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>계정코드관리.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_계정.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_계정.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직_test.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직_test.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직그룹상세.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계_조직그룹상세.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_사업.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_사업.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_조직.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계BI_조직.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계계정.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>관리회계계정.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>사업코드관리.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>조직코드관리.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>사업자등록번호정보.csv</td><td>생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>사업자등록번호정보.csv</td><td>최종업데이트ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>법인정보.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>법인정보.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>택배_조직도.csv</td><td>등록사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 3.0 < 6.0</td></tr>
+<tr><td>택배_조직도.csv</td><td>최종변경사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 3.0 < 6.0</td></tr>
+<tr><td>원가인명정보.csv</td><td>최초생성자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>원가인명정보.csv</td><td>최종갱신자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>택배_고객.csv</td><td>한진홈페이지ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0; LenMax 16.0 > 12.0</td></tr>
+<tr><td>택배_고객.csv</td><td>카페24MAILID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 13.0 > 12.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>표준항목ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>도메인ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>도메인그룹ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>인포타입ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>최초요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_표준항목.csv</td><td>승인사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>조직터미널마스터.csv</td><td>첨부파일ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>조직터미널마스터.csv</td><td>생성시스템ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 3.0 < 6.0</td></tr>
+<tr><td>조직터미널마스터.csv</td><td>최종업데이트시스템ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>도메인ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>도메인그룹ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>인포타입ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>상위도메인ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>주제영역ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>목록엔터티ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>목록어트리뷰트ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>담당사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>최초요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_도메인.csv</td><td>승인사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_표준단어.csv</td><td>표준단어ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_표준단어.csv</td><td>최초요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_표준단어.csv</td><td>요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_표준단어.csv</td><td>승인사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 5.0 < 6.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>코드값ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>도메인ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMax 15.0 > 12.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>상위코드값ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 0.0 < 6.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>최초요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>요청사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>WAM_코드값.csv</td><td>승인사용자ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 4.0 < 6.0</td></tr>
+<tr><td>QUICKTEXT_ID.csv</td><td>QUICKTEXT_ID</td><td>LENGTH</td><td>medium</td><td>100.00</td><td>LenMin 3.0 < 6.0</td></tr></tbody></table>
+
+  <h2>Proxy Drift (PSI-Composite)</h2>
+  <table><thead><tr><th>FileName</th><th>ColumnName</th><th>PSI_Pattern</th><th>PSI_Null</th><th>PSI_Unique</th><th>PSI_Composite</th><th>Drift</th><th>Pattern_Changed</th><th>Top2_Changed</th><th>Top3_Changed</th><th>Null%_cur</th><th>Null%_base</th><th>Unique%_cur</th><th>Unique%_base</th></tr></thead><tbody><tr><td>관리회계_조직.csv</td><td>최초생성일시</td><td>0.00</td><td>0.00</td><td>5.55</td><td>1.85</td><td>Significant</td><td>True</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>87.86</td><td>1.19</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최종변경일시</td><td>0.00</td><td>0.00</td><td>5.55</td><td>1.85</td><td>Significant</td><td>True</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>87.86</td><td>1.19</td></tr>
+<tr><td>우편번호3.csv</td><td>우편번호3</td><td>1.88</td><td>0.00</td><td>0.00</td><td>0.63</td><td>Significant</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>관리회계_조직.csv</td><td>부서조직코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>False</td><td>0.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>관리회계_조직.csv</td><td>유효시작일자V</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>유효시작일자V</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>부서조직명</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>False</td><td>0.00</td><td>0.00</td><td>98.33</td><td>98.33</td></tr>
+<tr><td>관리회계_조직.csv</td><td>상위부서조직코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>False</td><td>0.24</td><td>0.24</td><td>22.62</td><td>22.62</td></tr>
+<tr><td>관리회계_조직.csv</td><td>조직LEVEL코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>68.57</td><td>68.57</td><td>0.71</td><td>0.71</td></tr>
+<tr><td>관리회계_조직.csv</td><td>조직LEVEL코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>68.57</td><td>68.57</td><td>0.71</td><td>0.71</td></tr>
+<tr><td>관리회계_조직.csv</td><td>조직유형코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>True</td><td>86.90</td><td>86.90</td><td>6.90</td><td>6.90</td></tr>
+<tr><td>관리회계_조직.csv</td><td>조직유형코드</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>True</td><td>86.90</td><td>86.90</td><td>6.90</td><td>6.90</td></tr>
+<tr><td>관리회계_조직.csv</td><td>유효종료일자V</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>2.62</td><td>2.62</td></tr>
+<tr><td>관리회계_조직.csv</td><td>유효종료일자V</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>2.62</td><td>2.62</td></tr>
+<tr><td>관리회계_조직.csv</td><td>정렬순서</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>False</td><td>0.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>관리회계_조직.csv</td><td>정렬순서</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>False</td><td>False</td><td>0.00</td><td>0.00</td><td>100.00</td><td>100.00</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최초생성자ID</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최초생성자ID</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최초생성일시</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>1.19</td><td>1.19</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최종갱신자ID</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최종갱신자ID</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>최종변경일시</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>1.19</td><td>1.19</td></tr>
+<tr><td>관리회계_조직.csv</td><td>ETL일시</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>False</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr>
+<tr><td>관리회계_조직.csv</td><td>ETL일시</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Stable</td><td>True</td><td>True</td><td>True</td><td>0.00</td><td>0.00</td><td>0.24</td><td>0.24</td></tr></tbody></table>
+
+  <h2>Distribution Drift (PSI on Snapshots)</h2>
+  <table><thead><tr><th>FileName</th><th>ColumnName</th><th>DistType</th><th>PSI</th><th>Drift</th></tr></thead><tbody><tr><td>허브터미널.csv</td><td>허브코드</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>허브코드</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>CALC_LABOR_ACCOUNT_CD_desc.csv</td><td>CALC_LABOR_ACCOUNT_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>CALC_LABOR_ACCOUNT_CD_desc.csv</td><td>CALC_LABOR_ACCOUNT_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>CUSTOMER_SUBACCOUNT_CD_desc.csv</td><td>CUSTOMER_SUBACCOUNT_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>CUSTOMER_SUBACCOUNT_CD_desc.csv</td><td>CUSTOMER_SUBACCOUNT_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>EDI_ERR_name.csv</td><td>EDI_ERR_name</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>EDI_ERR_name.csv</td><td>EDI_ERR_name</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_CUS_MAIL_desc.csv</td><td>FOCUSIF_CUS_MAIL_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_CUS_MAIL_desc.csv</td><td>FOCUSIF_CUS_MAIL_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_EDI_CUST_NM_desc.csv</td><td>FOCUSIF_EDI_CUST_NM_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_EDI_CUST_NM_desc.csv</td><td>FOCUSIF_EDI_CUST_NM_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_REPLACE_CHAR_name.csv</td><td>FOCUSIF_REPLACE_CHAR_name</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_REPLACE_CHAR_name.csv</td><td>FOCUSIF_REPLACE_CHAR_name</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_SVC_CD_desc.csv</td><td>FOCUSIF_SVC_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>FOCUSIF_SVC_CD_desc.csv</td><td>FOCUSIF_SVC_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>INFORM_CYCLE_desc.csv</td><td>INFORM_CYCLE_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>INFORM_CYCLE_desc.csv</td><td>INFORM_CYCLE_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>MSG_TYP_desc.csv</td><td>MSG_TYP_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>MSG_TYP_desc.csv</td><td>MSG_TYP_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>NHX_MSG_CD_desc.csv</td><td>NHX_MSG_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>NHX_MSG_CD_desc.csv</td><td>NHX_MSG_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>REPORT_SEARCH_POV_desc.csv</td><td>REPORT_SEARCH_POV_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>REPORT_SEARCH_POV_desc.csv</td><td>REPORT_SEARCH_POV_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>SUBACCOUNT_CD_desc.csv</td><td>SUBACCOUNT_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>ALLOCATE_SOURCE_TYPE_CD_desc.csv</td><td>ALLOCATE_SOURCE_TYPE_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>ALLOCATE_SOURCE_TYPE_CD_desc.csv</td><td>ALLOCATE_SOURCE_TYPE_CD_desc</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>ETL일시</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>X좌표</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>터미널구분</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>터미널구분</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>허브명</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>허브명</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>허브영문명</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>허브영문명</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>우편번호</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>우편번호</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>주소</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>주소</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>X좌표</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>ETL일시</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>Y좌표</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>Y좌표</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>사업자등록번호</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>사업자등록번호</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>수정일시</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>수정일시</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>등록사원번호</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>등록사원번호</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>최종업데이트일시</td><td>length</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>허브터미널.csv</td><td>최종업데이트일시</td><td>topk</td><td>0.00</td><td>Stable</td></tr>
+<tr><td>SUBACCOUNT_CD_desc.csv</td><td>SUBACCOUNT_CD_desc</td><td>topk</td><td>0.00</td><td>Stable</td></tr></tbody></table>
+
+  <div class="small">Generated by dq_report_html.py</div>
+</body>
+</html>
