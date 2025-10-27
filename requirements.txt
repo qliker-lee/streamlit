@@ -1,27 +1,32 @@
-# --- Core Framework ---
-streamlit>=1.38.0
+# Core Data Science Libraries
+pandas>=2.0.0
+numpy>=1.24.0
 
-# --- Data Handling ---
-pandas>=2.2.0
-numpy>=1.26.0
+# Streamlit
+streamlit>=1.28.0
 
-# --- File I/O and Config Management ---
-PyYAML>=6.0
-python-dateutil>=2.9.0
+# Data Processing
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
 
-# --- Visualization (optional but useful for profiling, charts etc.) ---
-matplotlib>=3.9.0
-plotly>=5.24.0
+# Configuration
+pyyaml>=6.0
 
-# --- Utility / Structure ---
-openpyxl>=3.1.2        # for Excel import/export
-requests>=2.32.0        # for potential API integration
-watchdog>=4.0.1         # Streamlit hot-reload 안정화
-dataclasses-json>=0.6.4 # dataclass 기반 json 직렬화 지원
+# File Handling
+pathlib2>=2.3.0
 
-# --- Encoding / Locale ---
-chardet>=5.2.0          # CSV 인코딩 자동 감지
+# Data Visualization
+plotly>=5.17.0
+matplotlib>=3.7.0
 
-# --- Optional: Streamlit Cloud 호환성 향상 ---
-protobuf<5
-altair<6
+# Graph Visualization
+graphviz>=0.20.1
+
+# Type Hints (Python < 3.9)
+typing-extensions>=4.5.0
+
+# Additional Utilities
+python-dateutil>=2.8.2
+
+# Build Dependencies
+setuptools>=65.0.0
