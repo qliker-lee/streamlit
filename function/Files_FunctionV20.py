@@ -45,7 +45,13 @@ def load_yaml_datasense():
     
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+            config = yaml.safe_load(f)
+            
+            # ROOT_PATH가 없거나 절대경로인 경우 자동 감지
+            if not config.get('ROOT_PATH') or Path(config.get('ROOT_PATH', '')).is_absolute():
+                config['ROOT_PATH'] = str(project_root)
+            
+            return config
     except FileNotFoundError:  
         st.error(f"QDQM의 기본 YAML 파일을 찾을 수 없습니다: {file_path}")
         st.info(f"현재 작업 디렉토리: searching for YAML at {file_path}")
