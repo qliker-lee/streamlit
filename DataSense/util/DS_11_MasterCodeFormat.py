@@ -698,8 +698,8 @@ def Data_Quality_Analysis(config, source_dir_list):
     _ = Backup_File(output_dir, filestats, 'csv')
 
     # 1) 규칙 로드(+ 전역 세팅)
-    from util.dq_rules import load_yaml_contract, validate_with_yaml_contract, build_error_samples, suggest_autofix
-    from util.dq_report_html import render_summary_html
+    from .dq_rules import load_yaml_contract, validate_with_yaml_contract, build_error_samples, suggest_autofix
+    from .dq_report_html import render_summary_html
 
     with open("DataSense/util/DQ_Contract.yaml", "r", encoding="utf-8") as f:
         DQ_CONTRACT_DICT = yaml.safe_load(f)
@@ -820,14 +820,14 @@ def Data_Quality_Analysis(config, source_dir_list):
         rule_report_df.to_csv(f"{base_path}/{fileformat}_rule_report2.csv", index=False, encoding='utf-8-sig')
         try:
             if sample_df is not None and not sample_df.empty:
-                from util.dq_rules import build_error_samples, suggest_autofix  # 재임포트 안전
+                from .dq_rules import build_error_samples, suggest_autofix  # 재임포트 안전
                 err_log_csv = f"{base_path}/{fileformat}_rule_errors_samples.csv"
                 _ = build_error_samples(rule_report_df, sample_df, err_log_csv, max_samples_per_col=50)
         except Exception as e:
             print(f"[WARN] build_error_samples 중단: {e}")
 
         try:
-            from util.dq_rules import suggest_autofix
+            from .dq_rules import suggest_autofix
             autofix_df = suggest_autofix(rule_report_df, contract)
             autofix_df.to_csv(f"{base_path}/{fileformat}_autofix_suggestions.csv",
                               index=False, encoding="utf-8-sig")
@@ -845,7 +845,7 @@ def Data_Quality_Analysis(config, source_dir_list):
 
     # 10) 요약 HTML 리포트
     try:
-        from util.dq_report_html import render_summary_html
+        from .dq_report_html import render_summary_html
         reports2 = build_top_issue_reports(scored_df2, top_n=20)
         html_out = os.path.join(base_path, f"{fileformat}_summary.html")
         render_summary_html(
