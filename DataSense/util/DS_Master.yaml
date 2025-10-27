@@ -4,8 +4,8 @@ large_file_threshold_mb: 10
 encoding: utf-8-sig
 
 # Path & Directory 설정
-# ROOT_PATH: 'C:/projects/myproject/QDQM/DataSense'
-ROOT_PATH: C:\projects\myproject\QDQM
+# ROOT_PATH: 상대 경로 또는 환경에 따라 자동 설정됨
+# ROOT_PATH: (자동 감지)
 
 # 디렉토리 구조
 directories:
