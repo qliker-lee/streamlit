@@ -55,6 +55,11 @@ try:
 except ImportError:
     GRAPHVIZ_AVAILABLE = False
 
+def Display_ERD_sample():
+    image = Image.open("DataSense/DS_Output/CRD_Sample.png")
+    st.image(image, caption="CodeMapping 기반 Code Relationship Diagram", width=480)
+    return True
+
 def Display_ERD_Safe(df, img_width=480, view_mode="All"):
     if not GRAPHVIZ_AVAILABLE:
         st.warning("⚠️ Graphviz 실행 환경이 없어 다이어그램을 표시할 수 없습니다.")
@@ -571,7 +576,8 @@ class DashboardManager:
                             st.error(f"파일 오류: {str(e)}")
                     except Exception as e:
                         # st.error(f"Code Relationship Diagram 생성 중 오류 발생: {str(e)}")
-                        st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요.")
+                        st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요. 샘플 이미지를 표시합니다.")
+                        Display_ERD_sample()
 
             return True
 
