@@ -35,3 +35,5 @@ python-dateutil>=2.8.2
 # Build Dependencies
 setuptools>=65.0.0
 
+# Data Visualization
+Pillow>=10.0.0  # ← 추가
