@@ -342,7 +342,7 @@ def Display_MasterMapping_Detail(loaded_data, selected_files):
         st.markdown(f"###### {title}")
         st.dataframe(df[cols].reset_index(drop=True), width=1400, height=600, hide_index=True)
 
-    st.markdown("###### 상세 분석을 위해 위의 테이블에서 체크를 하세요.")
+    st.markdown("###### 상세 분석을 하고자 하는 File Name을 체크를 하세요.")
     st.divider()
     st.markdown("### Code File Mapping Information")
     st.markdown("###### 각 코드의 데이터 값을 분석하여 Mapping 정보를 표시합니다.")
