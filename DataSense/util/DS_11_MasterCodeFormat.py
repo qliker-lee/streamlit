@@ -23,15 +23,27 @@ ROOT_PATH = Path(__file__).resolve().parents[2]
 if str(ROOT_PATH) not in sys.path:
     sys.path.insert(0, str(ROOT_PATH))
 
-from DataSense.util.io import Load_Yaml_File, Backup_File
-
-from DataSense.util.dq_function import (DataType_Analysis, create_standard_df, Determine_Detail_Type,
-     Get_Oracle_Type, _ensure_severity_column, Find_Unique_Combination, 
-     build_top_issue_reports, save_or_load_baseline, compute_proxy_drift,
-     make_df_for_distribution, build_dist_snapshot_for_df, collect_value_samples, 
-     dist_topk_categories, add_dq_scores, apply_score_importance,
-     compute_snapshot_drift, 
-     )
+# 직접 실행 여부 확인 및 적절한 import 방식 선택
+if __name__ == "__main__" or not __package__:
+    # 직접 실행 시 절대 import
+    from DataSense.util.io import Load_Yaml_File, Backup_File
+    from DataSense.util.dq_function import (DataType_Analysis, create_standard_df, Determine_Detail_Type,
+         Get_Oracle_Type, _ensure_severity_column, Find_Unique_Combination, 
+         build_top_issue_reports, save_or_load_baseline, compute_proxy_drift,
+         make_df_for_distribution, build_dist_snapshot_for_df, collect_value_samples, 
+         dist_topk_categories, add_dq_scores, apply_score_importance,
+         compute_snapshot_drift, 
+         )
+else:
+    # 모듈로 import 시 상대 import
+    from .io import Load_Yaml_File, Backup_File
+    from .dq_function import (DataType_Analysis, create_standard_df, Determine_Detail_Type,
+         Get_Oracle_Type, _ensure_severity_column, Find_Unique_Combination, 
+         build_top_issue_reports, save_or_load_baseline, compute_proxy_drift,
+         make_df_for_distribution, build_dist_snapshot_for_df, collect_value_samples, 
+         dist_topk_categories, add_dq_scores, apply_score_importance,
+         compute_snapshot_drift, 
+         )
 # ======================================================================
 # Global Config
 # ======================================================================
@@ -698,8 +710,12 @@ def Data_Quality_Analysis(config, source_dir_list):
     _ = Backup_File(output_dir, filestats, 'csv')
 
     # 1) 규칙 로드(+ 전역 세팅)
-    from .dq_rules import load_yaml_contract, validate_with_yaml_contract, build_error_samples, suggest_autofix
-    from .dq_report_html import render_summary_html
+    if __name__ == "__main__" or not __package__:
+        from DataSense.util.dq_rules import load_yaml_contract, validate_with_yaml_contract, build_error_samples, suggest_autofix
+        from DataSense.util.dq_report_html import render_summary_html
+    else:
+        from .dq_rules import load_yaml_contract, validate_with_yaml_contract, build_error_samples, suggest_autofix
+        from .dq_report_html import render_summary_html
 
     with open("DataSense/util/DQ_Contract.yaml", "r", encoding="utf-8") as f:
         DQ_CONTRACT_DICT = yaml.safe_load(f)
@@ -820,14 +836,20 @@ def Data_Quality_Analysis(config, source_dir_list):
         rule_report_df.to_csv(f"{base_path}/{fileformat}_rule_report2.csv", index=False, encoding='utf-8-sig')
         try:
             if sample_df is not None and not sample_df.empty:
-                from .dq_rules import build_error_samples, suggest_autofix  # 재임포트 안전
+                if __name__ == "__main__" or not __package__:
+                    from DataSense.util.dq_rules import build_error_samples, suggest_autofix  # 재임포트 안전
+                else:
+                    from .dq_rules import build_error_samples, suggest_autofix  # 재임포트 안전
                 err_log_csv = f"{base_path}/{fileformat}_rule_errors_samples.csv"
                 _ = build_error_samples(rule_report_df, sample_df, err_log_csv, max_samples_per_col=50)
         except Exception as e:
             print(f"[WARN] build_error_samples 중단: {e}")
 
         try:
-            from .dq_rules import suggest_autofix
+            if __name__ == "__main__" or not __package__:
+                from DataSense.util.dq_rules import suggest_autofix
+            else:
+                from .dq_rules import suggest_autofix
             autofix_df = suggest_autofix(rule_report_df, contract)
             autofix_df.to_csv(f"{base_path}/{fileformat}_autofix_suggestions.csv",
                               index=False, encoding="utf-8-sig")
@@ -845,7 +867,10 @@ def Data_Quality_Analysis(config, source_dir_list):
 
     # 10) 요약 HTML 리포트
     try:
-        from .dq_report_html import render_summary_html
+        if __name__ == "__main__" or not __package__:
+            from DataSense.util.dq_report_html import render_summary_html
+        else:
+            from .dq_report_html import render_summary_html
         reports2 = build_top_issue_reports(scored_df2, top_n=20)
         html_out = os.path.join(base_path, f"{fileformat}_summary.html")
         render_summary_html(
@@ -878,7 +903,7 @@ def Data_Quality_Analysis(config, source_dir_list):
 if __name__ == "__main__":
     import time
     start_time = time.time()
-    config = Load_Yaml_File(YAML_PATH)
+    config = Load_Yaml_File(os.path.join(ROOT_PATH, YAML_PATH))
     codelist_meta_file = f"{config['ROOT_PATH']}/{config['files']['codelist_meta']}"
     codelist_df = pd.read_excel(codelist_meta_file)
     codelist_df = codelist_df[codelist_df['execution_flag'] == 'Y']

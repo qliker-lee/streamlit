@@ -2,6 +2,7 @@
 import os
 import shutil
 import yaml
+from pathlib import Path
 
 # YAML 파일 로드 함수
 def Load_Yaml_File(config_path: str | None = None):
@@ -27,7 +28,17 @@ def Load_Yaml_File(config_path: str | None = None):
 
     # ③ YAML 로드
     with open(config_path, encoding="utf-8") as fp:
-        return yaml.safe_load(fp)
+        config = yaml.safe_load(fp)
+    
+    # ④ ROOT_PATH가 없거나 절대경로인 경우 자동 감지
+    if config and ('ROOT_PATH' not in config or Path(config.get('ROOT_PATH', '')).is_absolute()):
+        # config_path 기준으로 프로젝트 루트 찾기
+        yaml_path = Path(config_path)
+        # DataSense/util/DS_Master.yaml -> DataSense/util -> DataSense -> QDQM
+        project_root = yaml_path.parent.parent.parent  # DataSense/util -> DataSense -> QDQM
+        config['ROOT_PATH'] = str(project_root)
+    
+    return config
 
 # YAML 파일 로드 함수
 def load_yaml_datasense():
