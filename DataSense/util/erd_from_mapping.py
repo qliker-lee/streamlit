@@ -13,7 +13,26 @@ from typing import Dict, List, Optional, Set, Tuple
 import pandas as pd
 import streamlit as st
 from PIL import Image
-from graphviz import Digraph
+
+# Graphviz import 시도
+GRAPHVIZ_AVAILABLE = False
+try:
+    from graphviz import Digraph
+    GRAPHVIZ_AVAILABLE = True
+except (ImportError, ModuleNotFoundError, RuntimeError, FileNotFoundError, Exception) as e:
+    GRAPHVIZ_AVAILABLE = False
+    # Digraph를 더미 객체로 대체
+    class Digraph:
+        def __init__(self, *args, **kwargs):
+            pass
+        def attr(self, *args, **kwargs):
+            pass
+        def node(self, *args, **kwargs):
+            pass
+        def edge(self, *args, **kwargs):
+            pass
+        def render(self, *args, **kwargs):
+            raise FileNotFoundError("Graphviz가 설치되지 않았습니다.")
 
 # ------------------------------
 # 유틸
@@ -273,7 +292,17 @@ def _render_erd(
                 penwidth="1.2", color=color)
 
     dot.attr(dpi="300")
-    dot.render(str(png_path.with_suffix("")), format="png", cleanup=True)
+    try:
+        dot.render(str(png_path.with_suffix("")), format="png", cleanup=True)
+    except FileNotFoundError as e:
+        # Graphviz 바이너리가 없는 경우를 명시적으로 처리
+        error_msg = str(e)
+        if "PosixPath('dot')" in error_msg or "Graphviz executables" in error_msg or "'dot'" in error_msg:
+            raise FileNotFoundError(
+                f"Graphviz가 설치되지 않았습니다. {error_msg}\n"
+                f"Streamlit Cloud에서는 Code Relationship Diagram을 생성할 수 없습니다."
+            )
+        raise
     return png_path
 
 # ------------------------------
@@ -308,7 +337,14 @@ def Display_ERD(
     img_width: int = 680,
     view_mode: str = "All",   # 👈 추가
 ) -> None:
-    ...
+    # Graphviz 사용 가능 여부 확인
+    if not GRAPHVIZ_AVAILABLE:
+        st.error("⚠️ Graphviz가 설치되지 않았습니다.")
+        st.info("Streamlit Cloud에서는 Code Relationship Diagram을 생성할 수 없습니다.")
+        st.info("로컬 환경에서는 다음 명령으로 설치할 수 있습니다:")
+        st.code("pip install graphviz\n# Windows: winget install graphviz\n# Mac: brew install graphviz\n# Linux: apt-get install graphviz")
+        return
+    
     df_cm = _norm_cols(erd_df).copy()
     if "CodeType_1" not in df_cm.columns:
         st.error("erd_df 에 'CodeType_1' 컬럼이 필요합니다.")
@@ -363,10 +399,16 @@ def Display_ERD(
         fk_box.info("표시할 FK 엣지가 없습니다.")
 
     with st.spinner("Code Relationship Diagram 생성 중..."):
-        png_path = _render_erd(columns_by_table, pk_lookup, edges, node_types_final, out_dir=out_dir)
         try:
+            png_path = _render_erd(columns_by_table, pk_lookup, edges, node_types_final, out_dir=out_dir)
             image = Image.open(png_path)
             st.image(image, caption="CodeMapping 기반 Code Relationship Diagram", width=img_width)
             st.caption(f"파일: {png_path}")
+        except FileNotFoundError as e:
+            if "PosixPath('dot')" in str(e) or "Graphviz executables" in str(e):
+                st.error("Graphviz가 설치되지 않았습니다.")
+                st.info("Streamlit Cloud에서는 Code Relationship Diagram을 생성할 수 없습니다. 로컬 환경에서 실행해주세요.")
+            else:
+                st.error(f"파일 오류: {e}")
         except Exception as e:
-            st.error(f"Code Relationship Diagram 이미지 로드 중 오류: {e}")
+            st.error(f"Code Relationship Diagram 생성 중 오류 발생: {e}")
