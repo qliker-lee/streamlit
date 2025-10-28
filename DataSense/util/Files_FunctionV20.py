@@ -29,18 +29,35 @@ def load_yaml():
 def load_yaml_datasense():
     import yaml
     import sys
-    # 현재 파일의 상위 디렉토리를 path에 추가
-    CURRENT_DIR_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    from pathlib import Path
+    
+    # 현재 파일의 상위 디렉토리를 path에 추가  
+    CURRENT_DIR_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     sys.path.append(CURRENT_DIR_PATH)
-    yaml_path = 'C:/projects/myproject/QDQM/DataSense/util'
+    
+    # Streamlit Cloud 호환: 상대 경로 사용
+    # 프로젝트 루트 기준으로 상대 경로 구성
+    project_root = Path(CURRENT_DIR_PATH)  
+    yaml_path = project_root / "DataSense" / "util"
     yaml_file_name = 'DS_Master.yaml'
-
-    file_path = os.path.join(yaml_path, yaml_file_name)
+    
+    file_path = yaml_path / yaml_file_name
+    
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+            config = yaml.safe_load(f)
+            
+            # ROOT_PATH가 없거나 절대경로인 경우 자동 감지
+            if not config.get('ROOT_PATH') or Path(config.get('ROOT_PATH', '')).is_absolute():
+                config['ROOT_PATH'] = str(project_root)
+            
+            return config
     except FileNotFoundError:  
         st.error(f"QDQM의 기본 YAML 파일을 찾을 수 없습니다: {file_path}")
+        st.info(f"현재 작업 디렉토리: searching for YAML at {file_path}")
+        return None
+    except Exception as e:
+        st.error(f"YAML 파일 로드 중 오류 발생: {str(e)}")
         return None
 # 기본 페이지 설정
 def set_page_config(yaml_file):
