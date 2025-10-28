@@ -78,8 +78,8 @@ if st.button("🔍 Data Quality Analyzer 실행"):
 st.divider()
 st.caption("실행 후 결과 파일은 DataSense/DS_Output 하위에 저장됩니다.")
 st.markdown("##### Data Quality Analyzer의 결과 입니다. 스크롤하여 전체 내용을 분석하세요. ")
-st.markdown("##### Data Quality Information Menu 에서 상세 분석을 수행합니다. ")
 
 fileformat_df = pd.read_csv('DataSense/DS_Output/FileFormat.csv')
 st.dataframe(fileformat_df, width=1400, height=800, hide_index=True)
+st.markdown("##### Data Quality Information Menu 에서 상세 분석을 수행합니다. ")
 st.divider()
