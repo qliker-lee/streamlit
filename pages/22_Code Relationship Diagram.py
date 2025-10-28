@@ -49,6 +49,24 @@ from DataSense.util.Display import (
 )
 
 from DataSense.util.erd_from_mapping import Display_ERD
+try:
+    from graphviz import Digraph
+    GRAPHVIZ_AVAILABLE = True
+except ImportError:
+    GRAPHVIZ_AVAILABLE = False
+
+def Display_ERD_Safe(df, img_width=480, view_mode="All"):
+    if not GRAPHVIZ_AVAILABLE:
+        st.warning("⚠️ Graphviz 실행 환경이 없어 다이어그램을 표시할 수 없습니다.")
+        return
+    try:
+        Display_ERD(df, img_width=img_width, view_mode=view_mode)
+    except FileNotFoundError as e:
+        if "dot" in str(e):
+            st.error("⚠️ Graphviz 실행기가 설치되어 있지 않습니다. Cloud에서는 `apt.txt`에 graphviz를 추가하세요.")
+        else:
+            st.error(f"ERD 생성 중 오류: {e}")
+
 #-----------------------------------------------------------------------------------------
 # Master KPI 
 def Display_Master_KPIs(loaded_data):
@@ -539,7 +557,8 @@ class DashboardManager:
                     st.info("선택된 파일에 해당하는 매핑 데이터가 없습니다.")
                 else:  # 👇 선택값 전달
                     try:
-                        Display_ERD(erd_df, img_width=480, view_mode=view_mode)
+                        Display_ERD_Safe(erd_df, img_width=480, view_mode=view_mode)
+                        # Display_ERD(erd_df, img_width=480, view_mode=view_mode)
                         st.write("색상은 code file type 기준으로 표시됩니다.")
                     except FileNotFoundError as e:
                         if "PosixPath('dot')" in str(e) or "Graphviz executables" in str(e):
