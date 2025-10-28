@@ -15,7 +15,13 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-from graphviz import Digraph
+try:
+    from graphviz import Digraph
+    GRAPHVIZ_AVAILABLE = True
+except ImportError:
+    GRAPHVIZ_AVAILABLE = False
+    st.warning("Graphviz를 사용할 수 없습니다. Code Relationship Diagram을 생성할 수 없습니다.")
+    
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 import plotly.graph_objects as go
@@ -532,8 +538,17 @@ class DashboardManager:
                 if erd_df.empty:
                     st.info("선택된 파일에 해당하는 매핑 데이터가 없습니다.")
                 else:  # 👇 선택값 전달
-                    Display_ERD(erd_df, img_width=480, view_mode=view_mode)
-                    st.write("색상은 code file type 기준으로 표시됩니다.")
+                    try:
+                        Display_ERD(erd_df, img_width=480, view_mode=view_mode)
+                        st.write("색상은 code file type 기준으로 표시됩니다.")
+                    except FileNotFoundError as e:
+                        if "PosixPath('dot')" in str(e) or "Graphviz executables" in str(e):
+                            st.error("Graphviz가 설치되지 않았습니다. Code Relationship Diagram을 생성할 수 없습니다.")
+                            st.info("로컬 환경에서는 `pip install graphviz` 및 Graphviz 바이너리를 설치해야 합니다.")
+                        else:
+                            st.error(f"파일 오류: {str(e)}")
+                    except Exception as e:
+                        st.error(f"Code Relationship Diagram 생성 중 오류 발생: {str(e)}")
 
             return True
 
