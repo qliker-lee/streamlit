@@ -570,7 +570,8 @@ class DashboardManager:
                         else:
                             st.error(f"파일 오류: {str(e)}")
                     except Exception as e:
-                        st.error(f"Code Relationship Diagram 생성 중 오류 발생: {str(e)}")
+                        # st.error(f"Code Relationship Diagram 생성 중 오류 발생: {str(e)}")
+                        st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요.")
 
             return True
 
