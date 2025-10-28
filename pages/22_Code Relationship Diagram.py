@@ -557,8 +557,11 @@ class DashboardManager:
                     st.info("선택된 파일에 해당하는 매핑 데이터가 없습니다.")
                 else:  # 👇 선택값 전달
                     try:
-                        Display_ERD_Safe(erd_df, img_width=480, view_mode=view_mode)
-                        # Display_ERD(erd_df, img_width=480, view_mode=view_mode)
+                        if GRAPHVIZ_AVAILABLE:
+                            Display_ERD_Safe(erd_df, img_width=480, view_mode=view_mode)
+                        else:
+                            st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요.")
+
                         st.write("색상은 code file type 기준으로 표시됩니다.")
                     except FileNotFoundError as e:
                         if "PosixPath('dot')" in str(e) or "Graphviz executables" in str(e):
