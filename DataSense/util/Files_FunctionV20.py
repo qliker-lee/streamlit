@@ -63,9 +63,9 @@ def load_yaml_datasense():
 def set_page_config(yaml_file):
     POWERED_BY = "Powered by QLIKER"
     EMAIL = "qliker@kakao.com"
-    APP_NAME = "Data Sense Analyzer"
-    APP_KOR_NAME = "데이터 센스 분석기"
-    APP_VER = "2.0"
+    APP_NAME = "Data Sense"
+    APP_KOR_NAME = "데이터 센스"
+    APP_VER = "1.0"
 
     st.set_page_config(
         page_title=APP_NAME,
