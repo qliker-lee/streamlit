@@ -32,7 +32,7 @@ YAML_FILE_ENV = os.environ.get("DS_YAML_FILE")
 # 외부 유틸(있으면 사용, 없으면 안전 폴백)
 # ------------------------------------------------------------
 try:
-    from function.Files_FunctionV20 import set_page_config
+    from DataSense.util.Files_FunctionV20 import set_page_config
 except Exception:
     def set_page_config(meta: Dict[str, str]):
         st.set_page_config(
