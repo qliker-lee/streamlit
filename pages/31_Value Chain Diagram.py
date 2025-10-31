@@ -73,7 +73,7 @@ class FileLoader:
         )
 
     def load_file(self, file_path: str, file_name: str) -> Optional[pd.DataFrame]:
-        """단일 파일 로드"""
+        """개별 파일 로드"""
         if not os.path.exists(file_path):
             st.warning(f"{file_name} 파일이 존재하지 않습니다: {file_path}")
             return None
@@ -94,7 +94,7 @@ class FileLoader:
             return None
     
     def load_all_files(self) -> Dict[str, pd.DataFrame]:
-        """모든 파일 로드"""
+        """필요한 모든 파일 로드"""
         files_to_load = {
             'valuechain': self.files_config.valuechain,
             'valuechain_standard_master': self.files_config.valuechain_standard_master,
@@ -105,7 +105,7 @@ class FileLoader:
         for name, path in files_to_load.items():
             df = self.load_file(path, name)
             if df is None:
-                st.warning(f"{name} 파일이 비어 있거나 존재하지 않습니다. 빈 DataFrame으로 대체합니다.")
+                st.warning(f"{name} 파일이 비어 있거나 존재하지 않습니다.")
                 df = pd.DataFrame()
             else:
                 df = df.fillna('')
@@ -148,72 +148,72 @@ class ValueChainDiagram:
             st.error(f"ValueChain 데이터 로드 실패: {str(e)}")
             return False
 
-    def create_diagram_from_data(self) -> Digraph:
-        import graphviz
+    # def create_diagram_from_data(self) -> Digraph:
+    #     import graphviz
 
-        if self.valuechain_data is None or self.valuechain_data.empty:
-            st.warning("ValueChain 데이터가 없습니다.")
-            st.warning("다음은 예제 그림입니다. 실제 데이터를 입력하세요.")
-            return self.create_default_diagram()
+    #     if self.valuechain_data is None or self.valuechain_data.empty:
+    #         st.warning("ValueChain 데이터가 없습니다.")
+    #         st.warning("다음은 예제 그림입니다. 실제 데이터를 입력하세요.")
+    #         return self.create_default_diagram()
 
-        dot = graphviz.Digraph(format='png')
-        dot.graph_attr.update(rankdir='LR', fontsize='10', fontname='Malgun Gothic')
-        dot.node_attr.update(fontname='Malgun Gothic')
-        dot.edge_attr.update(fontname='Malgun Gothic')
+    #     dot = graphviz.Digraph(format='png')
+    #     dot.graph_attr.update(rankdir='LR', fontsize='10', fontname='Malgun Gothic')
+    #     dot.node_attr.update(fontname='Malgun Gothic')
+    #     dot.edge_attr.update(fontname='Malgun Gothic')
 
-        # Primary Activities
-        primary_df = self.valuechain_data[
-            self.valuechain_data['Activities_Type'].str.strip() == 'Primary'
-        ].sort_values('Activity_Seq')
+    #     # Primary Activities
+    #     primary_df = self.valuechain_data[
+    #         self.valuechain_data['Activities_Type'].str.strip() == 'Primary'
+    #     ].sort_values('Activity_Seq')
 
-        primary_ids = []
-        for row in primary_df.itertuples():
-            pid = f"P{row.Activity_Seq}"
-            en = html_escape(row.Activities)
-            ko = html_escape(row.Activities_Kor)
-            label = f"""<
-            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
-                <TR><TD><B>{en}</B></TD></TR>
-                <TR><TD>({ko})</TD></TR>
-            </TABLE>
-            >"""
-            dot.node(pid, label=label, shape='box', style='filled', color='lightblue2')
-            primary_ids.append(pid)
+    #     primary_ids = []
+    #     for row in primary_df.itertuples():
+    #         pid = f"P{row.Activity_Seq}"
+    #         en = html_escape(row.Activities)
+    #         ko = html_escape(row.Activities_Kor)
+    #         label = f"""<
+    #         <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    #             <TR><TD><B>{en}</B></TD></TR>
+    #             <TR><TD>({ko})</TD></TR>
+    #         </TABLE>
+    #         >"""
+    #         dot.node(pid, label=label, shape='box', style='filled', color='lightblue2')
+    #         primary_ids.append(pid)
 
-        for i in range(len(primary_ids) - 1):
-            dot.edge(primary_ids[i], primary_ids[i + 1], style='bold', weight='10')
+    #     for i in range(len(primary_ids) - 1):
+    #         dot.edge(primary_ids[i], primary_ids[i + 1], style='bold', weight='10')
 
-        # Support Activities
-        support_df = self.valuechain_data[
-            self.valuechain_data['Activities_Type'].str.strip() == 'Support'
-        ].sort_values('Activity_Seq')
+    #     # Support Activities
+    #     support_df = self.valuechain_data[
+    #         self.valuechain_data['Activities_Type'].str.strip() == 'Support'
+    #     ].sort_values('Activity_Seq')
 
-        support_ids = []
-        with dot.subgraph(name='cluster_support') as s:
-            s.attr(rank='same')
-            for row in support_df.itertuples():
-                sid = f"S{row.Activity_Seq}"
-                en = html_escape(row.Activities)
-                ko = html_escape(row.Activities_Kor)
-                label = f"""<
-                <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
-                    <TR><TD><B>{en}</B></TD></TR>
-                    <TR><TD>({ko})</TD></TR>
-                </TABLE>
-                >"""
-                s.node(sid, label=label, shape='ellipse', style='filled', color='#eef8d2')
-                support_ids.append(sid)
+    #     support_ids = []
+    #     with dot.subgraph(name='cluster_support') as s:
+    #         s.attr(rank='same')
+    #         for row in support_df.itertuples():
+    #             sid = f"S{row.Activity_Seq}"
+    #             en = html_escape(row.Activities)
+    #             ko = html_escape(row.Activities_Kor)
+    #             label = f"""<
+    #             <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+    #                 <TR><TD><B>{en}</B></TD></TR>
+    #                 <TR><TD>({ko})</TD></TR>
+    #             </TABLE>
+    #             >"""
+    #             s.node(sid, label=label, shape='ellipse', style='filled', color='#eef8d2')
+    #             support_ids.append(sid)
 
-            if len(support_ids) > 1:
-                s.node('support_left', '', width='0', height='0', style='invis')
-                s.node('support_right', '', width='0', height='0', style='invis')
-                s.edge('support_left', support_ids[0], style='invis', weight='100')
-                s.edge(support_ids[-1], 'support_right', style='invis', weight='100')
+    #         if len(support_ids) > 1:
+    #             s.node('support_left', '', width='0', height='0', style='invis')
+    #             s.node('support_right', '', width='0', height='0', style='invis')
+    #             s.edge('support_left', support_ids[0], style='invis', weight='100')
+    #             s.edge(support_ids[-1], 'support_right', style='invis', weight='100')
 
-        if primary_ids and support_ids:
-            dot.edge(primary_ids[0], support_ids[0], style='invis', weight='1000')
+    #     if primary_ids and support_ids:
+    #         dot.edge(primary_ids[0], support_ids[0], style='invis', weight='1000')
 
-        return dot
+    #     return dot
 
     def create_plotly_diagram(self):
         st.markdown("---")
@@ -346,11 +346,9 @@ class ValueChainDiagram:
         return dot
     
     def valuechain_summary(self):
-        """ValueChain 데이터 정보 표시"""
+        """Value Chain Summary 정보 표시"""
         if self.valuechain_data is not None and not self.valuechain_data.empty:
             st.markdown("### Value Chain Process/Function Summary")
-            # st.dataframe(self.valuechain_data, use_container_width=True, hide_index=True)
-
             # 데이터 요약
             col1, col2, col3, col4 = st.columns(4)
             with col1:
@@ -375,11 +373,10 @@ class ValueChainDiagram:
         
         if self.valuechain_data is not None and not self.valuechain_data.empty:
             st.markdown("##### Value Chain의 process/function을 체크하면 선택된 process/function과 Master 간의 관계도를 생성합니다.")
-            
+
             col1, col2, col3 = st.columns([1, 1, 1])
-            with col1:
+            with col1: # Primary Activities
                 
-                # Primary Activities
                 primary_activities = self.valuechain_data[
                     self.valuechain_data['Activities_Type'].str.strip() == 'Primary'
                 ]
@@ -403,8 +400,7 @@ class ValueChainDiagram:
                             selected_activities_global.add(activity_seq)
                         else:
                             selected_activities_global.discard(activity_seq)
-            with col2:
-                # Support Activities
+            with col2: # Support Activities
                 support_activities = self.valuechain_data[
                     self.valuechain_data['Activities_Type'].str.strip() == 'Support'
                 ]
@@ -570,10 +566,12 @@ class ValueChainDiagram:
 
 
     def Activities_Master_Diagram(self, selected_activity_seq) -> Digraph:
-        """ValueChain 다이어그램 표시 - Primary와 Support를 분리된 다이어그램 표시 (고속/안전)"""
         try:
-            # ---------- 데이터 전처리 ----------
+            # ✅ 선택된 seq도 문자열로 통일
+            selected_activity_seq = [str(x).strip().replace('.0', '') for x in selected_activity_seq if pd.notna(x)]
+
             master_df = self.valuechain_standard_master.copy()
+            master_df['Activity_Seq'] = master_df['Activity_Seq'].astype(str).str.strip().str.replace('.0', '', regex=False)
             master_df = master_df[master_df['Activity_Seq'].isin(selected_activity_seq)]
 
             if master_df.empty:
@@ -708,8 +706,10 @@ class ValueChainDiagram:
                         masters_by_seq=masters_by_seq,
                         group_num=graph_count
                     )
-
+                    
+            st.divider()
             st.markdown("**박스는 Process/Function, 원은 Master 입니다.**")
+            st.divider()
             st.markdown("##### Master Color Definition:")
             st.markdown("###### Green: Standard Master에도 있고, 우리 회사에도 관리하는 Master")
             st.markdown("###### Yellow: Standard Master에는 없지만, 우리 회사에는 관리하는 Master")
@@ -1043,6 +1043,11 @@ class DashboardManager:
         try:
             loaded_data = self.file_loader.load_all_files() # 모든 파일 로드
 
+            # ✅ Activity_Seq 문자열로 통일
+            for name, df in loaded_data.items():
+                if isinstance(df, pd.DataFrame) and 'Activity_Seq' in df.columns:
+                    df['Activity_Seq'] = df['Activity_Seq'].astype(str).str.strip().str.replace('.0', '', regex=False)
+
             col1, col2 = st.columns([2, 8])
             with col1:
                 selected_industry = st.selectbox("Industry를 선택하세요", loaded_data['valuechain']['Industry'].unique())
@@ -1051,6 +1056,8 @@ class DashboardManager:
             loaded_data['valuechain_standard_master'] = loaded_data['valuechain_standard_master'][loaded_data['valuechain_standard_master']['Industry'] == selected_industry]
             # loaded_data['valuechain_standard_master_detail'] = loaded_data['valuechain_standard_master_detail'][loaded_data['valuechain_standard_master_detail']['Industry'] == selected_industry]
            
+            df = loaded_data['valuechain_standard_master']
+
             # ValueChain 데이터 로드
             if not self.value_chain_diagram.load_all_valuechain_data(loaded_data):
                 st.error("Value Chain 및 Master Table을 정의한 메타파일을 로드할 수 없습니다.")
