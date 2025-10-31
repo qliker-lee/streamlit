@@ -53,7 +53,7 @@ def load_yaml_datasense():
             
             return config
     except FileNotFoundError:  
-        st.error(f"QDQM의 기본 YAML 파일을 찾을 수 없습니다: {file_path}")
+        st.error(f"Data Sense의 기본 YAML 파일을 찾을 수 없습니다: {file_path}")
         st.info(f"현재 작업 디렉토리: searching for YAML at {file_path}")
         return None
     except Exception as e:
@@ -61,14 +61,20 @@ def load_yaml_datasense():
         return None
 # 기본 페이지 설정
 def set_page_config(yaml_file):
+    POWERED_BY = "Powered by QLIKER"
+    EMAIL = "qliker@kakao.com"
+    APP_NAME = "Data Sense Analyzer"
+    APP_KOR_NAME = "데이터 센스 분석기"
+    APP_VER = "2.0"
+
     st.set_page_config(
-        page_title="QDQM Analyzer",
+        page_title=APP_NAME,
         page_icon="📈",
         layout="wide",
         initial_sidebar_state="expanded",
     )
 
-    st.sidebar.header('Quick Data Quality Management')
+    st.sidebar.header(APP_NAME)
     st.sidebar.markdown("""
     <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
         <p style='font-size: 20px; color: #333; line-height: 1.6;'>
@@ -79,8 +85,8 @@ def set_page_config(yaml_file):
     </div>
     """, unsafe_allow_html=True)
     st.sidebar.markdown("")
-    st.sidebar.markdown("<h4>Powered by tifisoft</h4>", unsafe_allow_html=True)
-    st.sidebar.markdown("<h4>qdqm@tifisoft.com</h4>", unsafe_allow_html=True)
+    st.sidebar.markdown(f"<h4>{POWERED_BY}</h4>", unsafe_allow_html=True)
+    st.sidebar.markdown(f"<h4>{EMAIL}</h4>", unsafe_allow_html=True)
 
     return None
 
