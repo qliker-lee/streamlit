@@ -18,6 +18,7 @@ import time
 import tempfile
 import math
 from pathlib import Path
+from PIL import Image
 
 APP_NAME = "Value Chain Diagram"
 APP_DESC = "###### Value Chain의 Process/Function 과 Master Table 간의 Relationship Diagram 입니다."
@@ -40,6 +41,28 @@ def html_escape(text: str) -> str:
 def _ensure_dir(path: str):
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
+
+def display_valuechain_sample_image():
+    sample_image = "DataSense/DS_Output/valuechain_primary_sample.png"
+    filepath = os.path.join(PROJECT_ROOT, sample_image)
+
+    if not os.path.exists(filepath):
+        st.error(f"Sample Image 파일이 존재하지 않습니다: {filepath}")
+        return False
+    st.markdown("#### Value Chain Primary Sample Image")
+    image = Image.open(filepath)
+    st.image(image, caption="Value Chain Primary Sample Image", width=1000)
+
+    sample_image = "DataSense/DS_Output/valuechain_support_sample.png"
+    filepath = os.path.join(PROJECT_ROOT, sample_image)
+
+    if not os.path.exists(filepath):
+        st.error(f"Sample Image 파일이 존재하지 않습니다: {filepath}")
+        return False
+    st.markdown("#### Value Chain Support Sample Image")
+    image = Image.open(filepath)
+    st.image(image, caption="Value Chain Support Sample Image", width=1000)
+    return True
 
 @dataclass
 class FileConfig:
@@ -706,7 +729,7 @@ class ValueChainDiagram:
                         masters_by_seq=masters_by_seq,
                         group_num=graph_count
                     )
-                    
+
             st.divider()
             st.markdown("**박스는 Process/Function, 원은 Master 입니다.**")
             st.divider()
@@ -715,10 +738,13 @@ class ValueChainDiagram:
             st.markdown("###### Yellow: Standard Master에는 없지만, 우리 회사에는 관리하는 Master")
             st.markdown("###### Gray: Standard Master에는 있지만, 우리 회사에는 관리하지 않는 Master")
 
+        
             return primary_dot if (not primary_activities.empty) else None
 
         except Exception as e:
-            st.error(f"다이어그램 생성 중 오류 발생: {str(e)}")
+            # st.error(f"다이어그램 생성 중 오류 발생: {str(e)}")
+            st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요. 샘플 이미지를 표시합니다.")
+            display_valuechain_sample_image()
             return None
 
     def create_support_group_diagram(self, activities, masters,
