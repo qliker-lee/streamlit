@@ -1,6 +1,6 @@
 #
-# streamlit를 이용한 QDQM Analyzer : Master Information
-# 2024. 11. 9.  Qliker
+# streamlit를 이용한 Data Sense System : Data Quality Information
+# 2024. 11. 10.  Qliker
 #
 
 import streamlit as st
@@ -14,36 +14,31 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-
+import warnings
 from graphviz import Digraph
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 import plotly.graph_objects as go
+warnings.filterwarnings("ignore", category=UserWarning)
 
 SOLUTION_NAME = "Data Sense System"
 SOLUTION_KOR_NAME = "데이터 센스 시스템"
 APP_NAME = "Data Quality Information"
 APP_DESC = "###### Data Quality Analyzer의 결과를 기반으로 각 컬럼들에 대한 통계 정보입니다.  "
 
-# CURRENT_DIR = Path(__file__).resolve()
-# PROJECT_ROOT = CURRENT_DIR.parents[1]
-# if str(PROJECT_ROOT) not in sys.path:
-#     sys.path.append(str(PROJECT_ROOT))
+# -------------------------------------------------------------------
+# 경로 설정
+# -------------------------------------------------------------------
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
 
-# 현재 파일의 상위 디렉토리를 path에 추가
-CURRENT_DIR_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(CURRENT_DIR_PATH)
+from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 
-app_name = re.sub(r'\s*', '', re.sub(r'^\d+_|\.py$', '', os.path.basename(__file__)))
-QDQM_ver = '2.0'
+set_page_config(APP_NAME)
 
-# Now import utils after adding to path
-from function.Files_FunctionV20 import load_yaml_datasense, set_page_config
-
-from function.Display import (
-    create_metric_card,
-    display_kpi_metrics
-)
+from DataSense.util.Display import create_metric_card
 
 
 #-----------------------------------------------------------------------------------------
@@ -414,7 +409,7 @@ class FilesInformationApp:
                 st.error("YAML 파일을 로드할 수 없습니다.")
                 return False
             
-            set_page_config(self.yaml_config) # 페이지 설정
+            # set_page_config(self.yaml_config) # 페이지 설정
             
             self.dashboard_manager = DashboardManager(self.yaml_config) # 대시보드 매니저 초기화
             
