@@ -1,6 +1,6 @@
 ###################################################
-# 2025. 07. 01.  Qliker
-# streamlit test app
+# 2025. 11. 10.  Qliker
+# 데이터 센스 솔루션
 ###################################################
 
 import streamlit as st
@@ -291,14 +291,23 @@ def sidebar():
     """사이드바"""
     st.sidebar.header(SOLUTION_NAME)
     st.sidebar.markdown("""
-    <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
+        <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
         <p style='font-size: 20px; color: #333; line-height: 1.6;'>
-            모든 데이터(Data)를 <span style='font-size: 20px; color: #0066cc; font-weight: bold;'> 쉽고(Easy)</span>, 
-            <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> 빠르며(Fast)</span>, 
-            <span style='color: #006633; font-weight: bold;'> 정확하게(Accurate)</span> 분석합니다.
+            Data has <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> a value.</span><br>
+            Data is<span style='font-size: 20px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
+            Data shapes <span style='color: #cc3300; font-weight: bold;'> our future.</span>
         </p>
     </div>
     """, unsafe_allow_html=True)
+    # st.sidebar.markdown("""
+    # <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
+    #     <p style='font-size: 20px; color: #333; line-height: 1.6;'>
+    #         모든 데이터(Data)를 <span style='font-size: 20px; color: #0066cc; font-weight: bold;'> 쉽고(Easy)</span>, 
+    #         <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> 빠르며(Fast)</span>, 
+    #         <span style='color: #006633; font-weight: bold;'> 정확하게(Accurate)</span> 분석합니다.
+    #     </p>
+    # </div>
+    # """, unsafe_allow_html=True)
     
     st.sidebar.markdown("")
     st.sidebar.markdown("<h4>qliker@kakao.com</h4>", unsafe_allow_html=True)
