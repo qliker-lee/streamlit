@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import PIL.Image as Image
 
 try:
     from graphviz import Digraph
@@ -28,8 +29,8 @@ import plotly.graph_objects as go
 
 SOLUTION_NAME = "Data Sense System"
 SOLUTION_KOR_NAME = "데이터 센스 시스템"
-APP_NAME = "Code Relationship Management"
-APP_KOR_NAME = "###### 코드들 간의 관계도를 생성합니다. 마스터 코드 통계 정보와 코드 매핑 정보를 이용하여 생성합니다."
+APP_NAME = "Code Relationship Diagram (CRD)"
+APP_KOR_NAME = "###### 코드들 간의 관계도를 생성합니다. Code Relationship Analyzer 결과를 이용하여 생성합니다."
 
 # # 현재 파일의 상위 디렉토리를 path에 추가
 
