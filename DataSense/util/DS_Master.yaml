@@ -23,11 +23,13 @@ directories:
 files:
   valuechain: DataSense/DS_Meta/DataSense_ValueChain.csv
   valuechain_master: DataSense/DS_Meta/DataSense_ValueChain_Master.csv
+  valuechain_system: DataSense/DS_Meta/DataSense_ValueChain_System.csv
   valuechain_master_column: DataSense/DS_Meta/DataSense_ValueChain_Master_Column.csv
   valuechain_split: DataSense/DS_Meta/DataSense_ValueChain_Split.csv
   # valuechain: '/DS_Meta/DataSense_ValueChain.csv'  # 물류 가치 사슬 파일명
   valuechain_our_master: 'DataSense/DS_Meta/DataSense_ValueChain_Our_Master.csv'  # 물류 가치 사슬 & 우리기업의 마스터 파일명
-  valuechain_standard_master: 'DataSense/DS_Meta/DataSense_ValueChain_Standard_Master.csv'  # 물류 가치 사슬 & 표준 마스터 파일명
+  # valuechain_standard_master: 'DataSense/DS_Meta/DataSense_ValueChain_Standard_Master.csv'  # 물류 가치 사슬 & 표준 마스터 파일명
+  valuechain_standard_master: 'DataSense/DS_Meta/DataSense_ValueChain_Our_Master.csv'   # 물류 가치 사슬 & 표준 마스터 파일명
   valuechain_our_master_detail: 'DataSense/DS_Meta/DataSense_ValueChain_Our_Master_Detail.csv'  # 물류 가치 사슬 & 표준 마스터 상세 파일명
   valuechain_standard_master_detail: 'DataSense/DS_Meta/DataSense_ValueChain_Standard_Master_Detail.csv'  # 물류 가치 사슬 & 표준 마스터 상세 파일명
   codelist_meta: 'DataSense/DS_Meta/CodeList_Meta.xlsx'  # 코드 리스트 메타 파일명
@@ -126,3 +128,5 @@ Validation:
   Prefix: '6_'
   Dir: 'DataSense/6_Validation_Code'
   Meta: 'Validation_Meta.xlsx'
+
+DataSense_Password: 'tkfkdgo'
