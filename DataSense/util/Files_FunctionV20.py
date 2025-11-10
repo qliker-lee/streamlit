@@ -6,6 +6,16 @@ from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from datetime import datetime
+from pathlib import Path
+import sys
+try:
+    from graphviz import Digraph
+    GRAPHVIZ_AVAILABLE = True
+except ImportError:
+    GRAPHVIZ_AVAILABLE = False
+    st.warning("Graphviz를 사용할 수 없습니다. Code Relationship Diagram을 생성할 수 없습니다.")
+
+
 
 # YAML 파일 로드 함수
 def load_yaml():
@@ -14,10 +24,10 @@ def load_yaml():
     # 현재 파일의 상위 디렉토리를 path에 추가
     CURRENT_DIR_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(CURRENT_DIR_PATH)
-    yaml_path = 'C:/projects/myproject/QDQM/QDQM_Master_Code/util'
-    yaml_file_name = 'QDQM_Master.yaml'
+    yaml_path = PROJECT_ROOT / "DataSense" / "util"
+    yaml_file_name = 'DS_Master.yaml'
 
-    file_path = os.path.join(yaml_path, yaml_file_name)
+    file_path = yaml_path / yaml_file_name
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
@@ -89,6 +99,67 @@ def set_page_config(yaml_file):
     st.sidebar.markdown(f"<h4>{EMAIL}</h4>", unsafe_allow_html=True)
 
     return None
+
+# 31_Value Chain Diagram.py 에서 사용하는 함수
+def display_valuechain_sample_image():
+    from PIL import Image
+
+    CURRENT_DIR = Path(__file__).resolve()
+    PROJECT_ROOT = CURRENT_DIR.parents[2]
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.append(str(PROJECT_ROOT))
+
+    sample_image = "DataSense/DS_Output/valuechain_primary_sample.png"
+    filepath = os.path.join(PROJECT_ROOT, sample_image)
+
+    if not os.path.exists(filepath):
+        st.error(f"Sample Image 파일이 존재하지 않습니다: {filepath}")
+        return False
+    st.markdown("#### Value Chain Primary Sample Image")
+    image = Image.open(filepath)
+    st.image(image, caption="Value Chain Primary Sample Image", width=800)
+
+    sample_image = "DataSense/DS_Output/valuechain_support_sample.png"
+    filepath = os.path.join(PROJECT_ROOT, sample_image)
+
+    if not os.path.exists(filepath):
+        st.error(f"Sample Image 파일이 존재하지 않습니다: {filepath}")
+        return False
+    st.markdown("#### Value Chain Support Sample Image")
+    image = Image.open(filepath)
+    st.image(image, caption="Value Chain Support Sample Image", width=800)
+    return True
+
+# 31_Value Chain Diagram.py 에서 사용하는 함수 (현재는 사용하지 않음 - 기본 다이어그램 생성)
+def create_default_diagram() -> Digraph:
+    from graphviz import Digraph
+    """기본 Value Chain 다이어그램 생성"""
+    dot = Digraph(format='png')
+    dot.attr(rankdir='LR', fontsize='10')
+
+    # Primary Activities
+    dot.attr('node', shape='box', style='filled', color='lightblue2')
+    dot.node('P0', 'Inbound Logistics\n(수거/접수)\nKPI: 수거율\n시스템: TMS')
+    dot.node('P1', 'Operations\n(허브 처리)\nKPI: 자동분류율\n시스템: WMS')
+    dot.node('P2', 'Outbound Logistics\n(배송)\nKPI: 배송완료율\n시스템: PDA/모바일')
+    dot.node('P3', 'Marketing & Sales\nKPI: 고객유치율\n시스템: CRM')
+    dot.node('P4', 'Service\n(CS/반품)\nKPI: 클레임 처리율\n시스템: VOC 시스템')
+
+    # Support Activities
+    dot.attr('node', shape='ellipse', style='filled', color='#eef8d2', border='black')
+    dot.node('Infra', 'Infrastructure\n(재무/법무)\n시스템: ERP')
+    dot.node('HR', 'HR Management\n(인력 운영)\n시스템: HRIS')
+    dot.node('Tech', 'Technology\n(TES, 자동화)\n시스템: AI/IoT')
+    dot.node('Procure', 'Procurement\n(설비/차량)\n시스템: 자산관리')
+
+    # Edges
+    dot.edges([('P0', 'P1'), ('P1', 'P2'), ('P2', 'P3'), ('P3', 'P4')])
+    for support in ['Infra', 'HR', 'Tech', 'Procure']:
+        for primary in ['P0', 'P1', 'P2', 'P3', 'P4']:
+            dot.edge(support, primary, style='dashed', color='lightgrey')
+
+    return dot
+
 
 def Display_File_KPIs(df, title):
     """ Main KPIs """
