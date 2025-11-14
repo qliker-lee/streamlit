@@ -27,6 +27,8 @@ if str(ROOT_PATH) not in sys.path:
 # ✅ YAML 파일 절대 경로 설정
 YAML_PATH = ROOT_PATH / "DataSense" / "util" / "DS_Master.yaml"
 
+from DataSense.util.io import Load_Yaml_File, Backup_File   
+
 # 외부 유틸 (기존 프로젝트의 util 패키지)
 from DataSense.util.dq_format import Expand_Format, Combine_Format
 from DataSense.util.dq_validate import (
@@ -87,6 +89,12 @@ class Initializing_Main_Class:
         self.logger.info(f"Yaml File: {yaml_path}")
 
         self.config = self._load_yaml_config(yaml_path)
+        
+        # ROOT_PATH가 YAML에 없으면 자동으로 설정
+        if 'ROOT_PATH' not in self.config or not self.config.get('ROOT_PATH'):
+            self.config['ROOT_PATH'] = str(ROOT_PATH)
+            self.logger.info(f"ROOT_PATH 자동 설정: {self.config['ROOT_PATH']}")
+        
         self.directories_config = self._setup_directories_config()
 
         # 전역 참조 세트 초기화 (시도/성씨/ISO3/연월일 등)
