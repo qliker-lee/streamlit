@@ -10,7 +10,6 @@ CUSTOMER.csv,영문고객명,13.28,"High NULLs, Mixed formats, Length volatility
 상품코드.csv,서비스지역 및 요율,14.01,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",92.11,100.0,99.56784788245461,92.11,0.0
 고객마스터.csv,상세주소,16.16,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",90.95,94.36,97.77777777777777,92.01,0.0
 고객마스터.csv,주소,18.93,"High NULLs, Mixed formats, Length volatility",83.91,98.63,96.22641509433963,84.18,0.0
-WAM_코드값.csv,공통코드약칭,19.39,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",99.83,77.78,75.0,99.83,0.0
 관리회계계정.csv,관리회계계정속성값2,20.04,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",96.34,73.33,89.74358974358975,96.34,0.0
 택배_고객.csv,카페24MAILID,20.3,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",99.69,87.1,53.84615384615385,99.69,0.0
 택배_고객.csv,고객청구지주소1,20.53,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",86.94,91.58,84.90566037735849,90.61,0.0
@@ -19,3 +18,4 @@ WAM_코드값.csv,공통코드약칭,19.39,"High NULLs, Mixed formats, Length vo
 사용자.csv,비밀번호이력3,21.4,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",93.78,96.69,50.0,94.11,0.0
 택배_고객.csv,운송장등록요율미체크사유,22.0,"High NULLs, Mixed formats, Length volatility, Very low uniqueness",99.36,60.94,86.95652173913044,99.77,0.0
 사원마스터.csv,주소,22.15,"High NULLs, Mixed formats, Length volatility",82.37,87.18,95.23809523809523,88.25,0.0
+사원기본.csv,사원주소1(동이상),22.15,"High NULLs, Mixed formats, Length volatility",82.37,87.18,95.23809523809523,88.25,0.0

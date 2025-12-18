@@ -1,59 +1,58 @@
 ﻿FilePath,FileName,MasterType,ColumnName,DataType,OracleType
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업체코드,int64,NUMBER(4)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업체구분,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업체명,object,VARCHAR2(19)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업체명약어,object,VARCHAR2(16)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,사업자등록번호,float64,NUMBER(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업태,object,VARCHAR2(19)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업종,object,VARCHAR2(33)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,우편번호,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,주소,object,VARCHAR2(48)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,최초등록자,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,최종변경자,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,업체관리구분,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,영업사원관리일자,float64,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,계약시작일,float64,NUMBER(8)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,계약종료일,int64,DATE
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,불량등급관리(C60),object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,거래정지사유,object,VARCHAR2(40)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,거래연장사유,object,VARCHAR2(11)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,거래해제사유,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,도로명코드,float64,VARCHAR2(14)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,최종변경일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,계약번호,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,계약명,object,VARCHAR2(41)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,고객번호,float64,NUMBER(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,판매일자,float64,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,판매조직코드,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,판매사원번호,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,판매유형코드,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,우편번호,float64,NUMBER(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,주소,object,VARCHAR2(48)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,상세주소,object,VARCHAR2(58)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,반품배송우편번호,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,반품배송기본주소,object,VARCHAR2(48)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,반품배송상세주소,object,VARCHAR2(58)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,계약시작일자,object,DATE
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,계약종료일자,object,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,거래중지여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,거래중지사유,object,VARCHAR2(33)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,거래중지일자,float64,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,수하인관리여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,조직코드,object,VARCHAR2(4)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,사원번호,float64,NUMBER(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,청구조직코드,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,수금조직코드,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,수입조직코드,float64,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,지불구분코드,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,계약단가,float64,NUMBER(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,착불수수료_COD수수료,float64,NUMBER(4)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,개발조직코드,object,VARCHAR2(4)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,체적이미지관리여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,우수계약여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,등록사원번호,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,최종사원업데이트일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,최종업데이트사원번호,object,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,CompanyID,int64,VARCHAR2(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,CompanyType,int64,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Company_Name,object,VARCHAR2(19)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Company_Name_Abbreviation,object,VARCHAR2(16)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Business_Registration_Number,float64,NUMBER(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Business_Type,object,VARCHAR2(19)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Business_Item,object,VARCHAR2(33)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,ZIP_Code,object,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Address,object,VARCHAR2(48)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Insert_Emp_ID,object,VARCHAR2(8)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Update_Emp_ID,object,VARCHAR2(8)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Management_Type,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Management_Date,float64,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Start_Date,float64,NUMBER(8)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,End_Date,int64,DATE
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Defect Grade(C60),object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Transaction_Suspension,object,VARCHAR2(40)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Transaction_extension,object,VARCHAR2(11)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Transaction_Cancellation,object,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Road_Name_Code,float64,VARCHAR2(14)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,Last_Date,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Master,ETLTime,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CONTRACT_NO,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CUSTOMER,object,VARCHAR2(41)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CUST_NO,float64,VARCHAR2(12)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CONTRACT_DATE,float64,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CONTRACT_ORG_CD,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,SALES_EMP,object,NUMBER(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,SALES_TYPE,object,VARCHAR2(5)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,ZIP,float64,NUMBER(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,ADDR,object,VARCHAR2(48)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,ADDR_DETAIL,object,VARCHAR2(58)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,RETURN_ZIP,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,RETURN_ADDR,object,VARCHAR2(48)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,RETURN_ADDR_DETAIL,object,VARCHAR2(58)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,START_DATE,object,DATE
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,END_DATE,object,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,SUSPENSION_YN,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,SUSPENSION_DESC,object,VARCHAR2(33)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,SUSPENSION_DATE,float64,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,ORG_CODE,object,VARCHAR2(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,EMP_NO,float64,VARCHAR2(9)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,REQUEST_ORG,object,VARCHAR2(5)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,CORRECT_ORG,object,VARCHAR2(5)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,COST_ORG,float64,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,PAY_TYPE,object,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,PRICE,float64,NUMBER(5)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,COMMISION,float64,NUMBER(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,DEVELOP_ORG,object,NUMBER(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,IMAGE,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,GOOD_YN,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,ENT_EMP,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,UPDATE_DATE,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,Master,UPDATE_EMP,object,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,Master,고객번호,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,Master,개인기업고객구분,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,Master,사업구분,object,VARCHAR2(1)
@@ -136,6 +135,7 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,Master,운영점소,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,Master,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,Master,ETL일시,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,ID,int64,VARCHAR2(2)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,Name,object,VARCHAR2(3)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,Sex,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,SexE,object,VARCHAR2(1)
@@ -156,13 +156,31 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Mast
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,YYMMDD,int64,NUMBER(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,업체명,object,VARCHAR2(11)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Master,차량번호,object,VARCHAR2(9)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,CompanyCode,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,ID,int64,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,Name,object,VARCHAR2(3)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,Dept,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,City,object,VARCHAR2(2)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,Qty,int64,NUMBER(2)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Master,Amt,int64,VARCHAR2(3)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum.csv,test1_sum.csv,Master,CompanyCode,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum.csv,test1_sum.csv,Master,Dept,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum.csv,test1_sum.csv,Master,Qty_Sum,int64,VARCHAR2(3)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum2.csv,test1_sum2.csv,Master,CompanyCode,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum2.csv,test1_sum2.csv,Master,City,object,VARCHAR2(2)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum2.csv,test1_sum2.csv,Master,Amount_Sum,int64,NUMBER(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test2.csv,test2.csv,Master,CompanyCode,object,VARCHAR2(1)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test2.csv,test2.csv,Master,Dept,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test2.csv,test2.csv,Master,DeptName,object,VARCHAR2(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test3.csv,test3.csv,Master,City,object,VARCHAR2(2)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test3.csv,test3.csv,Master,CityName,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,사업자번호,object,VARCHAR2(12)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,적용일자,object,DATE
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,업체구분,object,VARCHAR2(2)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,업체명,object,VARCHAR2(16)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,last_update_dtm,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,Master,etl_dtm,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,고객번호,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,개인고객번호,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,개인기업고객구분,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,사업구분,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,고객명,object,VARCHAR2(18)
@@ -180,18 +198,11 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,청구점소,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,수금점소,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,최종수정일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,최종변경자사번,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,최종변경자사번,object,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,집하점소,float64,NUMBER(4)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,수입조직,float64,VARCHAR2(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,결제조건코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,결제조건명,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,폐기일자,float64,NULL
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,yn_abd,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,처리자사번,int64,NUMBER(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,last_update_dtm,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,Master,etl_dtm,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,계약적용월,int64,VARCHAR2(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,계약관리번호,object,VARCHAR2(12)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,계약번호,object,VARCHAR2(12)
@@ -211,17 +222,6 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,ESB_STATUS,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,계정과목코드,int64,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,계정과목명,object,VARCHAR2(19)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,상위계정과목코드,int64,NUMBER(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,계정유형코드,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,계정속성값1,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,계정속성값2,object,VARCHAR2(39)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,최초생성자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,최초생성일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,최종갱신자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,최종변경일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,Master,ETL일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,Master,고객번호,int64,VARCHAR2(10)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,Master,고객명,object,VARCHAR2(48)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,Master,고객구분코드,object,VARCHAR2(8)
@@ -272,21 +272,21 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.cs
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Master,최종갱신자ID,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Master,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,고객번호,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,기업고객번호,object,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,개인기업고객구분,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,사업구분,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,고객명,object,VARCHAR2(43)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,기업고객명,object,VARCHAR2(43)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,영문고객명,object,VARCHAR2(41)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,국가코드,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,사업자등록번호,float64,NUMBER(10)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,우편번호,object,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,기업사업자등록번호,float64,NUMBER(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,기업우편번호,object,NUMBER(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,주소,object,VARCHAR2(60)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,청구부서,object,VARCHAR2(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,청구부서,object,VARCHAR2(9)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,청구지우편번호,float64,NUMBER(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,청구지주소,object,VARCHAR2(60)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,판매일,float64,VARCHAR2(10)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,판매점소,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,판매원사번,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,판매원사번,object,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,담당부서,object,VARCHAR2(10)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,집하지우편번호,float64,NUMBER(6)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,집하지대번지,object,VARCHAR2(7)
@@ -298,17 +298,11 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,수금점소,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,최종수정일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,최종변경자사번,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,집하점소,object,VARCHAR2(4)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,집하점소,object,NUMBER(4)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,수입조직,float64,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,법인번호,float64,NUMBER(13)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,기업법인번호,float64,NUMBER(13)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,사유코드,int64,NUMBER(2)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,작업코드,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,사유명,object,VARCHAR2(16)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,사유명(영문),object,VARCHAR2(30)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,최종변경일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,Master,ETL일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,배송점코드,int64,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,상위조직코드,float64,NUMBER(4)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,배송점명,object,VARCHAR2(13)
@@ -326,15 +320,6 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,사업자등록번호,float64,VARCHAR2(12)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,최수정일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,Master,최종수정자,float64,NUMBER(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,불량등급코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,불량등급명,object,VARCHAR2(14)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,dt_reg,int64,DATE
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,dt_adjt,float64,NULL
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,폐기일자,float64,NULL
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,yn_abd,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,처리자사번,int64,NUMBER(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,last_update_dtm,object,DATE
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,Master,etl_dtm,object,DATE
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,Master,사원번호,int64,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,Master,정규비정규,int64,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,Master,조직코드,object,VARCHAR2(7)
@@ -472,19 +457,31 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,Master,수정사원번호,float64,NUMBER(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,Master,최종업데이트일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,Master,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,허브코드,float64,NUMBER(3)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,허브코드,int64,NUMBER(3)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,터미널구분,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,허브명,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,허브영문명,object,VARCHAR2(20)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,우편번호,float64,NUMBER(5)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,우편번호,int64,NUMBER(5)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,주소,object,VARCHAR2(21)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,X좌표,float64,"NUMBER(8,5)"
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,Y좌표,float64,"NUMBER(7,5)"
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,사업자등록번호,float64,NUMBER(10)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,사업자등록번호,int64,NUMBER(10)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,수정일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,등록사원번호,float64,VARCHAR2(9)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,등록사원번호,int64,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,최종업데이트일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,ETL일시,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Master,Unnamed: 13,object,VARCHAR2(4)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,계정과목코드,int64,VARCHAR2(6)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,계정과목명,object,VARCHAR2(19)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,상위계정과목코드,int64,NUMBER(6)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,계정유형코드,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,계정속성값1,object,VARCHAR2(2)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,계정속성값2,object,VARCHAR2(39)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,최초생성자ID,object,VARCHAR2(5)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,최초생성일시,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,최종갱신자ID,object,VARCHAR2(5)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,최종변경일시,object,VARCHAR2(7)
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,Operation,ETL일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,Operation,수익비용구분코드,int64,VARCHAR2(6)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,Operation,수익비용구분명,object,VARCHAR2(2)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,Operation,상위계정과목코드,int64,VARCHAR2(6)
@@ -579,15 +576,6 @@ C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,Operation,최종갱신자ID,object,VARCHAR2(5)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,Operation,최종변경일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,Operation,ETL일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,고객사업자등록번호,object,VARCHAR2(18)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,고객명,object,VARCHAR2(73)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,법인번호,object,VARCHAR2(13)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,고객구분코드,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,최초생성자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,최초생성일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,최종갱신자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,최종변경일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,Operation,ETL일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,Operation,관리회계분류공통코드,object,VARCHAR2(32)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,Operation,관리회계공통코드,object,VARCHAR2(29)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,Operation,관리회계공통코드명,object,VARCHAR2(24)
@@ -611,32 +599,6 @@ C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,Operation,최종갱신자ID,object,VARCHAR2(6)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,Operation,최종변경일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,Operation,ETL일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,사업유형코드,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,사업코드,object,VARCHAR2(4)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,유효시작일자V,int64,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,사업명,object,VARCHAR2(12)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,상위사업코드,float64,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,사업LEVEL코드,float64,VARCHAR2(3)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,유효종료일자V,int64,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,정렬순서,int64,NUMBER(4)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,최초생성자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,최초생성일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,최종갱신자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,최종변경일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,Operation,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,귀속부서조직코드,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,유효시작일자V,int64,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,귀속부서조직명,object,VARCHAR2(27)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,상위귀속부서조직코드,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,조직LEVEL코드,float64,VARCHAR2(3)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,조직유형코드,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,유효종료일자V,int64,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,정렬순서,int64,NUMBER(4)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,최초생성자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,최초생성일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,최종갱신자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,최종변경일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,Operation,ETL일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,Operation,귀속부서조직코드,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,Operation,유효시작일자V,float64,VARCHAR2(10)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,Operation,귀속부서조직명,object,VARCHAR2(10)
@@ -1033,141 +995,6 @@ C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계�
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계조직매핑.csv,택배관리회계조직매핑.csv,Operation,관리회계_지점코드,object,VARCHAR2(6)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계조직매핑.csv,택배관리회계조직매핑.csv,Operation,최종변경일시,object,VARCHAR2(7)
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계조직매핑.csv,택배관리회계조직매핑.csv,Operation,ETL일시,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,도메인ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,도메인논리명,object,VARCHAR2(13)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,도메인물리명,object,VARCHAR2(28)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,논리명기준구분,object,VARCHAR2(16)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,도메인그룹ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,인포타입ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,상위도메인ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,주제영역ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록엔터티ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록엔터티물리명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록엔터티논리명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록어트리뷰트ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록어트리뷰트물리명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,목록어트리뷰트논리명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,코드값유형코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,코드값부여방식코드,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,표준항목자동생성여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,데이터형식,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,담당사용자ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,도메인출처구분,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,요청번호,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,요청일련번호,int64,NUMBER(3)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,객체설명,object,VARCHAR2(45)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,객체버전,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,등록유형코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,최초요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,최초요청사용자ID,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,요청사용자ID,object,VARCHAR2(6)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,승인일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,승인사용자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,전체경로,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,물리명기준구분,object,VARCHAR2(28)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,암호화여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,대분류코드,object,VARCHAR2(3)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,전송여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,DMN_ORG_TXT,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,부분코드여부,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,DMN_MIN_VAL,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,DMN_MAX_VAL,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,표준분류,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,중복여부,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,중분류코드,object,VARCHAR2(25)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,테이블명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,last_update_dtm,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,Attribute,etl_dtm,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,코드값ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,코드값,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,코드값명,object,VARCHAR2(40)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,도메인ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,상위코드값ID,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,요청번호,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,요청일련번호,int64,NUMBER(3)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,요청상세일련번호,int64,NUMBER(3)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,객체설명,object,VARCHAR2(4)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,객체버전,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,등록유형코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,최초요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,최초요청사용자ID,object,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,요청사용자ID,object,VARCHAR2(10)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,승인일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,승인사용자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,표시순서,int64,NUMBER(3)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,적용시작일자,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,적용종료일자,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고1,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고2,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고3,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고4,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고5,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고명1,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고명2,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고명3,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고명4,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,비고명5,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,내용1,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,내용2,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,사용여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,공통코드약칭,object,VARCHAR2(12)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,중분류코드,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,last_update_dtm,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,Attribute,etl_dtm,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,표준단어ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,표준단어논리명,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,표준단어물리명,object,VARCHAR2(18)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,영문의미,object,VARCHAR2(55)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,한자명,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,출처구분,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,단어구분코드,object,VARCHAR2(4)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,요청번호,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,요청일련번호,int64,NUMBER(4)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,객체설명,object,VARCHAR2(1150)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,객체버전,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,등록유형코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,최초요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,최초요청사용자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,요청사용자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,승인일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,승인사용자ID,object,VARCHAR2(7)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,도메인여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,표준분류,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,최종변경일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,Attribute,ETL일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,표준항목ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,표준항목논리명,object,VARCHAR2(12)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,표준항목물리명,object,VARCHAR2(25)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,논리명기준구분,object,VARCHAR2(8)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,도메인ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,도메인그룹ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,인포타입ID,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,인포타입변경여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,암호화여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,요청번호,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,요청일련번호,int64,NUMBER(2)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,객체설명,object,VARCHAR2(18)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,객체버전,int64,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,등록유형코드,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,최초요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,최초요청사용자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,요청일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,요청사용자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,승인일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,승인사용자ID,object,VARCHAR2(5)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,물리명기준구분,object,VARCHAR2(15)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,변환여부,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,테스트데이터변환여부,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,표준분류,object,VARCHAR2(2)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,개인정보변환여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,개인정보등급,float64,NULL
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,중복여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,개인정보여부,object,VARCHAR2(1)
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,최종변경일시,object,DATE
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,Attribute,ETL일시,object,DATE
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,Attribute,결제조건코드,object,VARCHAR2(1)
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,Attribute,결제조건명,object,VARCHAR2(8)
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,Attribute,dt_reg,int64,DATE
