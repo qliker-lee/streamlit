@@ -915,13 +915,15 @@ def generate_erd(selected_tables, pk_map, it_df):
             st.info("""
             **ERD 생성이 불가능합니다.**
             
-            Streamlit Cloud 환경에서는 Graphviz 설치가 제한될 수 있습니다.
+            Streamlit Cloud 환경에서는 Graphviz 설치가 제한될 수 있어서 ERD 생성이 불가능합니다.
+            로컬 환경에서 실행하세요. 
             
-            **해결 방법:**
-            1. 로컬 환경에서 실행하거나
-            2. Streamlit Cloud의 requirements.txt에 graphviz를 추가하거나
-            3. 시스템에 Graphviz를 설치해주세요.
+            **예제 ERD를 표시합니다.**
             """)
+            image = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
+            st.image(image, caption="예제 ERD", width=480)
+            image = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
+            st.image(image, caption="예제 ERD", width=480)
             return False
     except ImportError:
         st.error("❌ Graphviz 라이브러리를 import할 수 없습니다.")
