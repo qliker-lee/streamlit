@@ -798,7 +798,7 @@ def load_data_filestats():
     1.2nd Step: filestats.csv 기반 데이터 추출 및 로드
     """
     try:
-        file_path = OUTPUT_DIR / "filestats.csv"
+        file_path = OUTPUT_DIR / "FileStats.csv"
         df = pd.read_csv(file_path, encoding='utf-8-sig')
     except Exception as e:  
         st.error(f"원본 파일 로드 중 오류 발생: {e}")
