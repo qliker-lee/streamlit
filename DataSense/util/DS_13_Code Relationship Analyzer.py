@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 DS_13_CodeMapping 
+2025.11.16 Qliker
 - 모든 핵심 메서드(Reference/Internal/Rule mapping, pivot, final)를 포함합니다.
 """
 
@@ -19,6 +20,9 @@ from typing import Dict, Any, Iterable, Optional, Sequence, List, Set
 import numpy as np
 import pandas as pd
 
+# -------------------------------------------------------------------
+# 경로 설정
+# -------------------------------------------------------------------
 # ✅ QDQM 루트 디렉토리 추적 (DataSense/util/ 까지 들어왔을 때)
 ROOT_PATH = Path(__file__).resolve().parents[2]
 if str(ROOT_PATH) not in sys.path:
@@ -28,7 +32,7 @@ if str(ROOT_PATH) not in sys.path:
 YAML_PATH = ROOT_PATH / "DataSense" / "util" / "DS_Master.yaml"
 
 from DataSense.util.io import Load_Yaml_File, Backup_File   
-
+# -------------------------------------------------------------------
 # 외부 유틸 (기존 프로젝트의 util 패키지)
 from DataSense.util.dq_format import Expand_Format, Combine_Format
 from DataSense.util.dq_validate import (
@@ -42,10 +46,13 @@ from DataSense.util.dq_validate import (
 
 # ---------------------- 전역 기본값 ----------------------
 DEBUG_MODE = True
+
 OUTPUT_FILE_NAME = 'CodeMapping'
 OUTPUT_FILEFORMAT = 'FileFormatMapping'
 OUTPUT_FILENUMERIC = 'FileNumericStats'
 
+
+MATCH_RATE_THRESHOLD = 20 # 매핑 결과 중 MatchRate(%) 20% 이상인 레코드만 선택
 # ---------------------- Dataclasses ----------------------
 @dataclass
 class DirectoriesConfig:
@@ -259,7 +266,7 @@ class Initializing_Main_Class:
             df = src_cache[fpath]
             md = master_cache[mpath]
             if (col not in df.columns) or (mcol not in md.columns):
-                print(f"[경고] 컬럼 없음: {col} / {mcol}")
+                print(f"[경고] 컬럼 없음: {fname} / {col} / {mpath} / {mcol}")
                 continue
 
             s_series = df[col]
@@ -299,8 +306,6 @@ class Initializing_Main_Class:
             return pd.DataFrame(columns=required_cols)
 
         return out.drop_duplicates().reset_index(drop=True)[required_cols]
-
-
     # ------------------ (2) 피벗(Left-compact) ------------------
     def mapping_pivot(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
                       top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
@@ -355,16 +360,6 @@ class Initializing_Main_Class:
                 arr[r, :] = vals
             return pd.DataFrame(arr, columns=block.columns, index=block.index)
 
-        # # map original pivot keys to desired names
-        # rename_map = {
-        #     'MasterFile': 'CodeFile',  # we used MasterFile as pivot value, rename to CodeFile
-        #     'MasterColumn': 'CodeColumn',
-        # }
-        # for orig, new in rename_map.items():
-        #     cols = [c for c in wide.columns if c.startswith(orig + "_")]
-        #     if cols:
-        #         wide.rename(columns={c: c.replace(orig + "_", new + "_") for c in cols}, inplace=True)
-
         # perform left-compact for groups
         for base in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
             cols = [c for c in wide.columns if c.startswith(base + "_")]
@@ -379,6 +374,87 @@ class Initializing_Main_Class:
 
         return wide
 
+    # ------------------ (2) 피벗(Left-compact) ------------------
+    def mapping_pivot_new(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
+                      top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
+        """Left-compact pivot: 상위 top_k 후보를 CodeFilePath/CodeFile/CodeType/CodeColumn/Matched로 전개"""
+        df_merged = df_merged.rename(columns={
+            'MasterFilePath':'CodeFilePath',
+            'MasterFile':'CodeFile',
+            'ReferenceMasterType':'CodeType',
+            'MasterColumn':'CodeColumn',
+            'CompareLength':'CompareLength',
+            'MatchRate(%)':'Matched(%)',
+            'CompareCount':'Matched',
+            'SourceCount':'SourceCount',
+            'MatchRate(%)':'Matched(%)'
+        })
+
+        # df_merged = df_merged[df_merged['Matched(%)'] > MATCH_RATE_THRESHOLD]
+
+        if df_merged is None or df_merged.empty:
+            cols = ["FilePath","FileName","ColumnName","MasterType"]
+            for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+                cols += [f"{b}_{i}" for i in range(1, top_k+1)]
+            return pd.DataFrame(columns=cols)
+
+        df = df_merged.copy()
+        # normalize numeric columns
+        for numc in ("Matched","Matched(%)"):
+            if numc in df.columns:
+                df[numc] = pd.to_numeric(df[numc], errors='coerce').fillna(0)
+
+        # keep only candidate rows that exceed thresholds
+        mask = (df["Matched"].fillna(0) > 0) & (df["Matched(%)"].fillna(-1) > valid_threshold)
+        df = df.loc[mask].copy()
+        if df.empty:
+            cols = ["FilePath","FileName","ColumnName","MasterType"]
+            for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+                cols += [f"{b}_{i}" for i in range(1, top_k+1)]
+            return pd.DataFrame(columns=cols)
+
+        sort_keys = ["FilePath","FileName","ColumnName","MasterType","Matched(%)","Matched"]
+        df = df.sort_values(sort_keys, ascending=[True,True,True,True,False,False], kind="mergesort").reset_index(drop=True)
+
+        grp_keys = ["FilePath","FileName","ColumnName","MasterType"]
+        df = df.assign(rank=df.groupby(grp_keys).cumcount() + 1)
+        df = df.loc[df["rank"] <= top_k].copy()
+
+        wide = (
+            df.pivot_table(
+                index=grp_keys,
+                columns="rank",
+                values=["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"],
+                aggfunc="first"
+            )
+        )
+        # Normalize column names to previous naming (CodeFile / CodeColumn)
+        # pivot produced e.g. ('CodeFilePath', 1)
+        wide.columns = [f"{col[0]}_{int(col[1])}" for col in wide.columns]
+        wide = wide.reset_index().copy()
+
+        # Left-compact each block of parallel columns
+        def _left_compact_block(block: pd.DataFrame) -> pd.DataFrame:
+            arr = block.to_numpy(object)
+            for r in range(arr.shape[0]):
+                vals = [x for x in arr[r].tolist() if not (pd.isna(x) or str(x).strip() == "")]
+                vals += [""] * (arr.shape[1] - len(vals))
+                arr[r, :] = vals
+            return pd.DataFrame(arr, columns=block.columns, index=block.index)
+
+        # perform left-compact for groups
+        for base in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+            cols = [c for c in wide.columns if c.startswith(base + "_")]
+            if cols:
+                block = _left_compact_block(wide[cols].copy())
+                wide[cols] = block
+
+        # fillna -> empty string for object columns
+        obj_cols = wide.select_dtypes(include="object").columns.tolist()
+        if obj_cols:
+            wide[obj_cols] = wide[obj_cols].fillna("")
+
+        return wide
     # ------------------ (3) Rule 매핑 ------------------
     def rule_mapping(
         self,
@@ -610,7 +686,7 @@ class Initializing_Main_Class:
         if combine_df.empty:
             return pd.DataFrame()
         mapping_df = self.mapping_check(combine_df)
-        mapping_df = mapping_df[mapping_df['MatchRate(%)'] > 1]
+        mapping_df = mapping_df[mapping_df['MatchRate(%)'] > MATCH_RATE_THRESHOLD]
         mapping_df = mapping_df.sort_values(by=['FilePath','ColumnName','MatchRate(%)'], ascending=[True,True,False])
         return mapping_df
 
@@ -622,13 +698,16 @@ class Initializing_Main_Class:
         expand_df['Format(%)'] = pd.to_numeric(expand_df.get('Format(%)', 0), errors='coerce').fillna(0)
         expand_df = expand_df.loc[expand_df['Format(%)'] > 10].copy()
         source_df = expand_df.loc[expand_df['MasterType'] != 'Reference'].copy()
-        combine_df = Combine_Format(source_df, source_df)
+        combine_df = Combine_Format(source_df, source_df) # Match 된 레코드 중 조건을 충족하는 레코드만 선택
+
         combine_df = combine_df[combine_df.get('Final_Flag', 0) == 1].copy()
         if combine_df.empty:
             return pd.DataFrame()
         mapping_df = self.mapping_check(combine_df)
-        mapping_df = mapping_df[mapping_df['MatchRate(%)'] > 1]
+        mapping_df = mapping_df[mapping_df['MatchRate(%)'] > MATCH_RATE_THRESHOLD]
         mapping_df = mapping_df.sort_values(by=['FilePath','ColumnName','MatchRate(%)'], ascending=[True,True,False])
+        # 'FilePath','ColumnName' 기준으로 그룹화하여 각 그룹에서 MatchRate(%) 상위 5개만 선택
+        # mapping_df = mapping_df.groupby(['FilePath', 'ColumnName'], as_index=False).head(3)
         return mapping_df
 
     def mapping_concat(self, reference_df: pd.DataFrame, internal_df: pd.DataFrame, rule_df: pd.DataFrame) -> pd.DataFrame:
@@ -661,13 +740,76 @@ class Initializing_Main_Class:
         })
         # keep meaningful candidates only (>=20% match)
         concat_df['Matched(%)'] = pd.to_numeric(concat_df.get('Matched(%)', 0), errors='coerce').fillna(0)
-        concat_df = concat_df[concat_df['Matched(%)'] > 20]
+        concat_df = concat_df[concat_df['Matched(%)'] > MATCH_RATE_THRESHOLD]
         concat_df = concat_df.sort_values(by=['FilePath','FileName','ColumnName','MasterType','Matched(%)'],
                                           ascending=[True,True,True,True,False])
         return concat_df
 
-    def final_mapping(self, fileformat_df: pd.DataFrame, pivoted_df: pd.DataFrame) -> pd.DataFrame:
+    # def final_mapping_old(self, fileformat_df: pd.DataFrame, pivoted_df: pd.DataFrame) -> pd.DataFrame:
+    #     """fileformat_df와 ruldatatype(preset)과 pivoted_df를 합쳐 최종 산출"""
+    #     self.logger.info("최종 매핑 파일을 생성합니다.")
+    #     df_rule = self.loaded_data.get('ruldatatype', pd.DataFrame()).copy()
+    #     if df_rule.empty:
+    #         self.logger.debug("ruldatatype 비어있음 -> 룰 반영 스킵")
+    #     rule_required_cols = ["FilePath","FileName","ColumnName","MasterType", "Rule","MatchedScoreList"]
+    #     # safe: fill missing rule cols if necessary
+    #     for c in rule_required_cols:
+    #         if c not in df_rule.columns:
+    #             df_rule[c] = ""
+
+    #     df_rule = df_rule[rule_required_cols].copy()
+    #     # pivoted_df may be empty -> create empty with expected columns
+    #     pivot_cols = [
+    #         'FilePath','FileName','ColumnName','MasterType',
+    #         'CodeColumn_1','CodeFile_1','CodeFilePath_1','CodeType_1','Matched_1','Matched(%)_1',
+    #         'CodeColumn_2','CodeFile_2','CodeFilePath_2','CodeType_2','Matched_2','Matched(%)_2'
+    #     ]
+    #     if pivoted_df is None or pivoted_df.empty:
+    #         pivoted_df = pd.DataFrame(columns=pivot_cols)
+    #     else:
+    #         # ensure all pivot cols exist
+    #         for c in pivot_cols:
+    #             if c not in pivoted_df.columns:
+    #                 pivoted_df[c] = ""
+
+    #     # merge
+    #     df = pd.merge(fileformat_df, df_rule, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_rule"))
+    #     df = pd.merge(df, pivoted_df, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_pivot"))
+
+    #     # 룰 매핑 반영: CodeColumn_1 비어있고 Rule이 있으면 반영
+    #     df['Rule'] = df.get('Rule', "").fillna("").astype(str).str.strip()
+    #     df['CodeColumn_1'] = df.get('CodeColumn_1', "").fillna("").astype(str)
+    #     mask = (df['CodeColumn_1'].str.strip() == "") & (df['Rule'] != "")
+    #     if mask.any():
+    #         df.loc[mask, 'CodeColumn_1'] = df.loc[mask, 'Rule']
+    #         df.loc[mask, 'CodeType_1'] = 'Rule'
+    #         df.loc[mask, 'CodeFile_1'] = 'Rule'
+    #         df.loc[mask, 'CodeFilePath_1'] = 'Rule'
+    #         # ValueCnt might not exist -> safe
+    #         if 'ValueCnt' in df.columns:
+    #             df.loc[mask, 'Matched_1'] = pd.to_numeric(df.loc[mask, 'ValueCnt'], errors='coerce').fillna(0).astype(int)
+    #         else:
+    #             df.loc[mask, 'Matched_1'] = 0
+    #         df.loc[mask, 'Matched(%)_1'] = 100
+    #         df.loc[mask, 'CodeCheck'] = 'Y'
+
+    #     # PK -> FK mapping (if PK column present in fileformat_df)
+    #     if 'PK' in fileformat_df.columns:
+    #         pk_numeric = pd.to_numeric(fileformat_df['PK'], errors='coerce').fillna(0).astype(int)
+    #         mask_pk = pk_numeric == 1
+    #         tmp_df = fileformat_df.loc[mask_pk, ['FilePath','ColumnName']].copy()
+    #         tmp_df = tmp_df.rename(columns={'FilePath':'CodeFilePath_1','ColumnName':'CodeColumn_1'})
+    #         tmp_df['FK'] = 'FK'
+    #         df = pd.merge(df, tmp_df, on=['CodeFilePath_1','CodeColumn_1'], how='left')
+
+    #     return df
+
+    # 2025-11-26 새로운 방식으로 변경함 
+    def final_mapping(self, fileformat_df: pd.DataFrame, pivoted_df: pd.DataFrame, reference_df: pd.DataFrame, rule_df: pd.DataFrame) -> pd.DataFrame:
         """fileformat_df와 ruldatatype(preset)과 pivoted_df를 합쳐 최종 산출"""
+        #---------------------------------------------------------
+        #  rule_df 읽어옴. 
+         #---------------------------------------------------------
         self.logger.info("최종 매핑 파일을 생성합니다.")
         df_rule = self.loaded_data.get('ruldatatype', pd.DataFrame()).copy()
         if df_rule.empty:
@@ -679,6 +821,27 @@ class Initializing_Main_Class:
                 df_rule[c] = ""
 
         df_rule = df_rule[rule_required_cols].copy()
+        #---------------------------------------------------------
+        #  reference_df 읽어옴. 
+        #---------------------------------------------------------
+        ref_cols = ["FilePath","FileName","ColumnName","MasterType","MasterFilePath","MasterFile","ReferenceMasterType","MasterColumn","CompareLength","CompareCount","SourceCount","MatchRate(%)"]
+        ref_df = reference_df[ref_cols].copy()
+        ref_df = ref_df.sort_values(by=['FilePath','FileName','ColumnName','MasterType','MatchRate(%)'], ascending=[True,True,True,True,False])
+        ref_df = ref_df.groupby(['FilePath', 'ColumnName'], as_index=False).head(1)
+        if ref_df.empty:
+            self.logger.debug("reference_df 비어있음 -> 참조 반영 스킵")
+        ref_df = ref_df.rename(columns={
+            'MasterFilePath':'CodeFilePath_4',
+            'MasterFile':'CodeFile_4',
+            'ReferenceMasterType':'CodeType_4',
+            'MasterColumn':'CodeColumn_4',
+            'CompareCount':'Matched_4',
+            'MatchRate(%)':'Matched(%)_4'
+        })
+
+        #---------------------------------------------------------
+        #  pivoted_df 읽어옴. 
+        #---------------------------------------------------------
         # pivoted_df may be empty -> create empty with expected columns
         pivot_cols = [
             'FilePath','FileName','ColumnName','MasterType',
@@ -687,8 +850,7 @@ class Initializing_Main_Class:
         ]
         if pivoted_df is None or pivoted_df.empty:
             pivoted_df = pd.DataFrame(columns=pivot_cols)
-        else:
-            # ensure all pivot cols exist
+        else:  # ensure all pivot cols exist
             for c in pivot_cols:
                 if c not in pivoted_df.columns:
                     pivoted_df[c] = ""
@@ -696,25 +858,31 @@ class Initializing_Main_Class:
         # merge
         df = pd.merge(fileformat_df, df_rule, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_rule"))
         df = pd.merge(df, pivoted_df, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_pivot"))
+        df = pd.merge(df, ref_df, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_ref"))
 
-        # 룰 매핑 반영: CodeColumn_1 비어있고 Rule이 있으면 반영
-        df['Rule'] = df.get('Rule', "").fillna("").astype(str).str.strip()
-        df['CodeColumn_1'] = df.get('CodeColumn_1', "").fillna("").astype(str)
-        mask = (df['CodeColumn_1'].str.strip() == "") & (df['Rule'] != "")
-        if mask.any():
-            df.loc[mask, 'CodeColumn_1'] = df.loc[mask, 'Rule']
-            df.loc[mask, 'CodeType_1'] = 'Rule'
-            df.loc[mask, 'CodeFile_1'] = 'Rule'
-            df.loc[mask, 'CodeFilePath_1'] = 'Rule'
-            # ValueCnt might not exist -> safe
-            if 'ValueCnt' in df.columns:
-                df.loc[mask, 'Matched_1'] = pd.to_numeric(df.loc[mask, 'ValueCnt'], errors='coerce').fillna(0).astype(int)
-            else:
-                df.loc[mask, 'Matched_1'] = 0
-            df.loc[mask, 'Matched(%)_1'] = 100
-            df.loc[mask, 'CodeCheck'] = 'Y'
+        #---------------------------------------------------------
+        #  Attribute 컬럼 생성
+        #---------------------------------------------------------
+        # Rule 컬럼에서 세미콜론 기준 첫 번째 값 추출하여 Attribute에 설정
+        df['Attribute'] = ""
+        if 'Rule' in df.columns:
+            # Rule 컬럼을 문자열로 변환하고 NaN 처리
+            df['Rule'] = df['Rule'].fillna("").astype(str).str.strip()
+            # 세미콜론 기준으로 첫 번째 값 추출
+            rule_first_value = df['Rule'].str.split(';').str[0].str.strip()
+            # 값이 있으면 Attribute에 설정
+            mask_rule = rule_first_value != ""
+            df.loc[mask_rule, 'Attribute'] = rule_first_value[mask_rule]
+        
+        # Rule에서 값이 없는 경우 CodeColumn_4 값 사용
+        if 'CodeColumn_4' in df.columns:
+            df['CodeColumn_4'] = df['CodeColumn_4'].fillna("").astype(str).str.strip()
+            mask_no_rule = (df['Attribute'] == "") & (df['CodeColumn_4'] != "")
+            df.loc[mask_no_rule, 'Attribute'] = df.loc[mask_no_rule, 'CodeColumn_4']
 
-        # PK -> FK mapping (if PK column present in fileformat_df)
+        #---------------------------------------------------------
+        #  PK -> FK mapping (if PK column present in fileformat_df) 추가
+        #---------------------------------------------------------
         if 'PK' in fileformat_df.columns:
             pk_numeric = pd.to_numeric(fileformat_df['PK'], errors='coerce').fillna(0).astype(int)
             mask_pk = pk_numeric == 1
@@ -754,25 +922,34 @@ class Initializing_Main_Class:
 
         # 4) Internal
         internal_df = self.internal_mapping(fileformat_df)
+
+        # if DEBUG_MODE and internal_df is not None and not internal_df.empty:
+        #     p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_7th_int_combine.csv')
+        #     internal_df.to_csv(p, index=False, encoding='utf-8-sig')
+        #     self.logger.info(f"internal combine mapping : {p} 저장")
+
         if DEBUG_MODE and internal_df is not None and not internal_df.empty:
             p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_7th_int_mapping.csv')
             internal_df.to_csv(p, index=False, encoding='utf-8-sig')
             self.logger.info(f"internal mapping : {p} 저장")
 
         # 5) concat + pivot + final
+        # concat_df 는 사용하지 않음 (2025-11-26 기준)
         concat_df = self.mapping_concat(reference_df, internal_df, rule_df)
         if DEBUG_MODE and concat_df is not None and not concat_df.empty:
             p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_8th_concat.csv')
             concat_df.to_csv(p, index=False, encoding='utf-8-sig')
             self.logger.info(f"concat_df : {p} 저장")
 
-        pivoted_df = self.mapping_pivot(concat_df)
+        # pivoted_df = self.mapping_pivot(concat_df)
+        pivoted_df = self.mapping_pivot_new(internal_df) # concat_df 대신 internal_df 사용하여 피벗 생성
         if DEBUG_MODE and pivoted_df is not None and not pivoted_df.empty:
             p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_9th_pivoted.csv')
             pivoted_df.to_csv(p, index=False, encoding='utf-8-sig')
             self.logger.info(f"pivoted_df : {p} 저장")
 
-        final_df = self.final_mapping(fileformat_df, pivoted_df)
+        # final_df = self.final_mapping(fileformat_df, pivoted_df) # 기존 방식 
+        final_df = self.final_mapping(fileformat_df, pivoted_df, reference_df, rule_df) # 새로운 방식 
         final_path = os.path.join(output_dir, OUTPUT_FILE_NAME + '.csv')
         try:
             final_df.to_csv(final_path, index=False, encoding='utf-8-sig')

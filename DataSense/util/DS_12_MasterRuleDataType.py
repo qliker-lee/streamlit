@@ -344,48 +344,57 @@ def safe_int(x, default=0):
         return default
 
 def Determine_Rule_Type(r: pd.Series) -> str:
-    pattern     = str(r.get('Format','') or '')
-    pattern_cnt = safe_int(r.get('FormatCnt',0), 0)
-    median      = str(r.get('FormatMedian','') or r.get('Median','') or r.get('MedianString','') or '')
-    mode_string = str(r.get('FormatMode','') or r.get('ModeString','') or '')
-    top10       = str(r.get('Top10','') or '')
-    min_string  = str(r.get('FormatMin','') or r.get('MinString','') or '')
-    max_string  = str(r.get('FormatMax','') or r.get('MaxString','') or '')
-    max_length  = safe_int(r.get('LenMax',0), 0)
-    unique_cnt  = safe_int(r.get('UniqueCnt',0), 0)
-    value_cnt   = safe_int(r.get('ValueCnt',0), 0)
+    try:
+        pattern     = str(r.get('Format','') or '')
+        pattern_cnt = safe_int(r.get('FormatCnt',0), 0)
+        median      = str(r.get('FormatMedian','') or r.get('Median','') or r.get('MedianString','') or '')
+        mode_string = str(r.get('FormatMode','') or r.get('ModeString','') or '')
+        top10       = str(r.get('Top10','') or '')
+        min_string  = str(r.get('FormatMin','') or r.get('MinString','') or '')
+        max_string  = str(r.get('FormatMax','') or r.get('MaxString','') or '')
+        max_length  = safe_int(r.get('LenMax',0), 0)
+        unique_cnt  = safe_int(r.get('UniqueCnt',0), 0)
+        value_cnt   = safe_int(r.get('ValueCnt',0), 0)
+        has_alpha   = safe_int(r.get('HasAlpha',0), 0)
+        has_num     = safe_int(r.get('HasNum',0), 0)
+        has_kor     = safe_int(r.get('HasKor',0), 0)
+        has_special = safe_int(r.get('HasSpecial',0), 0)
+        unique_percent = float(r.get('Unique(%)',0))
 
-    if max_length > FORMAT_MAX_VALUE: return 'CLOB'
-    if len(pattern) == 0:            return 'NULL'
+        if max_length > FORMAT_MAX_VALUE: return 'CLOB'
+        if len(pattern) == 0:            return 'NULL'
 
-    if is_timestamp(pattern, pattern_cnt):      return 'TIMESTAMP'
-    if is_time(pattern, pattern_cnt):           return 'TIME'
-    if is_yymmdd(pattern, median):              return 'YYMMDD'
-    if is_datechar(pattern, median):            return 'DATECHAR'
-    if is_yearmonth(pattern, median):           return 'YEARMONTH'
-    if is_year(pattern, median, mode_string):   return 'YEAR'
+        if is_timestamp(pattern, pattern_cnt):      return 'TIMESTAMP'
+        if is_time(pattern, pattern_cnt):           return 'TIME'
+        if is_yymmdd(pattern, median):              return 'YYMMDD'
+        if is_datechar(pattern, median):            return 'DATECHAR'
+        if is_yearmonth(pattern, median):           return 'YEARMONTH'
+        if is_year(pattern, median, mode_string):   return 'YEAR'
 
-    if is_latitude(pattern, median):            return 'LATITUDE'
-    if is_longitude(pattern, median):           return 'LONGITUDE'
+        if is_latitude(pattern, median):            return 'LATITUDE'
+        if is_longitude(pattern, median):           return 'LONGITUDE'
 
-    if is_tel(pattern, top10, 10):              return 'TEL'
-    if is_cellphone(pattern, median):           return 'CELLPHONE'
-    if is_car_number(pattern, pattern_cnt):     return 'CAR_NUMBER'
-    if is_company(pattern, pattern_cnt):        return 'COMPANY'
+        if is_tel(pattern, top10, 10) and unique_percent != 100 and has_alpha == 0 and has_kor == 0: return 'TEL'
+        if is_cellphone(pattern, median) and has_alpha == 0 and has_kor == 0: return 'CELLPHONE'
+        if is_car_number(pattern, pattern_cnt):     return 'CAR_NUMBER'
+        if is_company(pattern, pattern_cnt):        return 'COMPANY'
 
-    if is_email(pattern): return 'EMAIL'
-    if is_url(pattern):   return 'URL'
+        if is_email(pattern): return 'EMAIL'
+        if is_url(pattern):   return 'URL'
 
-    if pattern_cnt > 0 and pattern[:1] == 'K':
-        if is_address(pattern, median):         return 'ADDRESS'
-        if is_text(pattern, max_length, pattern_cnt): return 'Text'
+        if pattern_cnt > 0 and pattern[:1] == 'K':
+            if is_address(pattern, median):         return 'ADDRESS'
+            if is_text(pattern, max_length, pattern_cnt): return 'Text'
 
-    if pattern_cnt > 0:
-        flag_type = is_flag(pattern, pattern_cnt, median, min_string, max_string)
-        if flag_type: return flag_type
-        if is_sequence(min_string, max_string, unique_cnt): return 'SEQUENCE'
-        if unique_cnt == 1: return 'SINGLE VALUE'
-    return ''
+        if pattern_cnt > 0:
+            flag_type = is_flag(pattern, pattern_cnt, median, min_string, max_string)
+            if flag_type: return flag_type
+            if is_sequence(min_string, max_string, unique_cnt): return 'SEQUENCE'
+            if unique_cnt == 1: return 'SINGLE VALUE'
+        return ''
+    except Exception as e:
+        print(f"Error in Determine_Rule_Type: {e}")
+        return ''
 
 # ---------------- Env ----------------
 def build_env(row: pd.Series, valid_map: dict, *, rule_type_auto: str = "") -> dict:

@@ -161,6 +161,7 @@ def create_datatype_df(filepath, code_type, extension):
 # Data Type 분석
 # ======================================================================
 def DataType_Analysis(config, source_dir_list):
+
     """모든 코드 파일에 대한 DataType 분석"""
     print("\n=== DataType 분석 시작 ===")
 
@@ -168,30 +169,43 @@ def DataType_Analysis(config, source_dir_list):
     datatype_path = f"{base_path}/{config['files']['datatype']}.csv"
     datatype_df = read_csv_any(datatype_path)
     
-    # 기존 데이터가 있으면 그대로 반환
-    if not datatype_df.empty:
-        print(f"기존 DataType 파일을 찾았습니다. ({len(datatype_df)}개 레코드)")
-        return datatype_df
+    # # 기존 데이터가 있으면 그대로 반환
+    # if not datatype_df.empty:
+    #     print(f"기존 DataType 파일을 찾았습니다. ({len(datatype_df)}개 레코드)")
+    #     return datatype_df
     
-    print("⚠️ DataType 파일이 없습니다. 새로 생성합니다.")
+    # print("⚠️ DataType 파일이 없습니다. 새로 생성합니다.")
     
     # source_dir_list에서 파일 분석
     datatype_list = []
     for source_config in source_dir_list:
-        source_path = Path(source_config['path'])
+        # 'source' 또는 'path' 키 지원
+        source_key = 'source' if 'source' in source_config else 'path'
+        if source_key not in source_config:
+            print(f"⚠️ source_config에 'source' 또는 'path' 키가 없습니다: {source_config.keys()}")
+            continue
+            
+        base_path = Path(str(config["ROOT_PATH"]).rstrip("/\\"))
+        source_subpath = str(source_config[source_key]).lstrip("/\\")
+        source_path = base_path / source_subpath
+        
         if not source_path.exists():
             print(f"⚠️ 경로가 존재하지 않습니다: {source_path}")
             continue
-            
-        files = list(source_path.glob(f"*.{source_config['extension']}"))
+        
+        # extension 처리 (.csv, csv 모두 지원)
+        extension = source_config.get('extension', 'csv').lstrip('.')
+        file_pattern = f"*.{extension}"
+        files = list(source_path.glob(file_pattern))
+        
         if not files:
-            print(f"⚠️ {source_path}에 {source_config['extension']} 파일이 없습니다.")
+            print(f"⚠️ {source_path}에 {extension} 파일이 없습니다.")
             continue
             
-        print(f"\n {source_config['type']} 코드 분석 중... (총 {len(files)}개 파일)")
+        print(f"\n {source_config.get('type', 'Unknown')} 코드 분석 중... (총 {len(files)}개 파일)")
         for file in files:
             try:
-                datatype = create_datatype_df(file, source_config["type"], file.suffix)
+                datatype = create_datatype_df(file, source_config.get("type", ""), file.suffix)
                 if datatype:
                     datatype_list.extend(datatype)
             except Exception as e:
@@ -202,6 +216,14 @@ def DataType_Analysis(config, source_dir_list):
         return None
 
     result_df = pd.DataFrame(datatype_list)
+    
+    # 컬럼명 변환: CodeType -> MasterType, PD_DataType -> DataType
+    if not result_df.empty:
+        if 'CodeType' in result_df.columns:
+            result_df = result_df.rename(columns={'CodeType': 'MasterType'})
+        if 'PD_DataType' in result_df.columns:
+            result_df = result_df.rename(columns={'PD_DataType': 'DataType'})
+    
     print(f"DataType 분석 완료: {len(result_df)}개 레코드")
     return result_df
 

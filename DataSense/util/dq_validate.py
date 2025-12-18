@@ -23,8 +23,10 @@ DEFAULT_COUNTRY_ISO3 = r"5_Reference_Code/Source/Country_ISO3.csv"
 # DEFAULT_YMD_CSV_CANDIDATES = r"6_Validation_Code/Source/연월일.csv"
 # --- 추가: 연월일(YYYYMMDD/YYMMDD) 참조 파일 ---
 DEFAULT_YMD_CSV_CANDIDATES = (
-    r"6_Validation_Code/Source/연월일.csv",   # 1순위
-    r"5_Reference_Code/Source/연월일.csv",    # 2순위(대체 경로)
+    r"DataSense/6_Validation_Code/Source/연월일.csv",   # 1순위
+    r"6_Validation_Code/Source/연월일.csv",             # 2순위(대체 경로)
+    r"DataSense/5_Reference_Code/Source/연월일.csv",    # 3순위(대체 경로)
+    r"5_Reference_Code/Source/연월일.csv",              # 4순위(대체 경로)
 )
 
 # --- 추가: 전역 세트 ---
@@ -201,14 +203,14 @@ def init_ymd_sets(root_path: str | os.PathLike, *, verbose: bool = False) -> Non
 
     for rel in DEFAULT_YMD_CSV_CANDIDATES:
         path = os.path.normpath(os.path.join(root, rel))
-        if verbose:
-            print(f"[DEBUG] 탐색 중: {path} (exists={os.path.exists(path)})")
+        # if verbose:
+        #     print(f"[DEBUG] 탐색 중: {path} (exists={os.path.exists(path)})")
         if os.path.exists(path):
             y8, y6 = load_ymd_sets_from_csv(path)
             YMD8_SET, YYMMDD_SET = y8, y6
-            if verbose:
-                print(f"[INIT] 연월일 로드 성공: {path} / YYYYMMDD:{len(YMD8_SET)} / YYMMDD:{len(YYMMDD_SET)}")
-            break
+            # if verbose:
+            #     print(f"[INIT] 연월일 로드 성공: {path} / YYYYMMDD:{len(YMD8_SET)} / YYMMDD:{len(YYMMDD_SET)}")
+            # break
     else:
         YMD8_SET, YYMMDD_SET = set(), set()
         if verbose:
@@ -256,10 +258,10 @@ def init_reference_globals(root_path: str | os.PathLike, *, strict_columns: bool
     # ★ 추가: 연월일 세트 초기화
     init_ymd_sets(root_path, verbose=verbose)
 
-    if verbose:
-        print(f"[INIT] SIDO:{len(SIDO_SET)} / SIGUNGU:{len(SIGUNGU_SET)} "
-              f"/ KOR_NAME:{len(KOR_NAME_SET)} / ISO3:{len(COUNTRY_ISO3_SET)} "
-              f"/ YMD8:{len(YMD8_SET)} / YYMMDD:{len(YYMMDD_SET)}")
+    # if verbose:
+    #     print(f"[INIT] SIDO:{len(SIDO_SET)} / SIGUNGU:{len(SIGUNGU_SET)} "
+    #           f"/ KOR_NAME:{len(KOR_NAME_SET)} / ISO3:{len(COUNTRY_ISO3_SET)} "
+    #           f"/ YMD8:{len(YMD8_SET)} / YYMMDD:{len(YYMMDD_SET)}")
 # --------------------------- 유효성 함수 ---------------------------
 def validate_date(value) -> bool:
     """

@@ -413,6 +413,6 @@ def Display_ERD(
         except Exception as e:
             # st.error(f"Code Relationship Diagram 생성 중 오류 발생: {e}")
             st.info("Cloud 환경에서는 Diagram을 생성할 수 없습니다. Local 환경에서 실행해주세요. 샘플 이미지를 표시합니다.")
-            image = Image.open("DataSense/DS_Output/CRD_Sample.png")
-            st.image(image, caption="샘플 이미지를 표시합니다.", width=480)
+            image = Image.open("DataSense/DS_Output/CRD_Sample.png") # 파일명 대소문자 구분합니다. 
+            st.image(image, caption="샘플 이미지입니다.", width=480)
             return False

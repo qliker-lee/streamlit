@@ -1,9 +1,45 @@
+# -------------------------------------------------------------------
 
 import os
 import shutil
 import yaml
+import logging
+from os.path import basename
 from pathlib import Path
+from datetime import datetime
+import pandas as pd
 
+# ---------------------- 로깅 설정 ----------------------
+def setup_logger(app_name: str, debug_mode: bool = False) -> logging.Logger:
+    log_dir = Path('logs')
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / f"{app_name}_{datetime.now():%Y%m%d_%H%M%S}.log"
+    level = logging.DEBUG if debug_mode else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[logging.FileHandler(log_file, encoding='utf-8'), logging.StreamHandler()]
+    )
+    return logging.getLogger(__name__)
+
+# ---------------------- 파일 읽기 ----------------------
+def read_csv_any(path: str) -> pd.DataFrame:
+    """다양한 인코딩으로 CSV 파일 읽기"""
+    path = os.path.expanduser(os.path.expandvars(str(path)))
+    for enc in ("utf-8-sig", "utf-8", "cp949", "euc-kr"):
+        try:
+            return pd.read_csv(path, dtype=str, encoding=enc, low_memory=False)
+        except Exception:
+            continue
+    raise FileNotFoundError(path)
+
+def _clean_headers(df: pd.DataFrame) -> pd.DataFrame:
+    """헤더 정리"""
+    out = df.copy()
+    out.columns = [str(c).replace('\ufeff', '').strip() for c in out.columns]
+    return out
+
+#------------------------------------------------------------------
 # YAML 파일 로드 함수
 def Load_Yaml_File(config_path: str | None = None):
     """

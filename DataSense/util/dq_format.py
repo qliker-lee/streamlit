@@ -83,7 +83,14 @@ def Combine_Format(source_df, reference_df):
     """    source_df와 reference_df를 조합하여 반환.    """
     try:
         s_df = source_df.copy()
+
+        except_detail_data_types = ['Time', 'Timestamp', 'Date', 'DateTime', 'DATECHAR', 'TIME', 'TIMESTAMP', 
+            'DATE', 'DATETIME', 'YEAR', 'YEARMONTH', 'YYMMDD', 'LATITUDE', 'LONGITUDE', 'TEL', 'CELLPHONE', 'ADDRESS',
+            'Alpha_Flag', 'Num_Flag', 'YN_Flag', 'NUM_Flag', 'KOR_Flag', 'KOR_Name']
+
+        s_df = s_df[~s_df['DetailDataType'].isin(except_detail_data_types)].copy()
         r_df = reference_df.copy()
+        r_df = r_df[~r_df['DetailDataType'].isin(except_detail_data_types)].copy()
 
         r_df = r_df[['FilePath', 'FileName', 'MasterType', 'ColumnName', 'FormatCnt', 'Format', 'FormatMin', 'FormatMax', 
                      'FormatMedian', 'FormatValue', 'Format(%)', 'UniqueCnt']].copy().rename(columns={
@@ -161,7 +168,8 @@ def Combine_Format(source_df, reference_df):
         result_df['Match_Flag4'] = flag4.astype(int)
         result_df['Match_Flag5'] = flag5.astype(int)
         result_df['Match_Flag6'] = flag6.astype(int)
-        result_df['Match_Flag7'] = flag7.astype(int)
+        # result_df['Match_Flag7'] = flag7.astype(int)
+        result_df['Match_Flag7'] = 1
         result_df['Match_Flag8'] = flag8.astype(int)
         result_df['Final_Flag'] = (
             result_df['Match_Flag']  *

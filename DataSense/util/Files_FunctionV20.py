@@ -86,7 +86,7 @@ def set_page_config(yaml_file):
 
     st.sidebar.header(APP_NAME)
     st.sidebar.markdown("""
-        <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
+        <div style='background-color: #F0F8FF; padding: 10px; border-radius: 10px; margin: 10px 0;'>
         <p style='font-size: 20px; color: #333; line-height: 1.6;'>
             Data has <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> a value.</span><br>
             Data is<span style='font-size: 20px; color: #cc3300; font-weight: bold;'> an asset.</span><br>

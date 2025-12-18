@@ -50,6 +50,8 @@ else:
 FORMAT_MAX_VALUE   = 1000   # Format 검사 최대 길이 한계
 FORMAT_AVG_LENGTH  = 50     # 평균 길이 기준(문장형 텍스트 추정)
 vSamplingRows      = 10000
+MAX_PK_COMBINATION = 20     # PK를 구성하는 최대 컬럼 수 
+DEBUG_MODE         = True   # 실행시 False 
 YAML_PATH          = 'DataSense/util/DS_Master.yaml' # 'DataSense/util/DS_Diretory_Config.yaml' #
 CODEY_NAME_HINT    = re.compile(r"(zip|postal|우편|code|코드|id|식별|번호)$", re.IGNORECASE)
 _FLOAT_ZERO_RE = re.compile(r'^[+-]?\d+\.0+$')
@@ -512,6 +514,56 @@ def Read_Source_File(file_path, code_type, extension, sample_size=vSamplingRows,
         print(f"파일 읽기 오류: {str(e)}")
         return None, 0, None
 
+def find_unique_combo_sequential(df: pd.DataFrame, max_try_cols: int = 20) -> list:
+    """순차적으로 컬럼을 추가하며 유니크한 조합을 찾습니다."""
+    if df.empty:
+        return None  # [] 대신 None 반환 통일
+    
+    columns_to_check = df.columns.tolist()[:max_try_cols]
+    current_combo = []
+    
+    for column in columns_to_check:
+        current_combo.append(column)
+        
+        # 성능 최적화: 유니크 검사
+        if df.duplicated(subset=current_combo, keep=False).sum() == 0:
+            return current_combo
+            
+    return None # PK 조합을 찾지 못했음을 명확히 표시
+
+def discover_pk(df: pd.DataFrame, max_try_cols: int = 20) -> list:
+    """
+    Primary Key (PK)를 추론합니다.
+    Find_Unique_Combination과 동일한 인터페이스: 단일 DataFrame을 받아 PK 컬럼 리스트를 반환합니다.
+    
+    Args:
+        df: 분석할 DataFrame
+        max_try_cols: PK를 구성하는 최대 컬럼 수 (기본값: 20)
+    
+    Returns:
+        PK 컬럼 리스트 (없으면 빈 리스트)
+    """
+    try:
+        if df.empty:
+            return []
+        
+        # 1단계: 단일 필드가 유니크 값을 갖는지 확인
+        for col in df.columns:
+            # 해당 컬럼이 유니크한지 확인 (중복이 없는지)
+            if df[col].duplicated().sum() == 0:
+                return [col]
+        
+        # 2단계: 단일 필드 PK가 없으면 복합 PK 탐색
+        pk_combo = find_unique_combo_sequential(df, max_try_cols)
+        
+        if pk_combo:
+            return pk_combo
+        else:
+            return []
+    except Exception as e:
+        print(f"discover_pk 실패: {e}")
+        return []
+
 # ======================================================================
 # Per-file processing
 # ======================================================================
@@ -525,7 +577,8 @@ def Format_Process_File(file_info):
         if df is None:
             return [], None, [], []
 
-        unique_columns = Find_Unique_Combination(df)
+        # unique_columns = Find_Unique_Combination(df)
+        unique_columns = discover_pk(df)
 
         results, rules = [], []
         for column in df.columns:

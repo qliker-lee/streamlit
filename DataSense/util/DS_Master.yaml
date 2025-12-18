@@ -47,6 +47,7 @@ files:
   filecharacter: 'DataSense/DS_Output/FileCharacter'     # 문자형 통계 파일명
   fileformat: 'DataSense/DS_Output/FileFormat'     # 파일 형식 파일명
   codemapping: 'DataSense/DS_Output/CodeMapping'     # 코드 매핑 파일명
+  codemapping_relationship: 'DataSense/DS_Output/CodeMapping_Relationship'     # 코드 매핑 관계 파일명
   ruldatatype: 'DataSense/DS_Output/RuleDataType'     # 룰 데이터 타입 파일명
   fileformatmapping: 'DataSense/DS_Output/FileFormatMapping'     # 파일 형식 매핑 파일명
   filestats: 'DataSense/DS_Output/FileStats'       # 파일 통계 파일명
