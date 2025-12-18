@@ -1,21 +1,21 @@
 ﻿FilePath,FileName,ColumnName,MasterType,MasterColumn,CompareCount,MatchRate(%),MasterFile,ReferenceMasterType,MasterFilePath,CompareLength,SourceCount
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,주소,Master,ADDRESS,1471,100.0,Rule,Rule,Rule,,1471
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,영업사원관리일자,Master,DATECHAR,319,100.0,Rule,Rule,Rule,,319
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,계약시작일,Master,DATECHAR,1424,99.72,Rule,Rule,Rule,,1428
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,계약종료일,Master,DATECHAR,1474,100.0,Rule,Rule,Rule,,1474
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,최종변경일시,Master,TIME,1474,100.0,Rule,Rule,Rule,,1474
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,ETL일시,Master,TIME,1474,100.0,Rule,Rule,Rule,,1474
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약명,Master,KOR_NAME,9987,100.0,Rule,Rule,Rule,,9987
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,판매일자,Master,DATECHAR,9987,100.0,Rule,Rule,Rule,,9987
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,주소,Master,ADDRESS,6647,100.0,Rule,Rule,Rule,,6647
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,반품배송기본주소,Master,ADDRESS,6451,100.0,Rule,Rule,Rule,,6451
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약시작일자,Master,DATECHAR,9986,99.86,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약종료일자,Master,DATECHAR,7682,76.82,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,거래중지일자,Master,DATECHAR,504,100.0,Rule,Rule,Rule,,504
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,최종사원업데이트일시,Master,TIME,8817,100.0,Rule,Rule,Rule,,8817
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,최종수정일시,Master,TIME,7836,100.0,Rule,Rule,Rule,,7836
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Address,Master,ADDRESS,1471,100.0,Rule,Rule,Rule,,1471
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Management_Date,Master,DATECHAR,319,100.0,Rule,Rule,Rule,,319
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Start_Date,Master,DATECHAR,1424,99.72,Rule,Rule,Rule,,1428
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,End_Date,Master,DATECHAR,1474,100.0,Rule,Rule,Rule,,1474
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,Last_Date,Master,TIME,1474,100.0,Rule,Rule,Rule,,1474
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,ETLTime,Master,TIME,1474,100.0,Rule,Rule,Rule,,1474
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,CUSTOMER,Master,KOR_NAME,9987,100.0,Rule,Rule,Rule,,9987
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,CONTRACT_DATE,Master,DATECHAR,9987,100.0,Rule,Rule,Rule,,9987
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,ADDR,Master,ADDRESS,6647,100.0,Rule,Rule,Rule,,6647
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,RETURN_ADDR,Master,ADDRESS,6451,100.0,Rule,Rule,Rule,,6451
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,START_DATE,Master,DATECHAR,9986,99.86,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,END_DATE,Master,DATECHAR,7682,76.82,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,SUSPENSION_DATE,Master,DATECHAR,504,100.0,Rule,Rule,Rule,,504
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,UPDATE_DATE,Master,TIME,8817,100.0,Rule,Rule,Rule,,8817
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,최종수정일시,Master,TIME,7836,100.0,Rule,Rule,Rule,,7836
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,고객명,Master,KOR_NAME,9968,100.0,Rule,Rule,Rule,,9968
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,판매일,Master,DATECHAR,9968,100.0,Rule,Rule,Rule,,9968
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,조직계약종료일자,Master,DATECHAR,938,100.0,Rule,Rule,Rule,,938
@@ -24,54 +24,53 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZ
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,최수정일시,Master,TIME,3528,100.0,Rule,Rule,Rule,,3528
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,고객명,Master,KOR_NAME,46966,100.0,Rule,Rule,Rule,,46966
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,사업기본주소,Master,ADDRESS,46068,100.0,Rule,Rule,Rule,,46068
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,ETL일시,Master,TIME,3825,100.0,Rule,Rule,Rule,,3825
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,최종변경일시,Master,TIME,3825,100.0,Rule,Rule,Rule,,3825
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약종료일,Master,DATECHAR,3825,100.0,Rule,Rule,Rule,,3825
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,최초계약일,Master,DATECHAR,3825,100.0,Rule,Rule,Rule,,3825
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약등록일,Master,DATECHAR,3825,100.0,Rule,Rule,Rule,,3825
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약개시일,Master,DATECHAR,3825,100.0,Rule,Rule,Rule,,3825
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약종료일,Master,DATECHAR,3825,100.0,Rule,Rule,Rule,,3825
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,최종변경일시,Master,TIME,3825,100.0,Rule,Rule,Rule,,3825
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,ETL일시,Master,TIME,3825,100.0,Rule,Rule,Rule,,3825
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,전화번호,Master,TEL,31,96.88,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Email,Master,EMAIL,30,93.75,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,시도,Master,시도,32,100.0,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,YYYYMMDD,Master,DATECHAR,30,93.75,Rule,Rule,Rule,,32
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Year,Master,YEAR,31,96.88,Rule,Rule,Rule,,32
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,전화번호,Master,TEL,31,96.88,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Name2,Master,KOR_NAME,32,100.0,Rule,Rule,Rule,,32
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Cell Phone,Master,CELLPHONE,30,93.75,Rule,Rule,Rule,,32
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Year,Master,YEAR,31,96.88,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Addr,Master,ADDRESS,32,100.0,Rule,Rule,Rule,,32
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Address,Master,ADDRESS,32,100.0,Rule,Rule,Rule,,32
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Cell Phone,Master,CELLPHONE,27,84.38,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Tel,Master,TEL,30,93.75,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Country,Master,국가코드,32,100.0,Rule,Rule,Rule,,32
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Name,Master,KOR_NAME,32,100.0,Rule,Rule,Rule,,32
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Address,Master,ADDRESS,32,100.0,Rule,Rule,Rule,,32
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,Name,Master,KOR_NAME,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1.csv,test1.csv,City,Master,시도,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test1_sum2.csv,test1_sum2.csv,City,Master,시도,10,100.0,Rule,Rule,Rule,,10
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test3.csv,test3.csv,City,Master,시도,8,100.0,Rule,Rule,Rule,,8
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,적용일자,Master,DATECHAR,795,99.38,Rule,Rule,Rule,,800
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,last_update_dtm,Master,TIME,801,100.0,Rule,Rule,Rule,,801
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,etl_dtm,Master,TIME,801,100.0,Rule,Rule,Rule,,801
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,ETL일시,Master,TIME,2272,100.0,Rule,Rule,Rule,,2272
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,최종변경일시,Master,TIME,2272,100.0,Rule,Rule,Rule,,2272
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,최종수정일시,Master,TIME,158,100.0,Rule,Rule,Rule,,158
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,고객명,Master,KOR_NAME,2266,100.0,Rule,Rule,Rule,,2266
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,판매일,Master,DATECHAR,2266,100.0,Rule,Rule,Rule,,2266
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,고객명,Master,KOR_NAME,2266,100.0,Rule,Rule,Rule,,2266
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,계약기간종료일,Master,DATECHAR,41,100.0,Rule,Rule,Rule,,41
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,last_update_dtm,Master,TIME,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,etl_dtm,Master,TIME,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최초생성일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약개시일,Master,DATECHAR,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약종료일,Master,DATECHAR,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,최초생성일시,Master,TIME,410,100.0,Rule,Rule,Rule,,410
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,최종변경일시,Master,TIME,410,100.0,Rule,Rule,Rule,,410
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,ETL일시,Master,TIME,410,100.0,Rule,Rule,Rule,,410
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최초생성일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,주소,Master,ADDRESS,1609,100.0,Rule,Rule,Rule,,1609
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,등록일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,최종사원업데이트일시,Master,TIME,9408,100.0,Rule,Rule,Rule,,9408
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최초생성일시,Master,TIME,9987,100.0,Rule,Rule,Rule,,9987
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최종변경일시,Master,TIME,9993,100.0,Rule,Rule,Rule,,9993
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,ETL일시,Master,TIME,412,100.0,Rule,Rule,Rule,,412
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최종변경일시,Master,TIME,412,100.0,Rule,Rule,Rule,,412
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최초생성일시,Master,TIME,412,100.0,Rule,Rule,Rule,,412
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,ETL일시,Master,TIME,412,100.0,Rule,Rule,Rule,,412
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효시작일자V,Master,DATECHAR,412,100.0,Rule,Rule,Rule,,412
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효종료일자V,Master,DATECHAR,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최초생성일시,Master,TIME,412,100.0,Rule,Rule,Rule,,412
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효시작일자V,Master,DATECHAR,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효종료일자V,Master,DATECHAR,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,최초생성일시,Master,TIME,420,100.0,Rule,Rule,Rule,,420
@@ -81,45 +80,40 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기�
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,최종변경일시,Master,TIME,7392,100.0,Rule,Rule,Rule,,7392
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,최종수정일시,Master,TIME,7361,100.0,Rule,Rule,Rule,,7361
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,판매일,Master,DATECHAR,7388,100.0,Rule,Rule,Rule,,7388
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,최종변경일시,Master,TIMESTAMP,104,100.0,Rule,Rule,Rule,,104
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,ETL일시,Master,TIMESTAMP,104,100.0,Rule,Rule,Rule,,104
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직계약시작일자,Master,DATECHAR,1225,100.0,Rule,Rule,Rule,,1225
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직계약종료일자,Master,DATECHAR,871,100.0,Rule,Rule,Rule,,871
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직폐쇄일자,Master,DATECHAR,916,99.89,Rule,Rule,Rule,,917
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,기본주소,Master,ADDRESS,1263,100.0,Rule,Rule,Rule,,1263
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,최수정일시,Master,TIME,2388,100.0,Rule,Rule,Rule,,2388
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,etl_dtm,Master,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,last_update_dtm,Master,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,dt_reg,Master,DATECHAR,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,사직일자,Master,DATECHAR,8656,100.0,Rule,Rule,Rule,,8656
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,주소,Master,ADDRESS,1763,100.0,Rule,Rule,Rule,,1763
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,사직일자,Master,DATECHAR,8656,100.0,Rule,Rule,Rule,,8656
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,주소,Master,ADDRESS,1763,100.0,Rule,Rule,Rule,,1763
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,판매중지일,Master,DATECHAR,53,100.0,Rule,Rule,Rule,,53
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,접수시주의사항,Master,URL,61,98.39,Rule,Rule,Rule,,62
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,최종변경일시,Master,TIME,152,100.0,Rule,Rule,Rule,,152
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,ETL일시,Master,TIME,152,100.0,Rule,Rule,Rule,,152
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,ETL일시,Master,TIME,298,100.0,Rule,Rule,Rule,,298
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,수정일시,Master,TIME,298,100.0,Rule,Rule,Rule,,298
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,최종업데이트일시,Master,TIME,298,100.0,Rule,Rule,Rule,,298
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,등록일자,Master,DATECHAR,9998,99.98,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,ETL일시,Master,TIME,298,100.0,Rule,Rule,Rule,,298
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,ETL일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,ETL일시,Master,TIME,358,100.0,Rule,Rule,Rule,,358
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,최종변경일시,Master,TIME,10000,100.0,Rule,Rule,Rule,,10000
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,등록일자,Master,DATECHAR,9998,99.98,Rule,Rule,Rule,,10000
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,전화번호,Master,TEL,350,97.77,Rule,Rule,Rule,,358
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,등록일자,Master,DATECHAR,358,100.0,Rule,Rule,Rule,,358
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,수정일자,Master,DATECHAR,282,100.0,Rule,Rule,Rule,,282
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,최종변경일시,Master,TIME,358,100.0,Rule,Rule,Rule,,358
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,최종변경일시,Master,TIME,146,100.0,Rule,Rule,Rule,,146
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,ETL일시,Master,TIME,358,100.0,Rule,Rule,Rule,,358
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,유효기간,Master,DATECHAR,146,100.0,Rule,Rule,Rule,,146
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,설립일자,Master,DATECHAR,145,100.0,Rule,Rule,Rule,,145
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,최종변경일시,Master,TIME,146,100.0,Rule,Rule,Rule,,146
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,ETL일시,Master,TIME,146,100.0,Rule,Rule,Rule,,146
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무중지일,Master,DATECHAR,146,100.0,Rule,Rule,Rule,,146
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,설립일자,Master,DATECHAR,145,100.0,Rule,Rule,Rule,,145
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무개시일,Master,DATECHAR,146,100.0,Rule,Rule,Rule,,146
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무중지일,Master,DATECHAR,146,100.0,Rule,Rule,Rule,,146
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,주소,Master,ADDRESS,134,100.0,Rule,Rule,Rule,,134
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무종료일,Master,DATECHAR,146,100.0,Rule,Rule,Rule,,146
-C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,ETL일시,Master,TIME,196,100.0,Rule,Rule,Rule,,196
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,최종변경일시,Master,TIME,196,100.0,Rule,Rule,Rule,,196
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,ETL일시,Master,TIME,196,100.0,Rule,Rule,Rule,,196
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직계약시작일자,Master,DATECHAR,1225,100.0,Rule,Rule,Rule,,1225
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직계약종료일자,Master,DATECHAR,871,100.0,Rule,Rule,Rule,,871
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직폐쇄일자,Master,DATECHAR,916,99.89,Rule,Rule,Rule,,917
@@ -129,184 +123,158 @@ C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,수정일시,Master,TIME,556,100.0,Rule,Rule,Rule,,556
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,최종업데이트일시,Master,TIME,557,100.0,Rule,Rule,Rule,,557
 C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,ETL일시,Master,TIME,557,100.0,Rule,Rule,Rule,,557
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,etl_dtm,Operation,TIMESTAMP,330,100.0,Rule,Rule,Rule,,330
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,ETL일시,Master,TIME,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,최종업데이트일시,Master,TIME,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,주소,Master,ADDRESS,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,수정일시,Master,TIME,12,100.0,Rule,Rule,Rule,,12
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,최초생성일시,Operation,TIME,410,100.0,Rule,Rule,Rule,,410
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,최종변경일시,Operation,TIME,410,100.0,Rule,Rule,Rule,,410
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정과목코드.csv,계정과목코드.csv,ETL일시,Operation,TIME,410,100.0,Rule,Rule,Rule,,410
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,최초생성일시,Operation,TIMESTAMP,330,100.0,Rule,Rule,Rule,,330
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,last_update_dtm,Operation,TIMESTAMP,330,100.0,Rule,Rule,Rule,,330
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/계정코드관리.csv,계정코드관리.csv,etl_dtm,Operation,TIMESTAMP,330,100.0,Rule,Rule,Rule,,330
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_계정.csv,관리회계BI_계정.csv,etl_dtm,Operation,TIMESTAMP,348,100.0,Rule,Rule,Rule,,348
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_계정.csv,관리회계BI_계정.csv,최초생성일시,Operation,TIMESTAMP,348,100.0,Rule,Rule,Rule,,348
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_계정.csv,관리회계BI_계정.csv,last_update_dtm,Operation,TIMESTAMP,348,100.0,Rule,Rule,Rule,,348
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_계정.csv,관리회계BI_계정.csv,etl_dtm,Operation,TIMESTAMP,348,100.0,Rule,Rule,Rule,,348
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_사업.csv,관리회계BI_사업.csv,etl_dtm,Operation,TIMESTAMP,207,100.0,Rule,Rule,Rule,,207
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_사업.csv,관리회계BI_사업.csv,최초생성일시,Operation,TIMESTAMP,207,100.0,Rule,Rule,Rule,,207
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_사업.csv,관리회계BI_사업.csv,last_update_dtm,Operation,TIMESTAMP,207,100.0,Rule,Rule,Rule,,207
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_사업.csv,관리회계BI_사업.csv,etl_dtm,Operation,TIMESTAMP,207,100.0,Rule,Rule,Rule,,207
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_조직.csv,관리회계BI_조직.csv,etl_dtm,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_조직.csv,관리회계BI_조직.csv,최초생성일시,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계BI_조직.csv,관리회계BI_조직.csv,last_update_dtm,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹.csv,관리회계_계정그룹.csv,ETL일시,Operation,TIMESTAMP,3,100.0,Rule,Rule,Rule,,3
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹.csv,관리회계_계정그룹.csv,최초생성일시,Operation,TIMESTAMP,3,100.0,Rule,Rule,Rule,,3
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹.csv,관리회계_계정그룹.csv,최종변경일시,Operation,TIMESTAMP,3,100.0,Rule,Rule,Rule,,3
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹.csv,관리회계_계정그룹.csv,ETL일시,Operation,TIMESTAMP,3,100.0,Rule,Rule,Rule,,3
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,최초생성일시,Operation,TIMESTAMP,93,100.0,Rule,Rule,Rule,,93
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,최종변경일시,Operation,TIMESTAMP,93,100.0,Rule,Rule,Rule,,93
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_계정그룹상세.csv,관리회계_계정그룹상세.csv,ETL일시,Operation,TIMESTAMP,93,100.0,Rule,Rule,Rule,,93
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최종변경일시,Operation,TIMESTAMP,87538,100.0,Rule,Rule,Rule,,87538
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최초생성일시,Operation,TIMESTAMP,87485,100.0,Rule,Rule,Rule,,87485
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_고객.csv,관리회계_고객.csv,ETL일시,Operation,TIMESTAMP,87623,100.0,Rule,Rule,Rule,,87623
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,최초생성일시,Operation,TIMESTAMP,54,100.0,Rule,Rule,Rule,,54
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,최종변경일시,Operation,TIMESTAMP,58,100.0,Rule,Rule,Rule,,58
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_공통코드.csv,관리회계_공통코드.csv,ETL일시,Operation,TIMESTAMP,114,100.0,Rule,Rule,Rule,,114
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,최초생성일시,Operation,TIMESTAMP,13,100.0,Rule,Rule,Rule,,13
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,최종변경일시,Operation,TIMESTAMP,13,100.0,Rule,Rule,Rule,,13
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,ETL일시,Operation,TIMESTAMP,26,100.0,Rule,Rule,Rule,,26
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,ETL일시,Operation,TIME,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최종변경일시,Operation,TIME,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최초생성일시,Operation,TIME,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효종료일자V,Operation,DATECHAR,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효시작일자V,Operation,DATECHAR,412,100.0,Rule,Rule,Rule,,412
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효시작일자V,Operation,DATECHAR,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효종료일자V,Operation,DATECHAR,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,최초생성일시,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,최종변경일시,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직.csv,관리회계_조직.csv,ETL일시,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,ETL일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,최종변경일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,최초생성일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,유효종료일자V,Operation,DATECHAR,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_분류공통코드.csv,관리회계_분류공통코드.csv,최초생성일시,Operation,TIMESTAMP,13,100.0,Rule,Rule,Rule,,13
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,유효시작일자V,Operation,DATECHAR,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,유효종료일자V,Operation,DATECHAR,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,최초생성일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,최종변경일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직_test.csv,관리회계_조직_test.csv,ETL일시,Operation,TIME,8,100.0,Rule,Rule,Rule,,8
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹.csv,관리회계_조직그룹.csv,ETL일시,Operation,TIMESTAMP,10,100.0,Rule,Rule,Rule,,10
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹.csv,관리회계_조직그룹.csv,최초생성일시,Operation,TIMESTAMP,10,100.0,Rule,Rule,Rule,,10
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹.csv,관리회계_조직그룹.csv,최종변경일시,Operation,TIMESTAMP,10,100.0,Rule,Rule,Rule,,10
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹.csv,관리회계_조직그룹.csv,ETL일시,Operation,TIMESTAMP,10,100.0,Rule,Rule,Rule,,10
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹상세.csv,관리회계_조직그룹상세.csv,최초생성일시,Operation,TIMESTAMP,349,100.0,Rule,Rule,Rule,,349
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹상세.csv,관리회계_조직그룹상세.csv,최종변경일시,Operation,TIMESTAMP,349,100.0,Rule,Rule,Rule,,349
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹상세.csv,관리회계_조직그룹상세.csv,ETL일시,Operation,TIMESTAMP,349,100.0,Rule,Rule,Rule,,349
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계계정.csv,관리회계계정.csv,ETL일시,Operation,TIMESTAMP,410,100.0,Rule,Rule,Rule,,410
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹상세.csv,관리회계_조직그룹상세.csv,최종변경일시,Operation,TIMESTAMP,349,100.0,Rule,Rule,Rule,,349
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계_조직그룹상세.csv,관리회계_조직그룹상세.csv,최초생성일시,Operation,TIMESTAMP,349,100.0,Rule,Rule,Rule,,349
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계계정.csv,관리회계계정.csv,최초생성일시,Operation,TIMESTAMP,410,100.0,Rule,Rule,Rule,,410
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계계정.csv,관리회계계정.csv,최종변경일시,Operation,TIMESTAMP,410,100.0,Rule,Rule,Rule,,410
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/관리회계계정.csv,관리회계계정.csv,ETL일시,Operation,TIMESTAMP,410,100.0,Rule,Rule,Rule,,410
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/법인정보.csv,법인정보.csv,최초생성일시,Operation,TIMESTAMP,21844,100.0,Rule,Rule,Rule,,21844
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/법인정보.csv,법인정보.csv,최종변경일시,Operation,TIMESTAMP,21844,100.0,Rule,Rule,Rule,,21844
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/법인정보.csv,법인정보.csv,ETL일시,Operation,TIMESTAMP,21844,100.0,Rule,Rule,Rule,,21844
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업자등록번호정보.csv,사업자등록번호정보.csv,생성일시,Operation,TIMESTAMP,76222,100.0,Rule,Rule,Rule,,76222
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업자등록번호정보.csv,사업자등록번호정보.csv,last_update_dtm,Operation,TIMESTAMP,76222,100.0,Rule,Rule,Rule,,76222
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업자등록번호정보.csv,사업자등록번호정보.csv,etl_dtm,Operation,TIMESTAMP,76222,100.0,Rule,Rule,Rule,,76222
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업코드관리.csv,사업코드관리.csv,last_update_dtm,Operation,TIMESTAMP,346,100.0,Rule,Rule,Rule,,346
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업자등록번호정보.csv,사업자등록번호정보.csv,생성일시,Operation,TIMESTAMP,76222,100.0,Rule,Rule,Rule,,76222
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업코드관리.csv,사업코드관리.csv,최초생성일시,Operation,TIMESTAMP,346,100.0,Rule,Rule,Rule,,346
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업코드관리.csv,사업코드관리.csv,last_update_dtm,Operation,TIMESTAMP,346,100.0,Rule,Rule,Rule,,346
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사업코드관리.csv,사업코드관리.csv,etl_dtm,Operation,TIMESTAMP,346,100.0,Rule,Rule,Rule,,346
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,어음입금표발행제한일,Operation,DATECHAR,13,100.0,Rule,Rule,Rule,,13
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,사용자계정잠금일자,Operation,DATECHAR,720,100.0,Rule,Rule,Rule,,720
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,비매출세금계산서발급제한일,Operation,DATECHAR,234,100.0,Rule,Rule,Rule,,234
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,최종변경일시,Operation,TIMESTAMP,7287,100.0,Rule,Rule,Rule,,7287
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,ETL일시,Operation,TIMESTAMP,7287,100.0,Rule,Rule,Rule,,7287
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,최종변경일시,Operation,TIMESTAMP,7287,100.0,Rule,Rule,Rule,,7287
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,HR시스템소속변경일자,Operation,DATECHAR,1063,100.0,Rule,Rule,Rule,,1063
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,사용자계정잠금일자,Operation,DATECHAR,720,100.0,Rule,Rule,Rule,,720
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,어음입금표발행제한일,Operation,DATECHAR,13,100.0,Rule,Rule,Rule,,13
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,비밀번호변경일,Operation,DATECHAR,1823,100.0,Rule,Rule,Rule,,1823
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,폐기일자,Operation,DATECHAR,6164,100.0,Rule,Rule,Rule,,6164
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,EMAIL,Operation,EMAIL,3900,98.93,Rule,Rule,Rule,,3942
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,수정일자,Operation,DATECHAR,2924,100.0,Rule,Rule,Rule,,2924
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,사직일자,Operation,DATECHAR,5211,100.0,Rule,Rule,Rule,,5211
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,입사일자,Operation,DATECHAR,7260,99.97,Rule,Rule,Rule,,7262
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,등록일자,Operation,DATECHAR,7287,100.0,Rule,Rule,Rule,,7287
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,EMAIL,Operation,EMAIL,3900,98.93,Rule,Rule,Rule,,3942
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,폐기일자,Operation,DATECHAR,6164,100.0,Rule,Rule,Rule,,6164
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사용자.csv,사용자.csv,사원번호,Operation,TEL,4738,65.02,Rule,Rule,Rule,,7287
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,ETL일시,Operation,TIMESTAMP,132328,100.0,Rule,Rule,Rule,,132328
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,최종변경일시,Operation,TIMESTAMP,132328,100.0,Rule,Rule,Rule,,132328
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,휴면일자,Operation,DATECHAR,730,100.0,Rule,Rule,Rule,,730
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,사원주소1(동이상),Operation,ADDRESS,23401,100.0,Rule,Rule,Rule,,23401
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,사직일자,Operation,DATECHAR,114550,100.0,Rule,Rule,Rule,,114551
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,판매중지일,Operation,DATECHAR,53,100.0,Rule,Rule,Rule,,53
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,접수시주의사항,Operation,URL,61,98.39,Rule,Rule,Rule,,62
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,사원주소1(동이상),Operation,ADDRESS,23401,100.0,Rule,Rule,Rule,,23401
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,휴면일자,Operation,DATECHAR,730,100.0,Rule,Rule,Rule,,730
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,최종변경일시,Operation,TIMESTAMP,132328,100.0,Rule,Rule,Rule,,132328
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/사원기본.csv,사원기본.csv,ETL일시,Operation,TIMESTAMP,132328,100.0,Rule,Rule,Rule,,132328
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,최종변경일시,Operation,TIME,152,100.0,Rule,Rule,Rule,,152
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,ETL일시,Operation,TIME,152,100.0,Rule,Rule,Rule,,152
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,판매중지일,Operation,DATECHAR,53,100.0,Rule,Rule,Rule,,53
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/상품코드.csv,상품코드.csv,접수시주의사항,Operation,URL,61,98.39,Rule,Rule,Rule,,62
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/선박.csv,선박.csv,최종변경일시,Operation,TIME,25918,100.0,Rule,Rule,Rule,,25918
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/선박.csv,선박.csv,ETL일시,Operation,TIME,25918,100.0,Rule,Rule,Rule,,25918
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/선석.csv,선석.csv,ETL일시,Operation,TIMESTAMP,978,100.0,Rule,Rule,Rule,,978
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/선석.csv,선석.csv,최종변경일시,Operation,TIMESTAMP,978,100.0,Rule,Rule,Rule,,978
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/선석.csv,선석.csv,ETL일시,Operation,TIMESTAMP,978,100.0,Rule,Rule,Rule,,978
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/원가인명정보.csv,원가인명정보.csv,직원명,Operation,KOR_NAME,63121,100.0,Rule,Rule,Rule,,63121
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/원가인명정보.csv,원가인명정보.csv,최초생성일시,Operation,TIMESTAMP,63107,100.0,Rule,Rule,Rule,,63107
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/원가인명정보.csv,원가인명정보.csv,최종변경일시,Operation,TIMESTAMP,63121,100.0,Rule,Rule,Rule,,63121
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/원가인명정보.csv,원가인명정보.csv,ETL일시,Operation,TIMESTAMP,67463,100.0,Rule,Rule,Rule,,67463
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/작업코드.csv,작업코드.csv,최종변경일시,Operation,TIMESTAMP,79,100.0,Rule,Rule,Rule,,79
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/작업코드.csv,작업코드.csv,ETL일시,Operation,TIMESTAMP,79,100.0,Rule,Rule,Rule,,79
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/조직코드관리.csv,조직코드관리.csv,last_update_dtm,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/조직코드관리.csv,조직코드관리.csv,etl_dtm,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/조직코드관리.csv,조직코드관리.csv,최초생성일시,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배BI_조직.csv,택배BI_조직.csv,최종변경일시,Operation,TIMESTAMP,2631,100.0,Rule,Rule,Rule,,2631
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/조직코드관리.csv,조직코드관리.csv,last_update_dtm,Operation,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배BI_조직.csv,택배BI_조직.csv,ETL일시,Operation,TIMESTAMP,2631,100.0,Rule,Rule,Rule,,2631
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,사업자등록주소1,Operation,ADDRESS,80682,100.0,Rule,Rule,Rule,,80682
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배BI_조직.csv,택배BI_조직.csv,최종변경일시,Operation,TIMESTAMP,2631,100.0,Rule,Rule,Rule,,2631
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,한글고객명,Operation,KOR_NAME,225962,100.0,Rule,Rule,Rule,,225962
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,ETL일시,Operation,TIMESTAMP,226684,100.0,Rule,Rule,Rule,,226684
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,최종변경일시,Operation,TIMESTAMP,226684,100.0,Rule,Rule,Rule,,226684
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,그룹신용번호,Operation,TEL,1548,54.66,Rule,Rule,Rule,,2832
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,집하지한글주소1,Operation,ADDRESS,146088,100.0,Rule,Rule,Rule,,146088
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,고객청구지주소1,Operation,ADDRESS,28969,100.0,Rule,Rule,Rule,,28969
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,변경적용일자,Operation,DATECHAR,104955,100.0,Rule,Rule,Rule,,104955
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,그룹신용번호,Operation,TEL,1548,54.66,Rule,Rule,Rule,,2832
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,사업자등록주소1,Operation,ADDRESS,80682,100.0,Rule,Rule,Rule,,80682
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,UPDATE일자,Operation,DATECHAR,173646,100.0,Rule,Rule,Rule,,173646
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,한글고객명,Operation,KOR_NAME,225962,100.0,Rule,Rule,Rule,,225962
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,개발수수료적용일,Operation,DATECHAR,8640,93.24,Rule,Rule,Rule,,9266
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,최종수정일시,Operation,TIMESTAMP,176704,100.0,Rule,Rule,Rule,,176704
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,등록일시,Operation,TIMESTAMP,136709,100.0,Rule,Rule,Rule,,136709
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,판매일,Operation,DATECHAR,225896,100.0,Rule,Rule,Rule,,225896
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,작업연장일자,Operation,DATECHAR,74,100.0,Rule,Rule,Rule,,74
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,최종수정일시,Operation,TIMESTAMP,176704,100.0,Rule,Rule,Rule,,176704
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,개발수수료적용일,Operation,DATECHAR,8640,93.24,Rule,Rule,Rule,,9266
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_고객.csv,택배_고객.csv,등록일시,Operation,TIMESTAMP,136709,100.0,Rule,Rule,Rule,,136709
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,last_update_dtm,Operation,TIMESTAMP,3836,100.0,Rule,Rule,Rule,,3836
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,조직계약종료일자,Operation,DATECHAR,938,100.0,Rule,Rule,Rule,,938
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,조직폐쇄일자,Operation,DATECHAR,1067,99.91,Rule,Rule,Rule,,1068
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,기본주소,Operation,ADDRESS,1980,100.0,Rule,Rule,Rule,,1980
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,등록일시,Operation,TIMESTAMP,110,100.0,Rule,Rule,Rule,,110
-C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,사원최종업데이트일시,Operation,TIMESTAMP,3528,100.0,Rule,Rule,Rule,,3528
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,create_dtm,Operation,TIMESTAMP,3836,100.0,Rule,Rule,Rule,,3836
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,etl_dtm,Operation,TIMESTAMP,3836,100.0,Rule,Rule,Rule,,3836
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,last_update_dtm,Operation,TIMESTAMP,3836,100.0,Rule,Rule,Rule,,3836
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,사원최종업데이트일시,Operation,TIMESTAMP,3528,100.0,Rule,Rule,Rule,,3528
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,등록일시,Operation,TIMESTAMP,110,100.0,Rule,Rule,Rule,,110
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,기본주소,Operation,ADDRESS,1980,100.0,Rule,Rule,Rule,,1980
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,조직폐쇄일자,Operation,DATECHAR,1067,99.91,Rule,Rule,Rule,,1068
+C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배_조직도.csv,택배_조직도.csv,조직계약종료일자,Operation,DATECHAR,938,100.0,Rule,Rule,Rule,,938
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계조직매핑.csv,택배관리회계조직매핑.csv,최종변경일시,Operation,TIME,48,100.0,Rule,Rule,Rule,,48
 C:/projects/myproject/QDQM/DataSense/2_Operation_Code/Source/택배관리회계조직매핑.csv,택배관리회계조직매핑.csv,ETL일시,Operation,TIME,48,100.0,Rule,Rule,Rule,,48
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,etl_dtm,Attribute,TIMESTAMP,492,100.0,Rule,Rule,Rule,,492
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,승인일시,Attribute,TIMESTAMP,492,100.0,Rule,Rule,Rule,,492
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,last_update_dtm,Attribute,TIMESTAMP,492,100.0,Rule,Rule,Rule,,492
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,최초요청일시,Attribute,TIMESTAMP,492,100.0,Rule,Rule,Rule,,492
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_도메인.csv,WAM_도메인.csv,요청일시,Attribute,TIMESTAMP,492,100.0,Rule,Rule,Rule,,492
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,etl_dtm,Attribute,TIMESTAMP,5321,100.0,Rule,Rule,Rule,,5321
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,last_update_dtm,Attribute,TIMESTAMP,5321,100.0,Rule,Rule,Rule,,5321
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,최초요청일시,Attribute,TIMESTAMP,5321,100.0,Rule,Rule,Rule,,5321
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,요청일시,Attribute,TIMESTAMP,5321,100.0,Rule,Rule,Rule,,5321
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_코드값.csv,WAM_코드값.csv,승인일시,Attribute,TIMESTAMP,5321,100.0,Rule,Rule,Rule,,5321
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,최초요청일시,Attribute,TIMESTAMP,3776,100.0,Rule,Rule,Rule,,3776
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,요청일시,Attribute,TIMESTAMP,3776,100.0,Rule,Rule,Rule,,3776
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,승인일시,Attribute,TIMESTAMP,3776,100.0,Rule,Rule,Rule,,3776
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,최종변경일시,Attribute,TIMESTAMP,3776,100.0,Rule,Rule,Rule,,3776
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준단어.csv,WAM_표준단어.csv,ETL일시,Attribute,TIMESTAMP,3776,100.0,Rule,Rule,Rule,,3776
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,ETL일시,Attribute,TIMESTAMP,44,100.0,Rule,Rule,Rule,,44
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,최종변경일시,Attribute,TIMESTAMP,44,100.0,Rule,Rule,Rule,,44
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,요청일시,Attribute,TIMESTAMP,44,100.0,Rule,Rule,Rule,,44
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,최초요청일시,Attribute,TIMESTAMP,44,100.0,Rule,Rule,Rule,,44
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/WAM_표준항목.csv,WAM_표준항목.csv,승인일시,Attribute,TIMESTAMP,44,100.0,Rule,Rule,Rule,,44
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,etl_dtm,Attribute,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,dt_reg,Attribute,DATECHAR,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,dt_adjt,Attribute,DATECHAR,1,100.0,Rule,Rule,Rule,,1
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,last_update_dtm,Attribute,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/고객유형.csv,고객유형.csv,ETL일시,Attribute,TIMESTAMP,5,100.0,Rule,Rule,Rule,,5
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/결제조건.csv,결제조건.csv,etl_dtm,Attribute,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/고객유형.csv,고객유형.csv,등록일시,Attribute,TIMESTAMP,5,100.0,Rule,Rule,Rule,,5
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/고객유형.csv,고객유형.csv,최종변경일시,Attribute,TIMESTAMP,5,100.0,Rule,Rule,Rule,,5
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/고객유형.csv,고객유형.csv,ETL일시,Attribute,TIMESTAMP,5,100.0,Rule,Rule,Rule,,5
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/기업설립형태.csv,기업설립형태.csv,dt_reg,Attribute,DATECHAR,11,100.0,Rule,Rule,Rule,,11
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/기업설립형태.csv,기업설립형태.csv,last_update_dtm,Attribute,TIMESTAMP,11,100.0,Rule,Rule,Rule,,11
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/기업설립형태.csv,기업설립형태.csv,etl_dtm,Attribute,TIMESTAMP,11,100.0,Rule,Rule,Rule,,11
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/미배송사유코드.csv,미배송사유코드.csv,최종변경일시,Attribute,TIMESTAMP,104,100.0,Rule,Rule,Rule,,104
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/미배송사유코드.csv,미배송사유코드.csv,ETL일시,Attribute,TIMESTAMP,104,100.0,Rule,Rule,Rule,,104
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/미배송사유코드.csv,미배송사유코드.csv,최종변경일시,Attribute,TIMESTAMP,104,100.0,Rule,Rule,Rule,,104
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/불량등급.csv,불량등급.csv,dt_reg,Attribute,DATECHAR,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/불량등급.csv,불량등급.csv,last_update_dtm,Attribute,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/불량등급.csv,불량등급.csv,etl_dtm,Attribute,TIMESTAMP,19,100.0,Rule,Rule,Rule,,19
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,ETL일시,Attribute,TIMESTAMP,357,100.0,Rule,Rule,Rule,,357
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,최종변경일시,Attribute,TIMESTAMP,357,100.0,Rule,Rule,Rule,,357
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,등록일자,Attribute,DATECHAR,357,100.0,Rule,Rule,Rule,,357
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,수정일자,Attribute,DATECHAR,261,100.0,Rule,Rule,Rule,,261
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,폐기일자,Attribute,DATECHAR,91,100.0,Rule,Rule,Rule,,91
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용공여기간.csv,신용공여기간.csv,etl_dtm,Attribute,TIMESTAMP,43,100.0,Rule,Rule,Rule,,43
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,최종변경일시,Attribute,TIMESTAMP,357,100.0,Rule,Rule,Rule,,357
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/사업구분.csv,사업구분.csv,ETL일시,Attribute,TIMESTAMP,357,100.0,Rule,Rule,Rule,,357
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용공여기간.csv,신용공여기간.csv,dt_reg,Attribute,DATECHAR,43,100.0,Rule,Rule,Rule,,43
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용공여기간.csv,신용공여기간.csv,dt_adjt,Attribute,DATECHAR,19,100.0,Rule,Rule,Rule,,19
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용공여기간.csv,신용공여기간.csv,last_update_dtm,Attribute,TIMESTAMP,43,100.0,Rule,Rule,Rule,,43
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용등급.csv,신용등급.csv,etl_dtm,Attribute,TIMESTAMP,6,100.0,Rule,Rule,Rule,,6
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용등급.csv,신용등급.csv,last_update_dtm,Attribute,TIMESTAMP,6,100.0,Rule,Rule,Rule,,6
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용공여기간.csv,신용공여기간.csv,etl_dtm,Attribute,TIMESTAMP,43,100.0,Rule,Rule,Rule,,43
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용등급.csv,신용등급.csv,dt_reg,Attribute,DATECHAR,6,100.0,Rule,Rule,Rule,,6
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/작업코드.csv,작업코드.csv,최종변경일시,Attribute,TIMESTAMP,79,100.0,Rule,Rule,Rule,,79
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용등급.csv,신용등급.csv,last_update_dtm,Attribute,TIMESTAMP,6,100.0,Rule,Rule,Rule,,6
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/신용등급.csv,신용등급.csv,etl_dtm,Attribute,TIMESTAMP,6,100.0,Rule,Rule,Rule,,6
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/작업코드.csv,작업코드.csv,ETL일시,Attribute,TIMESTAMP,79,100.0,Rule,Rule,Rule,,79
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/작업코드.csv,작업코드.csv,최종변경일시,Attribute,TIMESTAMP,79,100.0,Rule,Rule,Rule,,79
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직_수입관리.csv,조직_수입관리.csv,OIO_CHG_MDH,Attribute,TIMESTAMP,61,100.0,Rule,Rule,Rule,,61
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직_수입관리.csv,조직_수입관리.csv,OIO_END_YMD,Attribute,DATECHAR,60,100.0,Rule,Rule,Rule,,60
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직_수입관리.csv,조직_수입관리.csv,최종변경일시,Attribute,TIMESTAMP,196,100.0,Rule,Rule,Rule,,196
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직_수입관리.csv,조직_수입관리.csv,ETL일시,Attribute,TIMESTAMP,196,100.0,Rule,Rule,Rule,,196
+C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직코드관리.csv,조직코드관리.csv,최초생성일시,Attribute,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직코드관리.csv,조직코드관리.csv,last_update_dtm,Attribute,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직코드관리.csv,조직코드관리.csv,etl_dtm,Attribute,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
-C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직코드관리.csv,조직코드관리.csv,최초생성일시,Attribute,TIMESTAMP,420,100.0,Rule,Rule,Rule,,420
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직터미널마스터.csv,조직터미널마스터.csv,등록일시,Attribute,TIMESTAMP,27,100.0,Rule,Rule,Rule,,27
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직터미널마스터.csv,조직터미널마스터.csv,최종사원업데이트일시,Attribute,TIMESTAMP,556,100.0,Rule,Rule,Rule,,556
 C:/projects/myproject/QDQM/DataSense/3_Attribute_Code/Source/조직터미널마스터.csv,조직터미널마스터.csv,생성일시,Attribute,TIMESTAMP,122,100.0,Rule,Rule,Rule,,122

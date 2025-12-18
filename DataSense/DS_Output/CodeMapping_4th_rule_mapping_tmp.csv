@@ -1,0 +1,210 @@
+﻿FilePath,FileName,ColumnName,MasterType,ValueCnt,Rule,MatchedScoreList,Matched(%)
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Sex,Master,32,성별구분; KOR_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,SexE,Master,32,성별구분_영문; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Country,Master,32,국가코드,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Tel,Master,32,TEL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Addr,Master,32,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Cell Phone,Master,32,CELLPHONE,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Address,Master,32,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Year,Master,32,YEAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Email,Master,32,EMAIL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,전화번호,Master,32,TEL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,YYYYMMDD,Master,32,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,시도,Master,32,시도,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,차량번호,Master,32,차량번호,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,결제조건코드,Master,19,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,폐기일자,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,yn_abd,Master,19,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,last_update_dtm,Master,19,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/결제조건.csv,결제조건.csv,etl_dtm,Master,19,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,적용일자,Master,800,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,업체명,Master,801,차량번호,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,last_update_dtm,Master,801,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/간선사업자.csv,간선사업자.csv,etl_dtm,Master,801,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,최초생성일시,Master,410,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,최종변경일시,Master,410,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,ETL일시,Master,410,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,업체구분,Master,1474,NUM_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,업종,Master,1437,업종,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,주소,Master,1471,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,업체관리구분,Master,1282,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,영업사원관리일자,Master,319,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,계약시작일,Master,1428,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,계약종료일,Master,1474,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,불량등급관리(C60),Master,1474,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,최종변경일시,Master,1474,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,ETL일시,Master,1474,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효시작일자V,Master,420,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,유효종료일자V,Master,420,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,최초생성일시,Master,420,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,최종변경일시,Master,420,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,ETL일시,Master,420,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효시작일자V,Master,412,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,유효종료일자V,Master,412,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최초생성일시,Master,412,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,최종변경일시,Master,412,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,ETL일시,Master,412,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,최종변경일시,Master,104,TIMESTAMP,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/미배송사유코드.csv,미배송사유코드.csv,ETL일시,Master,104,TIMESTAMP,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약형태,Master,3825,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약등록일,Master,3825,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,최초계약일,Master,3825,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약개시일,Master,3825,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,계약종료일,Master,3825,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,최종변경일시,Master,3825,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,ETL일시,Master,3825,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,조직계약시작일자,Master,2003,DATECHAR; TEL,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,조직계약종료일자,Master,938,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,조직폐쇄일자,Master,1068,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,기본주소,Master,1980,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/ORGNIZATION.csv,ORGNIZATION.csv,최수정일시,Master,3528,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,개인기업고객구분,Master,2272,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,사업구분,Master,2272,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,판매일,Master,2266,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,계약기간종료일,Master,41,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,최종수정일시,Master,158,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,최종변경일시,Master,2272,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,ETL일시,Master,2272,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,불량등급코드,Master,19,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,dt_reg,Master,19,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,dt_adjt,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,폐기일자,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,yn_abd,Master,19,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,last_update_dtm,Master,19,TIMESTAMP,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/불량등급.csv,불량등급.csv,etl_dtm,Master,19,TIMESTAMP,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,사업기본주소,Master,9824,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,사업구분,Master,152,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,판매중지일,Master,53,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,접수시주의사항,Master,62,URL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,수정자 사번,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,최종변경일시,Master,152,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,ETL일시,Master,152,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직계약시작일자,Master,1225,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직계약종료일자,Master,871,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,조직폐쇄일자,Master,917,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,기본주소,Master,1263,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/배송점.csv,배송점.csv,최수정일시,Master,2388,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,OIO_INC_ORG,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,최종변경일시,Master,196,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/지점코드.csv,지점코드.csv,ETL일시,Master,196,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,주소,Master,1609,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,거래중지여부,Master,2518,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,등록일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,최종사원업데이트일시,Master,9408,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,전화번호,Master,358,TEL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,등록일자,Master,358,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,수정일자,Master,282,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,최종변경일시,Master,358,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,ETL일시,Master,358,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,고객구분코드,Master,10000,01_FLAG; NUM_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최초생성일시,Master,9987,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,최종변경일시,Master,9993,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_고객.csv,관리회계_고객.csv,ETL일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,주소,Master,134,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,영업소등급,Master,146,NUM_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무개시일,Master,146,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무중지일,Master,146,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업무종료일,Master,146,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,설립일자,Master,145,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,유효기간,Master,146,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,구동분류기구분값,Master,95,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,반품송장권역ZONE,Master,122,NUM_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,최종변경일시,Master,146,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,ETL일시,Master,146,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,수정일시,Master,556,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,최종업데이트일시,Master,557,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,ETL일시,Master,557,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,사직일자,Master,8656,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,근무시작일자,Master,9870,DATECHAR; TEL,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,마감시각여부,Master,14,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,주소,Master,1763,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,화물운송종사자자격취득일,Master,1461,DATECHAR; TEL,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,차량번호,Master,1177,차량번호,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,최종변경일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,ETL일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,수정일시,Master,1,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,최종업데이트일시,Master,1,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/서브터미널.csv,서브터미널.csv,ETL일시,Master,1,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직계약시작일자,Master,1225,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직계약종료일자,Master,871,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,조직폐쇄일자,Master,917,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,기본주소,Master,1263,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/집하점.csv,집하점.csv,최수정일시,Master,2388,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,불량등급코드,Master,10000,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,신용등급코드,Master,10000,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,기업설립형태코드,Master,10000,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,결제조건코드,Master,10000,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,등록일자,Master,10000,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,최종변경일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,ETL일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,허브코드,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,터미널구분,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,허브명,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,허브영문명,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,우편번호,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,주소,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,X좌표,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,Y좌표,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,사업자등록번호,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,수정일시,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,등록사원번호,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,최종업데이트일시,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/허브터미널.csv,허브터미널.csv,ETL일시,Master,0,ALL_NULL,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약적용월,Master,10000,YYMMDD; YEARMONTH,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약개시일,Master,10000,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약종료일,Master,10000,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최초생성일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,ESB_STATUS,Master,10000,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,최종변경일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,ETL일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,개인기업고객구분,Master,9664,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,사업구분,Master,9979,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,판매일,Master,9968,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,계약기간종료일,Master,7735,DATECHAR; TEL,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,최종수정일시,Master,7836,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,최종변경일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,ETL일시,Master,10000,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,판매일자,Master,9987,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,주소,Master,6647,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,반품배송기본주소,Master,6451,ADDRESS,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약시작일자,Master,10000,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약종료일자,Master,10000,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,거래중지여부,Master,10000,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,거래중지일자,Master,504,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,수하인관리여부,Master,7871,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,체적이미지관리여부,Master,10000,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,우수계약여부,Master,10000,YN_FLAG; ALPHA_FLAG,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,최종사원업데이트일시,Master,8817,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,개인기업고객구분,Master,7392,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,사업구분,Master,7390,ALPHA_FLAG,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,판매일,Master,7388,DATECHAR,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,계약기간종료일,Master,7379,DATECHAR; TEL,1.0000; 1.0000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,최종수정일시,Master,7361,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,최종변경일시,Master,7392,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/기업고객.csv,기업고객.csv,ETL일시,Master,7392,TIME,1,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/사원마스터.csv,사원마스터.csv,정규비정규,Master,10000,NUM_FLAG; 01_FLAG,1.0000; 0.6667,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_사업.csv,관리회계_사업.csv,사업LEVEL코드,Master,313,NUM_FLAG; 01_FLAG,1.0000; 0.5000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/상품분류.csv,상품분류.csv,화물종류,Master,48,ALPHA_FLAG; YN_FLAG,1.0000; 0.5000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,계약구분,Master,146,NUM_FLAG; 01_FLAG,1.0000; 0.5000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,직영가맹여부,Master,146,NUM_FLAG; 01_FLAG,1.0000; 0.5000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,분류터미널구분,Master,146,NUM_FLAG; 01_FLAG,1.0000; 0.5000,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/관리회계_조직.csv,관리회계_조직.csv,조직LEVEL코드,Master,132,NUM_FLAG; 01_FLAG,1.0000; 0.3333,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리점소.csv,수입관리점소.csv,점소구분,Master,358,NUM_FLAG; 01_FLAG,1.0000; 0.3333,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/수입관리_고객.csv,수입관리_고객.csv,고객구분,Master,10000,NUM_FLAG; 01_FLAG,1.0000; 0.3333,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계약마스터.csv,계약마스터.csv,계약구분,Master,10000,ALPHA_FLAG; YN_FLAG,1.0000; 0.3333,100.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/COMPANY.csv,COMPANY.csv,업태,Master,1440,업태,0.9,90.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Name,Master,32,KOR_NAME,0.875,87.5
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,YearMonth,Master,32,YYMMDD; YEARMONTH,0.8333; 0.8333,83.33
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/계정과목코드.csv,계정과목코드.csv,계정과목명,Master,410,계정과목,0.7,70.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/개인고객.csv,개인고객.csv,고객명,Master,2266,KOR_NAME,0.7,70.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,고객명,Master,10000,KOR_NAME,0.7,70.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/test.csv,test.csv,Name2,Master,32,KOR_NAME,0.6,60.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,업태,Master,2297,업태,0.6,60.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,업태,Master,3824,업태,0.6,60.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/터미널마스터.csv,터미널마스터.csv,터미널명,Master,557,시도,0.5,50.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CONTRACT.csv,CONTRACT.csv,계약명,Master,9987,KOR_NAME,0.5,50.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/PRM계약.csv,PRM계약.csv,업태,Master,3825,업태,0.4,40.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/OneClick고객.csv,OneClick고객.csv,업종명,Master,9998,업태,0.4,40.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/CUSTOMER.csv,CUSTOMER.csv,고객명,Master,9968,KOR_NAME,0.4,40.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/고객마스터.csv,고객마스터.csv,업종명,Master,9397,업종,0.3,30.0
+C:/projects/myproject/QDQM/DataSense/1_Master_Code/Source/영업소.csv,영업소.csv,업태,Master,144,업태,0.3,30.0
