@@ -514,99 +514,103 @@ def get_related_tables(selected_tables: list, it_df: pd.DataFrame):
 
 def generate_erd_graph(selected_tables: list, all_tables: set, pk_map: dict, it_df: pd.DataFrame):
     """Graphviz 객체를 생성하고 ERD 관계를 추가합니다."""
+    try:
 
-    table_count = len(all_tables)
-    graph_size = max(20, min(20 + table_count * 3, 150))
-    
-    dot = graphviz.Digraph(comment='Dynamic ERD', engine='dot', graph_attr={
-        'rankdir': 'LR', 
-        'splines': 'curved', 
-        'concentrate': 'true',
-        'nodesep': '0.25',
-        'ranksep': '1',
-        'size': f'{graph_size},{graph_size}'
-    })
-    dot.attr('node', shape='none', fontname='Malgun Gothic', fontsize='10')
-    dot.attr('edge', fontname='Malgun Gothic', fontsize='10', penwidth='1.0')
-    
-    # ERD와 동일한 로직으로 관계 추출
-    relationships_list = _extract_relationships_from_erd_logic(selected_tables, all_tables, it_df)
-    # 연결된 컬럼 수집
-    connected_columns = {}
-    for from_file, from_col, to_file, to_col in relationships_list:
-        if from_file not in connected_columns:
-            connected_columns[from_file] = set()
-        connected_columns[from_file].add(from_col)
+        table_count = len(all_tables)
+        graph_size = max(20, min(20 + table_count * 3, 150))
         
-        if to_file not in connected_columns:
-            connected_columns[to_file] = set()
-        connected_columns[to_file].add(to_col)
-    
-    # 2. 각 테이블별로 표시할 컬럼 결정
-    display_columns = {}
-    for table_name in all_tables:
-        pk_cols_ordered = pk_map.get(table_name, [])
-        pk_cols_set = set(pk_cols_ordered)
-        connected_cols = connected_columns.get(table_name, set())
-        pk_to_display = [col for col in pk_cols_ordered if col in connected_cols]
-        other_to_display = sorted(list(connected_cols - pk_cols_set))
-        display_columns[table_name] = pk_to_display + other_to_display
+        dot = graphviz.Digraph(comment='Dynamic ERD', engine='dot', graph_attr={
+            'rankdir': 'LR', 
+            'splines': 'curved', 
+            'concentrate': 'true',
+            'nodesep': '0.25',
+            'ranksep': '1',
+            'size': f'{graph_size},{graph_size}'
+        })
+        dot.attr('node', shape='none', fontname='Malgun Gothic', fontsize='10')
+        dot.attr('edge', fontname='Malgun Gothic', fontsize='10', penwidth='1.0')
+        
+        # ERD와 동일한 로직으로 관계 추출
+        relationships_list = _extract_relationships_from_erd_logic(selected_tables, all_tables, it_df)
+        # 연결된 컬럼 수집
+        connected_columns = {}
+        for from_file, from_col, to_file, to_col in relationships_list:
+            if from_file not in connected_columns:
+                connected_columns[from_file] = set()
+            connected_columns[from_file].add(from_col)
+            
+            if to_file not in connected_columns:
+                connected_columns[to_file] = set()
+            connected_columns[to_file].add(to_col)
+        
+        # 2. 각 테이블별로 표시할 컬럼 결정
+        display_columns = {}
+        for table_name in all_tables:
+            pk_cols_ordered = pk_map.get(table_name, [])
+            pk_cols_set = set(pk_cols_ordered)
+            connected_cols = connected_columns.get(table_name, set())
+            pk_to_display = [col for col in pk_cols_ordered if col in connected_cols]
+            other_to_display = sorted(list(connected_cols - pk_cols_set))
+            display_columns[table_name] = pk_to_display + other_to_display
 
-    # 3. 테이블 노드 생성
-    def escape_html(text):
-        return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    
-    for table_name in sorted(all_tables):
-        pk_cols_ordered = pk_map.get(table_name, [])
-        pk_cols_set = set(pk_cols_ordered)
-        table_cols = display_columns.get(table_name, [])
+        # 3. 테이블 노드 생성
+        def escape_html(text):
+            return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
         
-        is_selected = table_name in selected_tables
-        title_bgcolor = '#FFA500' if is_selected else '#FFF8DC'
-        
-        table_label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">'
-        table_label += f'<TR><TD COLSPAN="2" PORT="title" BGCOLOR="{title_bgcolor}"><B>{escape_html(table_name)}</B></TD></TR>'
-        
-        pk_to_display = [col for col in table_cols if col in pk_cols_set]
-        other_to_display = [col for col in table_cols if col not in pk_cols_set]
-        
-        for col in pk_to_display:
-            safe_col = escape_html(col)
-            table_label += f'<TR><TD ALIGN="LEFT" BGCOLOR="#E6E6FA" PORT="{safe_col}"><B>🔑 {safe_col}</B></TD></TR>'
-        
-        for col in other_to_display:
-            safe_col = escape_html(col)
-            table_label += f'<TR><TD ALIGN="LEFT" PORT="{safe_col}"><B>🔗 {safe_col}</B></TD></TR>'
-        
-        table_label += '</TABLE>>'
-        dot.node(table_name, table_label, shape='none')
+        for table_name in sorted(all_tables):
+            pk_cols_ordered = pk_map.get(table_name, [])
+            pk_cols_set = set(pk_cols_ordered)
+            table_cols = display_columns.get(table_name, [])
+            
+            is_selected = table_name in selected_tables
+            title_bgcolor = '#FFA500' if is_selected else '#FFF8DC'
+            
+            table_label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">'
+            table_label += f'<TR><TD COLSPAN="2" PORT="title" BGCOLOR="{title_bgcolor}"><B>{escape_html(table_name)}</B></TD></TR>'
+            
+            pk_to_display = [col for col in table_cols if col in pk_cols_set]
+            other_to_display = [col for col in table_cols if col not in pk_cols_set]
+            
+            for col in pk_to_display:
+                safe_col = escape_html(col)
+                table_label += f'<TR><TD ALIGN="LEFT" BGCOLOR="#E6E6FA" PORT="{safe_col}"><B>🔑 {safe_col}</B></TD></TR>'
+            
+            for col in other_to_display:
+                safe_col = escape_html(col)
+                table_label += f'<TR><TD ALIGN="LEFT" PORT="{safe_col}"><B>🔗 {safe_col}</B></TD></TR>'
+            
+            table_label += '</TABLE>>'
+            dot.node(table_name, table_label, shape='none')
 
-    # 4. FK 관계 (Edge) 추가
-    edge_groups = {}
-    for from_file, from_col, to_file, to_col in relationships_list:
-        key = (from_file, to_file)
-        if key not in edge_groups:
-            edge_groups[key] = []
-        edge_groups[key].append((from_col, to_col))
-    
-    edge_count = 0
-    for (from_file, to_file), cols_list in edge_groups.items():
-        if from_file not in all_tables or to_file not in all_tables:
-            continue
+        # 4. FK 관계 (Edge) 추가
+        edge_groups = {}
+        for from_file, from_col, to_file, to_col in relationships_list:
+            key = (from_file, to_file)
+            if key not in edge_groups:
+                edge_groups[key] = []
+            edge_groups[key].append((from_col, to_col))
         
-        from_col, to_col = cols_list[0]
-        safe_from_col = escape_html(from_col)
-        safe_to_col = escape_html(to_col)
+        edge_count = 0
+        for (from_file, to_file), cols_list in edge_groups.items():
+            if from_file not in all_tables or to_file not in all_tables:
+                continue
+            
+            from_col, to_col = cols_list[0]
+            safe_from_col = escape_html(from_col)
+            safe_to_col = escape_html(to_col)
+            
+            dot.edge(f'{from_file}:{safe_from_col}', 
+                    f'{to_file}:{safe_to_col}',
+                    dir='both',
+                    arrowtail='crow',
+                    arrowhead='none',
+                    constraint='true')
+            edge_count += 1
         
-        dot.edge(f'{from_file}:{safe_from_col}', 
-                f'{to_file}:{safe_to_col}',
-                dir='both',
-                arrowtail='crow',
-                arrowhead='none',
-                constraint='true')
-        edge_count += 1
-    
-    return dot, edge_count
+        return dot, edge_count
+    except Exception as e:
+        st.error(f"Graphviz 객체 생성 중 오류 발생: {e}")
+        return None, 0
 
 def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: dict, it_df: pd.DataFrame):
     """ERD 생성 결과를 데이터프레임으로 정리합니다. ERD와 동일한 필터링 로직 사용."""
@@ -1033,10 +1037,12 @@ def main():
         # 3. ERD 생성
         related_tables = generate_erd(selected_tables, pk_map, it_df)
         if not related_tables:
+            st.error("ERD 생성에 실패했습니다.")
             return
 
         erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
         if not erd_success:
+            st.error("ERD 결과 요약에 실패했습니다.")
             return
         return 
 
