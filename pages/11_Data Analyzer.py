@@ -7,37 +7,49 @@
 - Code Relationship Analyzer: Data Quality Analyzer 결과를 기반으로 모든 파일의 컬럼들에 대한 관계도 작성
 Class-based Version (Tab Integration)
 """
+# -------------------------------------------------------------------
+# 1. 경로 설정 (Streamlit warnings import 전에 필요)
+# -------------------------------------------------------------------
+import sys
+from pathlib import Path
 
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+# -------------------------------------------------------------------
+# 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
+# -------------------------------------------------------------------
+from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+setup_streamlit_warnings()
+
+# -------------------------------------------------------------------
+# 3. 필수 라이브러리 import
+# -------------------------------------------------------------------
 import streamlit as st
 import subprocess
 import os
 import sys
-import warnings
+# import warnings
 from pathlib import Path
 import pandas as pd
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 import yaml
 
-warnings.filterwarnings("ignore", category=UserWarning)
-
 # -------------------------------------------------------------------
 # 기본 앱 정보
 # -------------------------------------------------------------------
-APP_NAME = "Data Analyzer"
-APP_DESC = "##### 데이터 품질 분석, 데이터 타입 및 룰 분석, 코드 관계 분석을 통합 수행합니다."
-APP_DESC2 = """###### 아래의 탭들을 단계적으로 수행합니다. 
-- Data Quality Analyzer: 모든 파일의 각 컬럼들에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
-- Data Type & Rule Analyzer: Data Quality Analyzer 결과를 기반으로 각 컬럼에 대한 Rule 프로파일링 수행
-- Code Relationship Analyzer: Data Quality Analyzer 결과를 기반으로 모든 파일의 컬럼들에 대한 관계도를 작성
+APP_NAME = "Data Analyzer (Data Profile)"
+APP_DESC = "##### 데이터 품질 분석, 데이터 타입 및 룰 분석, 데이터 관계도 분석을 위한 기초 작업입니다."
+APP_DESC2 = """
+- Data Quality Analyzer: 모든 데이터에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
+- Data Type & Rule Analyzer: 모든 데이터의 데이터 타입 및 사전 정의된 Rule 기반 프로파일링 수행
+- Data Relationship Analyzer: 데이터 간의 관계도를 작성
+###### 아래의 탭들을 단계적으로 수행합니다. 
 """
-# -------------------------------------------------------------------
-# 경로 설정
-# -------------------------------------------------------------------
-CURRENT_DIR = Path(__file__).resolve()
-PROJECT_ROOT = CURRENT_DIR.parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.append(str(PROJECT_ROOT))
+
 
 from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 
@@ -216,8 +228,8 @@ class DataQualityAnalyzer:
             st.write("Length 평균/중앙값")
         
         with col4:
-            st.markdown("##### Value 구성(패턴)")
-            st.write("영문, 한글, 숫자 등으로 패턴 구성")
+            st.markdown("##### Value 구성")
+            st.write("영문, 한글, 숫자 등 패턴 구성")
             st.write("패턴의 종류 수")
             st.write("다빈도 패턴 구성")
             st.write("다빈도 패턴 및 비율")
@@ -229,7 +241,7 @@ class DataQualityAnalyzer:
             st.write("Top 10 비율")
         
         with col6:
-            st.markdown("##### 데이터 문자 통계")
+            st.markdown("##### 문자 통계")
             st.write("영문 대소문자 열 수")
             st.write("한글 포함 열 수")
             st.write("숫자 포함 열 수")
@@ -267,7 +279,7 @@ class DataQualityAnalyzer:
         df = normalize_dataframe_for_display(df)
         
         df = df.drop(columns=['FilePath'])
-        st.dataframe(df, use_container_width=True, height=550, hide_index=True)
+        st.dataframe(df, width='stretch', height=550, hide_index=True)
     
     def display(self):
         """메인 UI 표시"""
@@ -364,7 +376,7 @@ class DataTypeRuleAnalyzer:
         
         # df = df.drop(columns=['FilePath'])
 
-        st.dataframe(df, use_container_width=True, height=600, hide_index=True)
+        st.dataframe(df, width='stretch', height=600, hide_index=True)
     
     def display(self):
         """메인 UI 표시"""
@@ -443,7 +455,7 @@ class CodeRelationshipAnalyzer:
         
         df = df.drop(columns=['FilePath'])
 
-        st.dataframe(df, use_container_width=True, height=600, hide_index=True)
+        st.dataframe(df, width='stretch', height=600, hide_index=True)
     
     def display(self):
         """메인 UI 표시"""
@@ -507,12 +519,11 @@ class DataAnalyzerApp:
         st.title(f"📊 {APP_NAME}")
         st.markdown(APP_DESC)
         st.markdown(APP_DESC2)
-        st.divider()
         
         tab1, tab2, tab3 = st.tabs([
             "📊 Data Quality Analyzer", 
             "📋 Data Type & Rule Analyzer", 
-            "🔗 Code Relationship Analyzer"
+            "🔗 Data Relationship Analyzer"
         ])
         
         with tab1:

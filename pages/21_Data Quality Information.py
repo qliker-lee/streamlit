@@ -2,7 +2,26 @@
 # streamlit를 이용한 Data Sense System : Data Quality Information
 # 2024. 11. 10.  Qliker
 #
+# -------------------------------------------------------------------
+# 1. 경로 설정 (Streamlit warnings import 전에 필요)
+# -------------------------------------------------------------------
+import sys
+from pathlib import Path
 
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+# -------------------------------------------------------------------
+# 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
+# -------------------------------------------------------------------
+from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+setup_streamlit_warnings()
+
+# -------------------------------------------------------------------
+# 3. 필수 라이브러리 import
+# -------------------------------------------------------------------
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,32 +33,31 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import warnings
+# import warnings
 from graphviz import Digraph
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 import plotly.graph_objects as go
-warnings.filterwarnings("ignore", category=UserWarning)
+# warnings.filterwarnings("ignore", category=UserWarning)
+# warnings.filterwarnings("ignore", category=UserWarning)
 
 SOLUTION_NAME = "Data Sense System"
 SOLUTION_KOR_NAME = "데이터 센스 시스템"
 APP_NAME = "Data Quality Information"
 APP_DESC = "###### Data Quality Analyzer의 결과를 기반으로 각 컬럼들에 대한 통계 정보입니다.  "
-
 # -------------------------------------------------------------------
 # 경로 설정
 # -------------------------------------------------------------------
-CURRENT_DIR = Path(__file__).resolve()
-PROJECT_ROOT = CURRENT_DIR.parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.append(str(PROJECT_ROOT))
+# CURRENT_DIR = Path(__file__).resolve()
+# PROJECT_ROOT = CURRENT_DIR.parents[1]
+# if str(PROJECT_ROOT) not in sys.path:
+#     sys.path.append(str(PROJECT_ROOT))
 
 from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 
 set_page_config(APP_NAME)
 
 from DataSense.util.Display import create_metric_card
-
 
 #-----------------------------------------------------------------------------------------
 # Master KPI 
@@ -63,6 +81,8 @@ def Display_Master_KPIs(loaded_data):
             return {}
 
     df = loaded_data['filestats']
+    df = df[(df['MasterType'] != 'Common') & (df['MasterType'] != 'Reference') & (df['MasterType'] != 'Validation')]
+
     if df is None or df.empty:
         st.warning("데이터가 없습니다.")
         return
@@ -98,7 +118,7 @@ def Display_Master_KPIs(loaded_data):
         "Code File #": f"{total_files:,}",
         "Total Record #": f"{total_records:,.0f} {total_records_unit}",
         "Total File Size": f"{total_filesize:,.0f} {total_filesize_unit}",
-        "Code Type #": f"{total_master_types:,}",
+        # "Code Type #": f"{total_master_types:,}",
         "Work Date": f"{work_date}"
     }
 
@@ -107,7 +127,7 @@ def Display_Master_KPIs(loaded_data):
         "Code File #": "#1f77b4",
         "Total Record #": "#2ca02c", 
         "Total File Size": "#ff7f0e",
-        "Code Type #": "#d62728",
+        # "Code Type #": "#d62728",
         "Work Date": "#9467bd"
     }
 
@@ -117,116 +137,136 @@ def Display_Master_KPIs(loaded_data):
         color = metric_colors.get(key, "#0072B2")
         col.markdown(create_metric_card(value, key, color), unsafe_allow_html=True)
 
-    # MasterType별 파일 수
-    st.markdown("### Statistics by Code Type")
-    master_type_counts = calculate_master_type_counts(df)
+    # # MasterType별 파일 수
+    # st.markdown("### Statistics by Code Type")
+    # master_type_counts = calculate_master_type_counts(df)
     
-    if master_type_counts:
-        metric_colors = {
-            "Master": "#1f77b4",      # 파란색
-            "Operation": "#2ca02c",    # 초록색
-            "Reference": "#ff7f0e",    # 주황색
-            "Attribute": "#d62728",    # 빨간색
-            "Common": "#9467bd",       # 보라색
-            "Validation": "#8c564b"    # 갈색
-        }
+    # if master_type_counts:
+    #     metric_colors = {
+    #         "Master": "#1f77b4",      # 파란색
+    #         "Operation": "#2ca02c",    # 초록색
+    #         "Reference": "#ff7f0e",    # 주황색
+    #         "Attribute": "#d62728",    # 빨간색
+    #         "Common": "#9467bd",       # 보라색
+    #         "Validation": "#8c564b"    # 갈색
+    #     }
 
-        cols = st.columns(len(master_type_counts))
-        for col, (key, value) in zip(cols, master_type_counts.items()):
-            color = metric_colors.get(key, "#0072B2")
-            col.markdown(create_metric_card(value, key, color), unsafe_allow_html=True)
+    #     cols = st.columns(len(master_type_counts))
+    #     for col, (key, value) in zip(cols, master_type_counts.items()):
+    #         color = metric_colors.get(key, "#0072B2")
+    #         col.markdown(create_metric_card(value, key, color), unsafe_allow_html=True)
 
     return True
 
 #-----------------------------------------------------------------------------------------
-def Display_MasterFormat_Detail_old(loaded_data):
-    """ Master Format Detail """
+# def Display_MasterFormat_Detail_old(loaded_data):
+#     """ Master Format Detail """
 
-    def value_info(df):
-        st.markdown("###### Value Information")
+#     def value_info(df):
+#         st.markdown("###### Value Information")
 
-        df= df[['FileName', 'ColumnName', 'OracleType', 'PK',  'ValueCnt', 
-                'Null(%)', 'UniqueCnt', 'Unique(%)', 
-                'MinString', 'MaxString', 'ModeString', 'MedianString', 'ModeCnt', 'Mode(%)']]
+#         df= df[['FileName', 'ColumnName', 'OracleType', 'PK',  'ValueCnt', 
+#                 'Null(%)', 'UniqueCnt', 'Unique(%)', 
+#                 'MinString', 'MaxString', 'ModeString', 'MedianString', 'ModeCnt', 'Mode(%)']]
 
-        df = df.reset_index(drop=True)
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)
+#         df = df.reset_index(drop=True)
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)
 
-    def value_type_info(df):
-        st.markdown("###### Value Pattern Information")
+#     def value_type_info(df):
+#         st.markdown("###### Value Pattern Information")
 
-        df= df[['FileName', 'ColumnName', 'ValueCnt', 'FormatCnt',
-                'Format', 'Format(%)', 'FormatMin', 'FormatMax', 'FormatMode', 'FormatMedian',
-                'Format2nd', 'Format2nd(%)', 'Format2ndMin', 'Format2ndMax', 'Format2ndMode', 'Format2ndMedian',
-                'Format3rd', 'Format3rd(%)', 
-                ]]
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)
+#         df= df[['FileName', 'ColumnName', 'ValueCnt', 'FormatCnt',
+#                 'Format', 'Format(%)', 'FormatMin', 'FormatMax', 'FormatMode', 'FormatMedian',
+#                 'Format2nd', 'Format2nd(%)', 'Format2ndMin', 'Format2ndMax', 'Format2ndMode', 'Format2ndMedian',
+#                 'Format3rd', 'Format3rd(%)', 
+#                 ]]
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)
 
-    def top10_info(df):
-        st.markdown("###### Value Top 10 Information")
-        df= df[['FileName', 'ColumnName', 'ValueCnt', 'ModeString', 'ModeCnt', 'Mode(%)', 'Top10', 'Top10(%)']]
+#     def top10_info(df):
+#         st.markdown("###### Value Top 10 Information")
+#         df= df[['FileName', 'ColumnName', 'ValueCnt', 'ModeString', 'ModeCnt', 'Mode(%)', 'Top10', 'Top10(%)']]
 
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)   
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)   
 
-    def length_info(df):
-        st.markdown("###### Data Length Information")
+#     def length_info(df):
+#         st.markdown("###### Data Length Information")
 
-        df= df[['FileName', 'ColumnName', 'OracleType', 'PK', 'DetailDataType', 'LenCnt', 'LenMin', 'LenMax', 'LenAvg',
-                    'LenMode', 'RecordCnt', 'SampleRows', 'ValueCnt', 'NullCnt', 'Null(%)', 'UniqueCnt', 'Unique(%)']]
+#         df= df[['FileName', 'ColumnName', 'OracleType', 'PK', 'DetailDataType', 'LenCnt', 'LenMin', 'LenMax', 'LenAvg',
+#                     'LenMode', 'RecordCnt', 'SampleRows', 'ValueCnt', 'NullCnt', 'Null(%)', 'UniqueCnt', 'Unique(%)']]
 
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)
 
-    def character_info(df):
-        st.markdown("###### Character Information")
+#     def character_info(df):
+#         st.markdown("###### Character Information")
 
-        df= df[['FileName', 'ColumnName', 'ValueCnt', 'HasBlank', 'HasDash', 'HasDot', 'HasAt', 'HasAlpha', 'HasKor', 'HasNum', 
-                'HasBracket', 'HasMinus', 'HasOnlyAlpha', 'HasOnlyNum', 'HasOnlyKor', 'HasOnlyAlphanum', 
-                'FirstChrKor', 'FirstChrNum', 'FirstChrAlpha', 'FirstChrSpecial']]
+#         df= df[['FileName', 'ColumnName', 'ValueCnt', 'HasBlank', 'HasDash', 'HasDot', 'HasAt', 'HasAlpha', 'HasKor', 'HasNum', 
+#                 'HasBracket', 'HasMinus', 'HasOnlyAlpha', 'HasOnlyNum', 'HasOnlyKor', 'HasOnlyAlphanum', 
+#                 'FirstChrKor', 'FirstChrNum', 'FirstChrAlpha', 'FirstChrSpecial']]
 
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)
 
-    def dq_score_info(df):
-        st.markdown("###### Data Quality Score Information")
-        st.write("DQ Score 현재 개발중임. (기업의 상황에 따라 기준이 다를 수 있습니다. 컨설팅 후 확정합니다. ")
+#     def dq_score_info(df):
+#         st.markdown("###### Data Quality Score Information")
+#         st.write("DQ Score 현재 개발중임. (기업의 상황에 따라 기준이 다를 수 있습니다. 컨설팅 후 확정합니다. ")
 
-        df= df[['FileName', 'ColumnName', 'ValueCnt', 'Null_pct', 'TypeMixed_pct', 'LengthVol_pct', 'Duplicate_pct',
-                    'DQ_Score', 'DQ_Issues', 'Issue_Count', 'Weighted_DQ_Score']]
+#         df= df[['FileName', 'ColumnName', 'ValueCnt', 'Null_pct', 'TypeMixed_pct', 'LengthVol_pct', 'Duplicate_pct',
+#                     'DQ_Score', 'DQ_Issues', 'Issue_Count', 'Weighted_DQ_Score']]
 
-        st.dataframe(data=df, width=1400, height=600,hide_index=True)          
+#         st.dataframe(data=df, width=1400, height=600,hide_index=True)          
 
-    #---------------------------------
-    st.write("\n")
-    st.markdown("### Data Quality Information")
-    st.markdown("###### 모든 파일의 데이터 값을 분석하여 Value Pattern별로 통계를 작성합니다.")
-    fileformat_df = loaded_data['fileformat'].copy()
+#     #---------------------------------
+#     st.write("\n")
+#     st.markdown("### Data Quality Information")
+#     st.markdown("###### 아래의 탭을 이용하여 분석된 데이터 통계값을 조회합니다.")
+#     fileformat_df = loaded_data['fileformat'].copy()
 
-    if fileformat_df is not None and not fileformat_df.empty:
-        # MasterType들
-        expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
-        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(expected_types)
+#     if fileformat_df is not None and not fileformat_df.empty:
+#         # MasterType들
+#         tabs = ['Value Information', 'Value Type Information', 'Length Information', 'Top10 Information', 'Character Information', 'DQ Score Information', 'Total Statistics']
+#         tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(tabs)
 
-        for master_type, tab in zip(expected_types, [tab1, tab2, tab3, tab4, tab5, tab6]):
-            with tab:
-                Value, value_type,Length,  top10, character, dq_score = st.columns(6)
+#         with tab1:
+#             display_df = value_info(fileformat_df)
+#         with tab2:
+#             display_df = value_type_info(fileformat_df)
+#         with tab3:
+#             display_df = length_info(fileformat_df)
+#         with tab4:
+#             display_df = top10_info(fileformat_df)
+#         with tab5:
+#             display_df = character_info(fileformat_df)
+#         with tab6:
+#             display_df = dq_score_info(fileformat_df)
+#         with tab7:
+#             st.dataframe(data=fileformat_df, width=1400, height=600,hide_index=True)
 
-                master_type_df = fileformat_df[fileformat_df['MasterType'] == master_type]
-                if Value.button("Value Information", key=f"Value_{master_type}"):
-                    display_df = value_info(master_type_df)
-                if value_type.button("Value Type Information", key=f"value_type_{master_type}"):
-                    display_df = value_type_info(master_type_df)
-                if Length.button("Length Information", key=f"Length_{master_type}"):
-                    display_df = length_info(master_type_df)
-                if top10.button("Top10 Information", key=f"top10_{master_type}"):
-                    display_df = top10_info(master_type_df)
-                if character.button("Character Information", key=f"character_{master_type}"):
-                    display_df = character_info(master_type_df)
-                if dq_score.button("DQ Score Information", key=f"dq_score_{master_type}"):
-                    display_df = dq_score_info(master_type_df)
+#     # if fileformat_df is not None and not fileformat_df.empty:
+#     #     # MasterType들
+#     #     expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
+#     #     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(expected_types)
 
-    else:
-        st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
-        return False
-    return True
+#     #     for master_type, tab in zip(expected_types, [tab1, tab2, tab3, tab4, tab5, tab6]):
+#     #         with tab:
+#     #             Value, value_type,Length,  top10, character, dq_score = st.columns(6)
+
+#     #             master_type_df = fileformat_df[fileformat_df['MasterType'] == master_type]
+#     #             if Value.button("Value Information", key=f"Value_{master_type}"):
+#     #                 display_df = value_info(master_type_df)
+#     #             if value_type.button("Value Type Information", key=f"value_type_{master_type}"):
+#     #                 display_df = value_type_info(master_type_df)
+#     #             if Length.button("Length Information", key=f"Length_{master_type}"):
+#     #                 display_df = length_info(master_type_df)
+#     #             if top10.button("Top10 Information", key=f"top10_{master_type}"):
+#     #                 display_df = top10_info(master_type_df)
+#     #             if character.button("Character Information", key=f"character_{master_type}"):
+#     #                 display_df = character_info(master_type_df)
+#     #             if dq_score.button("DQ Score Information", key=f"dq_score_{master_type}"):
+#     #                 display_df = dq_score_info(master_type_df)
+
+#     else:
+#         st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
+#         return False
+#     return True
 
 #-----------------------------------------------------------------------------------------
 def Display_MasterFormat_Detail(loaded_data):
@@ -280,24 +320,48 @@ def Display_MasterFormat_Detail(loaded_data):
     # ---------------------------
     st.markdown("### Data Quality Information")
     st.markdown("###### 모든 파일의 데이터 값을 분석하여 Value Pattern별로 통계를 작성합니다.")
-    fileformat_df = loaded_data.get('fileformat', pd.DataFrame())
-
-    if fileformat_df.empty:
+    ff_df = loaded_data.get('fileformat', pd.DataFrame())
+    ff_df = ff_df[(ff_df['MasterType'] != 'Common') & (ff_df['MasterType'] != 'Reference') & (ff_df['MasterType'] != 'Validation')]
+    
+    if ff_df.empty:
         st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
         return False
 
-    expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
-    tabs = st.tabs(expected_types)
+    if ff_df is not None and not ff_df.empty:
+        tabs = ['Value Info', 'Value Type Info', 'Top10 Info', 'Length Info', 
+            'Character Info', 'DQ Score Info', 'Total Statistics']
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(tabs)
 
-    for master_type, tab in zip(expected_types, tabs):
-        with tab:
-            cols = st.columns(len(VIEW_COLUMNS))
+        with tab1:
+            render_table(ff_df, 'Value Info', VIEW_COLUMNS['Value Info'])
+        with tab2:
+            render_table(ff_df, 'Value Type Info', VIEW_COLUMNS['Value Type Info'])
+        with tab3:
+            render_table(ff_df, 'Top10 Info', VIEW_COLUMNS['Top10 Info'])
+        with tab4:
+            render_table(ff_df, 'Length Info', VIEW_COLUMNS['Length Info'])
+        with tab5:
+            render_table(ff_df, 'Character Info', VIEW_COLUMNS['Character Info'])
+        with tab6:
+            render_table(ff_df, 'DQ Score Info', VIEW_COLUMNS['DQ Score Info'])
+        with tab7:
+            st.dataframe(data=ff_df, width=1400, height=600,hide_index=True)
+    else:
+        st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
+        return False
+
+    # expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
+    # tabs = st.tabs(expected_types)
+
+    # for master_type, tab in zip(expected_types, tabs):
+    #     with tab:
+    #         cols = st.columns(len(VIEW_COLUMNS))
             
-            master_type_df = fileformat_df[fileformat_df['MasterType'] == master_type]
+    #         master_type_df = fileformat_df[fileformat_df['MasterType'] == master_type]
 
-            for col, (title, cols_to_show) in zip(cols, VIEW_COLUMNS.items()):
-                if col.button(title, key=f"{title}_{master_type}"):
-                    render_table(master_type_df, title, cols_to_show)
+    #         for col, (title, cols_to_show) in zip(cols, VIEW_COLUMNS.items()):
+    #             if col.button(title, key=f"{title}_{master_type}"):
+    #                 render_table(master_type_df, title, cols_to_show)
     return True
 
 
