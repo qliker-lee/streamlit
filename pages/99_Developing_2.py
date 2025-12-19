@@ -6,10 +6,8 @@
 ✔ Cloud : 예제 이미지 출력
 ✔ Local : 실제 Graphviz ERD 생성
 ✔ Streamlit rerun 대응 (session_state 유지)
-✔ 기존 프로그램 구조 유지 (신규 프로그램 기준)
-
 Author: Qliker
-Date  : 2025-12-17
+Date  : 2025-12-19
 """
 
 # -------------------------------------------------
@@ -1044,7 +1042,7 @@ def display_erd_result(selected_tables, related_tables, pk_map, it_df):
 
 
 def main():
-    st.title(APP_TITLE)
+    st.title("🔗 데이터 관계 (ERD) 분석 ver 2") # APP_TITLE
     st.caption(APP_DESCRIPTION)
 
     try:
