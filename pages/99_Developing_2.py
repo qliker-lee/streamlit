@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-📘 🔗 데이터 관계 (ERD) 시각화 (CodeMapping_relationship.csv 기반)
-2025.12.17 Qliker
-초기 import 시 경로설정, streamlit warnings 억제 설정 순서 중요
+🔗 DataSense Logical ERD Generator (Final)
+--------------------------------------------------
+✔ Cloud / Local 환경 자동 감지
+✔ Cloud : 예제 이미지 출력
+✔ Local : 실제 Graphviz ERD 생성
+✔ Streamlit rerun 대응 (session_state 유지)
+✔ 기존 프로그램 구조 유지 (신규 프로그램 기준)
+
+Author: Qliker
+Date  : 2025-12-17
 """
-# -------------------------------------------------------------------
-# 1. 경로 설정 (Streamlit warnings import 전에 필요)
-# -------------------------------------------------------------------
+
+# -------------------------------------------------
+# 1. Path / Warning setup (Streamlit import 전)
+# -------------------------------------------------
 import sys
 from pathlib import Path
 
@@ -15,51 +23,68 @@ PROJECT_ROOT = CURRENT_DIR.parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-# -------------------------------------------------------------------
-# 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
-# -------------------------------------------------------------------
 from DataSense.util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
-# -------------------------------------------------------------------
-# 3. 필수 라이브러리 import
-# -------------------------------------------------------------------
-# 표준 라이브러리
-import os
-from collections import defaultdict
+# -------------------------------------------------
+# 2. Standard / Third-party imports
+# -------------------------------------------------
+import shutil
 from datetime import datetime
+from collections import defaultdict
 
-# 서드파티 라이브러리
 import streamlit as st
 import pandas as pd
 import graphviz
 import streamlit.components.v1 as components
 from PIL import Image
 
-#----------------------------------------------------------------------------
-# 4. 로컬 모듈 import
-#----------------------------------------------------------------------------
-from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
+# -------------------------------------------------
+# 3. Local imports
+# -------------------------------------------------
+from DataSense.util.Files_FunctionV20 import set_page_config
+from DataSense.util.Display import display_kpi_metrics
 
-from DataSense.util.Display import (
-    create_metric_card,
-    display_kpi_metrics     # df, colors, title
-)
-
+# -------------------------------------------------
+# 4. App Config
+# -------------------------------------------------
 APP_NAME = "Developing 2"
-APP_KOR_NAME = "개발 2"
 APP_TITLE = "🔗 데이터 관계 (ERD) 분석"
-APP_DESCRIPTION = "데이터 값에 의한 논리적 ERD를 생성합니다. CodeMapping 기반으로 생성합니다."
-# -------------------------------------------------------------------
-# 상수 설정
-# -------------------------------------------------------------------
+APP_DESCRIPTION = "CodeMapping 기반 논리적 ERD 생성"
+
+OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
 MAPPING_FILE = "CodeMapping_relationship.csv"
 MAPPING_ORG_FILE = "CodeMapping.csv"
-OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
+MAX_RELATED_TABLE_COUNT = 100
 
 set_page_config(APP_NAME)
 
-MAX_RELATED_TABLE_COUNT = 100
+# -------------------------------------------------
+# 5. Utility: Cloud / Local detection
+# -------------------------------------------------
+def is_cloud_env() -> bool:
+    try:
+        return shutil.which("dot") is None
+    except Exception:
+        return True
+
+# -------------------------------------------------
+# 6. Example ERD (Cloud)
+# -------------------------------------------------
+def show_example_erd_images():
+    st.info("""
+    **Streamlit Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
+    실제 ERD 대신 예제 이미지를 표시합니다.
+    """)
+    try:
+        img1 = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
+        img2 = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
+        st.image(img1, caption="ERD 예제 (단순)", width=480)
+        st.image(img2, caption="ERD 예제 (복잡)", width=480)
+    except Exception as e:
+        st.error(f"예제 이미지 로드 실패: {e}")
+
+
 #----------------------------------------------------------------------------
 # 5. 함수 정의
 #----------------------------------------------------------------------------
@@ -87,10 +112,8 @@ def parse_relationship(relationship_str):
                 'Parent_Table': parent_file,
                 'Parent_Column': parent_col
             })
-            
         except ValueError:
             continue
-            
     return relationships
 
 def _extract_and_load_erd_data_impl(input_file_path: Path):
@@ -384,10 +407,7 @@ def export_summary_result(integrated_df: pd.DataFrame, selected_tables: list = N
 
 #----------------------------------------------------------------------------
 def export_summary_result_new(integrated_df: pd.DataFrame):
-    """
-    FileName 기준으로 집계하여 요약 정보를 저장합니다. (Level Rel Table # 계산 추가)
-    """
-    
+    """    FileName 기준으로 집계하여 요약 정보를 저장합니다. (Level Rel Table # 계산 추가)    """
     # Level_Relationship 문자열에서 모든 고유 파일 이름을 추출하는 유틸리티 함수
     def extract_unique_files_from_chain(relationship_str):
         if not isinstance(relationship_str, str) or not relationship_str.strip():
@@ -433,16 +453,13 @@ def export_summary_result_new(integrated_df: pd.DataFrame):
         lambda x: len(set.union(*x)) if x.any() else 0
     ).to_dict()
 
-    # 4. 결과 DataFrame에 병합
     summary_df = table_stats.copy()
 
-    # **사용자 요청 필드 추가**
     summary_df['Rel Table #'] = summary_df['FileName'].apply(
         lambda x: total_rel_files_map.get(x, 0)
     )
     
     summary_df = summary_df.sort_values(by='FileName').fillna(0)
-    
     return summary_df
 
 def get_related_tables(selected_tables: list, it_df: pd.DataFrame):
@@ -673,7 +690,6 @@ def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: 
                 if from_table:
                     child_tables_set.add(from_table)
         
-        # 관계 수: ERD와 동일하게 엣지 그룹 개수로 계산
         from_edge_count = len(from_edge_groups.get(table_name, set()))
         to_edge_count = len(to_edge_groups.get(table_name, set()))
         
@@ -693,27 +709,9 @@ def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: 
 # Master KPI 
 def Display_File_Statistics(filestats_df):
     """ Master Statistics KPIs """
-    # def calculate_master_type_counts(df):
-    #     """Code Type별 파일 수 계산"""
-    #     if 'MasterType' not in df.columns or 'FileName' not in df.columns:
-    #         return {}
-    #     try:
-    #         master_type_counts = df.groupby('MasterType')['FileName'].nunique()
-    #         expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
-            
-    #         result = {}
-    #         for master_type in expected_types:
-    #             count = master_type_counts.get(master_type, 0)
-    #             result[master_type] = f"{count:,}"
-    #         return result
-    #     except Exception as e:
-    #         st.error(f"MasterType 계산 중 오류 발생: {str(e)}")
-    #         return {}
-
     df = filestats_df.copy()
     df = df[(df['MasterType'] != 'Common') & (df['MasterType'] != 'Reference') & (df['MasterType'] != 'Validation')]
     
-    # KPI 계산
     total_files = len(df['FileName'].unique()) if 'FileName' in df.columns else 0
     total_records = df['RecordCnt'].sum() if 'RecordCnt' in df.columns else 0
     total_filesize = df['FileSize'].sum() if 'FileSize' in df.columns else 0
@@ -743,11 +741,9 @@ def Display_File_Statistics(filestats_df):
         "Code File #": f"{total_files:,}",
         "Total Record #": f"{total_records:,.0f} {total_records_unit}",
         "Total File Size": f"{total_filesize:,.0f} {total_filesize_unit}",
-        # "Code Type #": f"{total_master_types:,}",
         "Work Date": f"{work_date}"
     }
 
-    # 각 메트릭에 대한 색상 정의
     metric_colors = {
         "Code File #":      "#1f77b4",
         "Total Record #":   "#2ca02c", 
@@ -755,16 +751,25 @@ def Display_File_Statistics(filestats_df):
         "Work Date":        "#9467bd"     # 보라색
     }
 
-    # 메트릭 표시
     display_kpi_metrics(summary, metric_colors, 'File Statistics')
-
-
     return True
 #---------------------------------------------------------------------------
+
+# -------------------------------------------------
+# 7. Data Load
+# -------------------------------------------------
+def load_data_mapping_new():
+    file_path = OUTPUT_DIR / MAPPING_FILE
+    if not file_path.exists():
+        st.error(f"{MAPPING_FILE} 파일이 없습니다")
+        return None, None
+    df = pd.read_csv(file_path, encoding='utf-8-sig')
+    pk_map = df[df['PK'] == 1].groupby('FileName')['ColumnName'].apply(list).to_dict()
+    return pk_map, df
+
+
 def load_data_mapping():
-    """ 
-    1st Step: 데이터 추출 및 로드
-    """
+    """     1st Step: 데이터 추출 및 로드    """
     mapping_file_path = OUTPUT_DIR / MAPPING_FILE
     
     if not mapping_file_path.exists():
@@ -782,9 +787,7 @@ def load_data_mapping():
     return pk_map, fk_df, it_df
 
 def load_data_org():
-    """ 
-    1.1st Step: CodeMapping.csv 기반 데이터 추출 및 로드
-    """
+    """     1.1st Step: CodeMapping.csv 기반 데이터 추출 및 로드    """
     try:
         file_path = OUTPUT_DIR / MAPPING_ORG_FILE
         df = pd.read_csv(file_path, encoding='utf-8-sig')
@@ -794,9 +797,7 @@ def load_data_org():
         return None
 
 def load_data_filestats():
-    """ 
-    1.2nd Step: filestats.csv 기반 데이터 추출 및 로드
-    """
+    """     1.2nd Step: filestats.csv 기반 데이터 추출 및 로드    """
     try:
         file_path = OUTPUT_DIR / "FileStats.csv"
         df = pd.read_csv(file_path, encoding='utf-8-sig')
@@ -807,9 +808,7 @@ def load_data_filestats():
     return df
 
 def select_tables(it_df, it_org_df) -> list:
-    """ 
-    2nd Step: 테이블 선택
-    """
+    """   2nd Step: 테이블 선택    """
     st.subheader("1. 테이블 선택")
     #-----------------------------------------------
     # CodeMapping.csv 기반 데이터 가공 및 병합
@@ -887,28 +886,9 @@ def select_tables(it_df, it_org_df) -> list:
 
     return selected_tables
 
-def show_example_erd_images():
-    st.info("""
-    **Streamlit Cloud 환경에서는 ERD 자동 생성이 제한됩니다.**
-    
-    Graphviz 실행 파일(`dot`)을 사용할 수 없어
-    실제 ERD 생성 대신 예제 이미지를 표시합니다.
-    """)
-
-    try:
-        img1 = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
-        st.image(img1, caption="ERD 예제 (단순)", width=480)
-
-        img2 = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
-        st.image(img2, caption="ERD 예제 (복잡)", width=480)
-    except Exception as e:
-        st.error(f"예제 이미지 로드 실패: {e}")
-
 
 def generate_erd(selected_tables, pk_map, it_df):
-    """ 
-    3rd Step: Logical ERD 생성
-    """
+    """     3rd Step: Logical ERD 생성     """
     
     st.subheader("2. Logical ERD 분석 결과")
     related_tables = get_related_tables(selected_tables, it_df)
@@ -921,30 +901,6 @@ def generate_erd(selected_tables, pk_map, it_df):
     if related_table_count > MAX_RELATED_TABLE_COUNT:
         st.error(f"연결된 테이블 수가 {MAX_RELATED_TABLE_COUNT}개를 초과했습니다.")
         return False
-
-    # # Graphviz 설치 확인
-    # try:
-    #     import graphviz
-    #     # Graphviz 실행 파일 확인
-    #     try:
-    #         graphviz.version()
-    #     except Exception:
-    #         st.info("""
-    #         **ERD 생성이 불가능합니다.**
-    #         Cloud 환경에서는 Graphviz 설치가 제한될 수 있어서 ERD 생성이 불가능합니다.
-    #         로컬 환경에서 실행하세요. 
-            
-    #         **예제 ERD를 표시합니다.**
-    #         """)
-    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
-    #         st.image(image, caption="단순한 예제 ERD", width=480)
-    #         st.divider()
-    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
-    #         st.image(image, caption="복잡한 예제 ERD", width=480)
-    #         return False
-    # except ImportError:
-    #     st.error("❌ Graphviz 라이브러리를 import할 수 없습니다.")
-    #     return False
 
     try:
         graph, erd_edge_count = generate_erd_graph(selected_tables, related_tables, pk_map, it_df)
@@ -986,24 +942,6 @@ def generate_erd(selected_tables, pk_map, it_df):
             
             if is_graphviz_error:
                 st.write("Debug 01:")
-                st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
-                st.warning("""
-                **ERD 생성이 불가능합니다.**
-                
-                **오류 원인:**
-                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-                
-                **해결 방법:**
-                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-                
-                **참고:**
-                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-                - Windows: https://graphviz.org/download/ 에서 설치
-                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-                """)
-                # SVG도 동일한 오류가 발생할 것이므로 바로 False 반환
                 return False
             else:
                 st.write("Debug 02:")
@@ -1012,24 +950,21 @@ def generate_erd(selected_tables, pk_map, it_df):
         
         # PNG 파일이 성공적으로 생성된 경우
         if png_success and actual_png_filepath:
-            try:
-                with open(actual_png_filepath, 'rb') as f:
-                    png_data = f.read()
-                if png_data:
-                    st.download_button(
-                        label="📥 PNG 파일 다운로드",
-                        data=png_data,
-                        file_name=actual_png_filepath.name,
-                        mime="image/png"
-                    )
+            with open(actual_png_filepath, 'rb') as f:
+                png_data = f.read()
+            if png_data:
+                st.download_button(
+                    label="📥 PNG 파일 다운로드",
+                    data=png_data,
+                    file_name=actual_png_filepath.name,
+                    mime="image/png"
+                )
 
-                image = Image.open(actual_png_filepath)
-                caption = f"ERD: {', '.join(selected_tables[:5])}{'...' if len(selected_tables) > 5 else ''}"
-                st.image(image, caption=caption, width=1000)
-                return related_tables
-            except Exception as e:
-                st.warning(f"⚠️ PNG 이미지 로드 실패: {e}")
-        
+            image = Image.open(actual_png_filepath)
+            caption = f"ERD: {', '.join(selected_tables[:5])}{'...' if len(selected_tables) > 5 else ''}"
+            st.image(image, caption=caption, width=1000)
+            return related_tables
+ 
         # PNG 실패 시 SVG로 대체 시도
         try:
             st.info("🔄 SVG 형식으로 ERD를 표시합니다...")
@@ -1044,80 +979,12 @@ def generate_erd(selected_tables, pk_map, it_df):
         except Exception as e:
             st.write("Debug 03:")
             error_msg = str(e)
-            # Graphviz 실행 파일을 찾을 수 없는 경우 감지
-            is_graphviz_error = (
-                'ExecutableNotFound' in error_msg or 
-                'not found' in error_msg.lower() or
-                'failed to execute' in error_msg.lower() or
-                'PosixPath' in error_msg or
-                'make sure the Graphviz executables' in error_msg.lower() or
-                'PATH' in error_msg
-            )
-            
-            if is_graphviz_error:
-                st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
-                st.warning("""
-                **ERD 생성이 불가능합니다.**
-                
-                **오류 원인:**
-                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-                
-                **해결 방법:**
-                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-                
-                **참고:**
-                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-                - Windows: https://graphviz.org/download/ 에서 설치
-                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-                """)
-            else:
-                st.write("Debug 04:")
-                st.info("""
-                **Cloud 환경에서는 ERD 생성이 불가능한 상황입니다.**
-                
-                **가능한 원인:**
-                - Streamlit Cloud 환경 제한
-                
-                **해결 방법:**
-                - 로컬 환경에서 실행하세요
-                """)
-            return False
+
 
     except Exception as e:
         error_msg = str(e)
         st.error(f"❌ ERD 생성 중 오류가 발생했습니다: {error_msg}")
         
-        # # Graphviz 관련 오류인지 확인
-        # is_graphviz_error = (
-        #     'graphviz' in error_msg.lower() or 
-        #     'ExecutableNotFound' in error_msg or
-        #     'failed to execute' in error_msg.lower() or
-        #     'PosixPath' in error_msg or
-        #     'make sure the Graphviz executables' in error_msg.lower() or
-        #     'PATH' in error_msg
-        # )
-        
-        # if is_graphviz_error:
-        #     st.warning("""
-        #     **Graphviz 실행 파일 관련 오류입니다.**
-            
-        #     **오류 원인:**
-        #     - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-        #     - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-            
-        #     **해결 방법:**
-        #     1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-        #     2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-            
-        #     **참고:**
-        #     - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-        #     - Windows: https://graphviz.org/download/ 에서 설치
-        #     - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-        #     """)
-        # else:
-        #     st.info("예상치 못한 오류가 발생했습니다. 오류 메시지를 확인하세요.")
         
         return False
 
@@ -1169,9 +1036,13 @@ def display_erd_result(selected_tables, related_tables, pk_map, it_df):
 
     return True
 
-#---------------------------------------------------------------------------
-# 6. main 함수
-#---------------------------------------------------------------------------
+
+
+# -------------------------------------------------
+# 11. Main
+# -------------------------------------------------
+
+
 def main():
     st.title(APP_TITLE)
     st.caption(APP_DESCRIPTION)
@@ -1181,10 +1052,13 @@ def main():
         pk_map, fk_df, it_df = load_data_mapping() # CodeMapping_relationship.csv 기반
 
         it_org_df = load_data_org() # CodeMapping.csv 기반
+        if it_org_df is None:
+            st.error("CodeMapping.csv 파일을 로드할 수 없습니다.")
+            return
         filestats_df = load_data_filestats() # filestats.csv 기반
        
-        if it_org_df is None or filestats_df is None:
-            st.error("CodeMapping.csv 또는 filestats.csv 파일을 로드할 수 없습니다.")
+        if filestats_df is None:
+            st.error("filestats.csv 파일을 로드할 수 없습니다.")
             return
 
         # 1.1 KPI 표시
@@ -1202,7 +1076,12 @@ def main():
                 erd_button = st.button("🔗 ERD 생성", type="primary", use_container_width=True)
 
         if erd_button:
-            # 3. ERD 생성
+            # ☁️ Cloud 환경 처리
+            if is_cloud_env():
+                show_example_erd_images()
+                return
+
+            # 🖥️ Local 환경: 실제 ERD 생성
             related_tables = generate_erd(selected_tables, pk_map, it_df)
             if not related_tables:
                 return
@@ -1210,16 +1089,25 @@ def main():
             erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
             if not erd_success:
                 return
-            return 
-        else:
-            st.write("Debug 05:")
-            st.markdown("**ERD 생성 버튼을 클릭하세요.**")
             return
-        
 
+        # if erd_button:
+        #     # 3. ERD 생성
+        #     related_tables = generate_erd(selected_tables, pk_map, it_df)
+        #     if not related_tables:
+        #         return
+
+        #     erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
+        #     if not erd_success:
+        #         return
+        #     return 
+        
     except Exception as e:
         st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
         return
 
 if __name__ == '__main__':
     main()
+
+
+
