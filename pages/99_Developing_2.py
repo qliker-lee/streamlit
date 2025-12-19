@@ -1090,17 +1090,6 @@ def main():
             if not erd_success:
                 return
             return
-
-        # if erd_button:
-        #     # 3. ERD 생성
-        #     related_tables = generate_erd(selected_tables, pk_map, it_df)
-        #     if not related_tables:
-        #         return
-
-        #     erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
-        #     if not erd_success:
-        #         return
-        #     return 
         
     except Exception as e:
         st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
