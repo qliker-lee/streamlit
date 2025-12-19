@@ -49,7 +49,7 @@ from DataSense.util.Display import display_kpi_metrics
 # 4. App Config
 # -------------------------------------------------
 APP_NAME = "Developing 2"
-APP_TITLE = "🔗 데이터 관계 (ERD) 분석"
+APP_TITLE = "🔗 데이터 관계 (ERD) 분석 ver 2"
 APP_DESCRIPTION = "CodeMapping 기반 논리적 ERD 생성"
 
 OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
