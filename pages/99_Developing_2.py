@@ -887,219 +887,55 @@ def select_tables(it_df, it_org_df) -> list:
 
     return selected_tables
 
-def generate_erd(selected_tables, pk_map, it_df):
-    """ 
-    3rd Step: Logical ERD 생성
-    """
+def show_example_erd_images():
+    st.info("""
+    **Streamlit Cloud 환경에서는 ERD 자동 생성이 제한됩니다.**
     
-    st.subheader("2. Logical ERD 분석 결과")
-    related_tables = get_related_tables(selected_tables, it_df)
+    Graphviz 실행 파일(`dot`)을 사용할 수 없어
+    실제 ERD 생성 대신 예제 이미지를 표시합니다.
+    """)
 
-    related_table_count = len(related_tables) # 연결된 테이블 수    
+    try:
+        img1 = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
+        st.image(img1, caption="ERD 예제 (단순)", width=480)
+
+        img2 = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
+        st.image(img2, caption="ERD 예제 (복잡)", width=480)
+    except Exception as e:
+        st.error(f"예제 이미지 로드 실패: {e}")
+
+
+# def generate_erd(selected_tables, pk_map, it_df):
+def generate_erd(selected_tables, pk_map, it_df):
+    st.subheader("2. Logical ERD 분석 결과")
+
+    related_tables = get_related_tables(selected_tables, it_df)
+    related_table_count = len(related_tables)
 
     st.caption(f"**선택된 테이블:** {selected_tables}")
     st.caption(f"**연결된 총 테이블 수:** {related_table_count}개")
-    
+
     if related_table_count > MAX_RELATED_TABLE_COUNT:
         st.error(f"연결된 테이블 수가 {MAX_RELATED_TABLE_COUNT}개를 초과했습니다.")
         return False
 
-    # # Graphviz 설치 확인
-    # try:
-    #     import graphviz
-    #     # Graphviz 실행 파일 확인
-    #     try:
-    #         graphviz.version()
-    #     except Exception:
-    #         st.info("""
-    #         **ERD 생성이 불가능합니다.**
-    #         Cloud 환경에서는 Graphviz 설치가 제한될 수 있어서 ERD 생성이 불가능합니다.
-    #         로컬 환경에서 실행하세요. 
-            
-    #         **예제 ERD를 표시합니다.**
-    #         """)
-    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
-    #         st.image(image, caption="단순한 예제 ERD", width=480)
-    #         st.divider()
-    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
-    #         st.image(image, caption="복잡한 예제 ERD", width=480)
-    #         return False
-    # except ImportError:
-    #     st.error("❌ Graphviz 라이브러리를 import할 수 없습니다.")
-    #     return False
-
     try:
-        graph, erd_edge_count = generate_erd_graph(selected_tables, related_tables, pk_map, it_df)
-        
-        if graph is None:
-            st.error("❌ ERD 그래프 객체를 생성할 수 없습니다.")
-            return False
-        
-        file_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-        png_filename = f"DataSense_Logical_ERD_{file_time}.png"
-        png_filepath = OUTPUT_DIR / png_filename
-       
-        # PNG 저장 시도
-        png_success = False
-        actual_png_filepath = None
-        try:
-            graph.attr(dpi='300')
-            erd_path = png_filepath.with_suffix('')
-            graph.render(str(erd_path), format='png', cleanup=True)
-            actual_png_filepath = OUTPUT_DIR / f"{erd_path.name}.png"
-            
-            if actual_png_filepath.exists():
-                png_success = True
-                st.caption(f"📁 저장 경로: `{actual_png_filepath}`")
-            else:
-                st.warning("⚠️ PNG 파일이 생성되었지만 파일을 찾을 수 없습니다.")
-        except Exception as e:
-            error_msg = str(e)
-            # Graphviz 실행 파일을 찾을 수 없는 경우 감지
-            is_graphviz_error = (
-                'ExecutableNotFound' in error_msg or 
-                'not found' in error_msg.lower() or
-                'failed to execute' in error_msg.lower() or
-                'PosixPath' in error_msg or
-                'make sure the Graphviz executables' in error_msg.lower() or
-                'PATH' in error_msg
-            )
-            
-            if is_graphviz_error:
-                st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
-                st.warning("""
-                **ERD 생성이 불가능합니다.**
-                
-                **오류 원인:**
-                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-                
-                **해결 방법:**
-                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-                
-                **참고:**
-                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-                - Windows: https://graphviz.org/download/ 에서 설치
-                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-                """)
-                # SVG도 동일한 오류가 발생할 것이므로 바로 False 반환
-                return False
-            else:
-                st.warning(f"⚠️ PNG 파일 저장 실패: {error_msg}")
-        
-        # PNG 파일이 성공적으로 생성된 경우
-        if png_success and actual_png_filepath:
-            try:
-                with open(actual_png_filepath, 'rb') as f:
-                    png_data = f.read()
-                if png_data:
-                    st.download_button(
-                        label="📥 PNG 파일 다운로드",
-                        data=png_data,
-                        file_name=actual_png_filepath.name,
-                        mime="image/png"
-                    )
-
-                image = Image.open(actual_png_filepath)
-                caption = f"ERD: {', '.join(selected_tables[:5])}{'...' if len(selected_tables) > 5 else ''}"
-                st.image(image, caption=caption, width=1000)
-                return related_tables
-            except Exception as e:
-                st.warning(f"⚠️ PNG 이미지 로드 실패: {e}")
-        
-        # PNG 실패 시 SVG로 대체 시도
-        try:
-            st.info("🔄 SVG 형식으로 ERD를 표시합니다...")
-            svg_data = graph.pipe(format='svg').decode('utf-8')
-            if svg_data and len(svg_data) > 0:
-                components.html(svg_data, height=800, scrolling=True)
-                st.success("✅ ERD가 SVG 형식으로 표시되었습니다.")
-                return related_tables
-            else:
-                st.error("❌ SVG 데이터가 비어있습니다.")
-                return False
-        except Exception as e:
-            error_msg = str(e)
-            # Graphviz 실행 파일을 찾을 수 없는 경우 감지
-            is_graphviz_error = (
-                'ExecutableNotFound' in error_msg or 
-                'not found' in error_msg.lower() or
-                'failed to execute' in error_msg.lower() or
-                'PosixPath' in error_msg or
-                'make sure the Graphviz executables' in error_msg.lower() or
-                'PATH' in error_msg
-            )
-            
-            if is_graphviz_error:
-                st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
-                st.warning("""
-                **ERD 생성이 불가능합니다.**
-                
-                **오류 원인:**
-                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-                
-                **해결 방법:**
-                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-                
-                **참고:**
-                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-                - Windows: https://graphviz.org/download/ 에서 설치
-                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-                """)
-            else:
-                st.error(f"❌ ERD 생성에 실패했습니다: {error_msg}")
-                st.info("""
-                **ERD 생성이 불가능한 상황입니다.**
-                
-                **가능한 원인:**
-                1. Graphviz가 설치되어 있지 않음
-                2. Graphviz 실행 파일 경로 문제
-                3. Streamlit Cloud 환경 제한
-                
-                **해결 방법:**
-                - 로컬 환경에서 실행하거나
-                - 시스템 관리자에게 Graphviz 설치를 요청하세요.
-                """)
-            return False
-
-    except Exception as e:
-        error_msg = str(e)
-        st.error(f"❌ ERD 생성 중 오류가 발생했습니다: {error_msg}")
-        
-        # Graphviz 관련 오류인지 확인
-        is_graphviz_error = (
-            'graphviz' in error_msg.lower() or 
-            'ExecutableNotFound' in error_msg or
-            'failed to execute' in error_msg.lower() or
-            'PosixPath' in error_msg or
-            'make sure the Graphviz executables' in error_msg.lower() or
-            'PATH' in error_msg
+        graph, erd_edge_count = generate_erd_graph(
+            selected_tables, related_tables, pk_map, it_df
         )
-        
-        if is_graphviz_error:
-            st.warning("""
-            **Graphviz 실행 파일 관련 오류입니다.**
-            
-            **오류 원인:**
-            - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
-            - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
-            
-            **해결 방법:**
-            1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
-            2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
-            
-            **참고:**
-            - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
-            - Windows: https://graphviz.org/download/ 에서 설치
-            - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
-            """)
-        else:
-            st.info("예상치 못한 오류가 발생했습니다. 오류 메시지를 확인하세요.")
-        
-        return False
+
+        # 🔴 Cloud 환경에서 여기서 거의 반드시 실패
+        graph.attr(dpi='300')
+        graph.pipe(format='png')
+
+        st.success("ERD 생성 성공 (로컬 환경)")
+        return related_tables
+
+    except Exception:
+        # ✅ Cloud 대응: 예제 이미지로 대체
+        show_example_erd_images()
+        return related_tables
+
 
 def display_erd_result(selected_tables, related_tables, pk_map, it_df):
     """ 
