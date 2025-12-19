@@ -970,8 +970,9 @@ def generate_erd(selected_tables, pk_map, it_df):
                 png_success = True
                 st.caption(f"📁 저장 경로: `{actual_png_filepath}`")
             else:
-                st.warning("⚠️ PNG 파일이 생성되었지만 파일을 찾을 수 없습니다.")
+                st.warning(f"⚠️ PNG 파일이 생성되었지만 파일을 찾을 수 없습니다: 저장 경로: `{actual_png_filepath}`")
         except Exception as e:
+            st.error("Debug 00:")
             error_msg = str(e)
             # Graphviz 실행 파일을 찾을 수 없는 경우 감지
             is_graphviz_error = (
@@ -984,6 +985,7 @@ def generate_erd(selected_tables, pk_map, it_df):
             )
             
             if is_graphviz_error:
+                st.error("Debug 01:")
                 st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
                 st.warning("""
                 **ERD 생성이 불가능합니다.**
@@ -1004,7 +1006,9 @@ def generate_erd(selected_tables, pk_map, it_df):
                 # SVG도 동일한 오류가 발생할 것이므로 바로 False 반환
                 return False
             else:
+                st.error("Debug 02:")
                 st.warning(f"⚠️ PNG 파일 저장 실패: {error_msg}")
+                return False
         
         # PNG 파일이 성공적으로 생성된 경우
         if png_success and actual_png_filepath:
@@ -1038,6 +1042,7 @@ def generate_erd(selected_tables, pk_map, it_df):
                 st.error("❌ SVG 데이터가 비어있습니다.")
                 return False
         except Exception as e:
+            st.error("Debug 03:")
             error_msg = str(e)
             # Graphviz 실행 파일을 찾을 수 없는 경우 감지
             is_graphviz_error = (
@@ -1205,6 +1210,7 @@ def main():
             if not erd_success:
                 return
             return 
+        
 
     except Exception as e:
         st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
