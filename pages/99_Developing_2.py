@@ -904,31 +904,29 @@ def generate_erd(selected_tables, pk_map, it_df):
         st.error(f"연결된 테이블 수가 {MAX_RELATED_TABLE_COUNT}개를 초과했습니다.")
         return False
 
-    # Graphviz 설치 확인
-    try:
-        import graphviz
-        # Graphviz 실행 파일 확인
-        try:
-            graphviz.version()
-        except Exception:
-            st.warning("⚠️ Graphviz가 설치되어 있지 않거나 실행 경로에 없습니다.")
-            st.info("""
-            **ERD 생성이 불가능합니다.**
+    # # Graphviz 설치 확인
+    # try:
+    #     import graphviz
+    #     # Graphviz 실행 파일 확인
+    #     try:
+    #         graphviz.version()
+    #     except Exception:
+    #         st.info("""
+    #         **ERD 생성이 불가능합니다.**
+    #         Cloud 환경에서는 Graphviz 설치가 제한될 수 있어서 ERD 생성이 불가능합니다.
+    #         로컬 환경에서 실행하세요. 
             
-            Streamlit Cloud 환경에서는 Graphviz 설치가 제한될 수 있어서 ERD 생성이 불가능합니다.
-            로컬 환경에서 실행하세요. 
-            
-            **예제 ERD를 표시합니다.**
-            """)
-            image = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
-            st.image(image, caption="예제 ERD", width=480)
-            image = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
-            st.image(image, caption="예제 ERD", width=480)
-            return False
-    except ImportError:
-        st.error("❌ Graphviz 라이브러리를 import할 수 없습니다.")
-        st.info("`pip install graphviz`를 실행하여 설치해주세요.")
-        return False
+    #         **예제 ERD를 표시합니다.**
+    #         """)
+    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
+    #         st.image(image, caption="단순한 예제 ERD", width=480)
+    #         st.divider()
+    #         image = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
+    #         st.image(image, caption="복잡한 예제 ERD", width=480)
+    #         return False
+    # except ImportError:
+    #     st.error("❌ Graphviz 라이브러리를 import할 수 없습니다.")
+    #     return False
 
     try:
         graph, erd_edge_count = generate_erd_graph(selected_tables, related_tables, pk_map, it_df)
