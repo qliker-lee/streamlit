@@ -1211,6 +1211,10 @@ def main():
             if not erd_success:
                 return
             return 
+        else:
+            st.write("Debug 05:")
+            st.markdown("**ERD 생성 버튼을 클릭하세요.**")
+            return
         
 
     except Exception as e:
