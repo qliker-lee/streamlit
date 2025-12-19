@@ -955,16 +955,36 @@ def generate_erd(selected_tables, pk_map, it_df):
                 st.warning("⚠️ PNG 파일이 생성되었지만 파일을 찾을 수 없습니다.")
         except Exception as e:
             error_msg = str(e)
-            if 'ExecutableNotFound' in error_msg or 'not found' in error_msg.lower():
+            # Graphviz 실행 파일을 찾을 수 없는 경우 감지
+            is_graphviz_error = (
+                'ExecutableNotFound' in error_msg or 
+                'not found' in error_msg.lower() or
+                'failed to execute' in error_msg.lower() or
+                'PosixPath' in error_msg or
+                'make sure the Graphviz executables' in error_msg.lower() or
+                'PATH' in error_msg
+            )
+            
+            if is_graphviz_error:
                 st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
-                st.info("""
-                **ERD 생성 실패:**
+                st.warning("""
+                **ERD 생성이 불가능합니다.**
                 
-                Streamlit Cloud 환경에서는 Graphviz 실행 파일이 설치되어 있지 않을 수 있습니다.
+                **오류 원인:**
+                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
+                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
                 
-                **대안:**
-                - SVG 형식으로 ERD를 표시하려고 시도합니다.
+                **해결 방법:**
+                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
+                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
+                
+                **참고:**
+                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
+                - Windows: https://graphviz.org/download/ 에서 설치
+                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
                 """)
+                # SVG도 동일한 오류가 발생할 것이므로 바로 False 반환
+                return False
             else:
                 st.warning(f"⚠️ PNG 파일 저장 실패: {error_msg}")
         
@@ -1001,19 +1021,48 @@ def generate_erd(selected_tables, pk_map, it_df):
                 return False
         except Exception as e:
             error_msg = str(e)
-            st.error(f"❌ ERD 생성에 실패했습니다: {error_msg}")
-            st.info("""
-            **ERD 생성이 불가능한 상황입니다.**
+            # Graphviz 실행 파일을 찾을 수 없는 경우 감지
+            is_graphviz_error = (
+                'ExecutableNotFound' in error_msg or 
+                'not found' in error_msg.lower() or
+                'failed to execute' in error_msg.lower() or
+                'PosixPath' in error_msg or
+                'make sure the Graphviz executables' in error_msg.lower() or
+                'PATH' in error_msg
+            )
             
-            **가능한 원인:**
-            1. Graphviz가 설치되어 있지 않음
-            2. Graphviz 실행 파일 경로 문제
-            3. Streamlit Cloud 환경 제한
-            
-            **해결 방법:**
-            - 로컬 환경에서 실행하거나
-            - 시스템 관리자에게 Graphviz 설치를 요청하세요.
-            """)
+            if is_graphviz_error:
+                st.error("❌ Graphviz 실행 파일을 찾을 수 없습니다.")
+                st.warning("""
+                **ERD 생성이 불가능합니다.**
+                
+                **오류 원인:**
+                - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
+                - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
+                
+                **해결 방법:**
+                1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
+                2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
+                
+                **참고:**
+                - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
+                - Windows: https://graphviz.org/download/ 에서 설치
+                - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
+                """)
+            else:
+                st.error(f"❌ ERD 생성에 실패했습니다: {error_msg}")
+                st.info("""
+                **ERD 생성이 불가능한 상황입니다.**
+                
+                **가능한 원인:**
+                1. Graphviz가 설치되어 있지 않음
+                2. Graphviz 실행 파일 경로 문제
+                3. Streamlit Cloud 환경 제한
+                
+                **해결 방법:**
+                - 로컬 환경에서 실행하거나
+                - 시스템 관리자에게 Graphviz 설치를 요청하세요.
+                """)
             return False
 
     except Exception as e:
@@ -1021,12 +1070,31 @@ def generate_erd(selected_tables, pk_map, it_df):
         st.error(f"❌ ERD 생성 중 오류가 발생했습니다: {error_msg}")
         
         # Graphviz 관련 오류인지 확인
-        if 'graphviz' in error_msg.lower() or 'ExecutableNotFound' in error_msg:
-            st.info("""
-            **Graphviz 관련 오류입니다.**
+        is_graphviz_error = (
+            'graphviz' in error_msg.lower() or 
+            'ExecutableNotFound' in error_msg or
+            'failed to execute' in error_msg.lower() or
+            'PosixPath' in error_msg or
+            'make sure the Graphviz executables' in error_msg.lower() or
+            'PATH' in error_msg
+        )
+        
+        if is_graphviz_error:
+            st.warning("""
+            **Graphviz 실행 파일 관련 오류입니다.**
             
-            Streamlit Cloud에서는 Graphviz 실행 파일이 설치되어 있지 않을 수 있습니다.
-            로컬 환경에서 실행하거나, 시스템 관리자에게 문의하세요.
+            **오류 원인:**
+            - Graphviz 실행 파일(`dot`)이 시스템 PATH에 없습니다.
+            - Streamlit Cloud 환경에서는 Graphviz 실행 파일 설치가 제한될 수 있습니다.
+            
+            **해결 방법:**
+            1. **로컬 환경에서 실행**: 로컬 PC에 Graphviz를 설치하고 실행하세요.
+            2. **시스템 관리자 문의**: Streamlit Cloud 환경에서 Graphviz 설치를 요청하세요.
+            
+            **참고:**
+            - Python `graphviz` 패키지는 설치되어 있지만, Graphviz 실행 파일 자체가 필요합니다.
+            - Windows: https://graphviz.org/download/ 에서 설치
+            - Linux/Mac: `apt-get install graphviz` 또는 `brew install graphviz`
             """)
         else:
             st.info("예상치 못한 오류가 발생했습니다. 오류 메시지를 확인하세요.")
