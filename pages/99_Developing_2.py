@@ -1043,7 +1043,7 @@ def display_erd_result(selected_tables, related_tables, pk_map, it_df):
 
 def main():
     st.title("🔗 데이터 관계 (ERD) 분석 ver 2") # APP_TITLE
-    st.caption(APP_DESCRIPTION)
+    # st.caption(APP_DESCRIPTION)
 
     try:
         # 1. 데이터 추출 및 로드
@@ -1095,6 +1095,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
