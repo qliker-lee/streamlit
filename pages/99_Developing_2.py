@@ -1107,24 +1107,23 @@ def main():
         if selected_tables is None:
             return
 
+        st.info(f"최대 related_tables 수는 합계 {MAX_RELATED_TABLE_COUNT}개까지 가능합니다.")
         # ERD 생성 버튼
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
-            erd_button = st.button("🔗 ERD 생성", type="primary", use_container_width=True)
-        
-        if not erd_button:
-            st.info(f"최대 related_tables 수는 합계 {MAX_RELATED_TABLE_COUNT}개까지 가능합니다.")
-            return
+                erd_button = st.button("🔗 ERD 생성", type="primary", use_container_width=True)
 
-        # 3. ERD 생성
-        related_tables = generate_erd(selected_tables, pk_map, it_df)
-        if not related_tables:
-            return
+        if erd_button:
+            with st.spinner("ERD 생성 중..."):
+                # 3. ERD 생성
+                related_tables = generate_erd(selected_tables, pk_map, it_df)
+                if not related_tables:
+                    return
 
-        erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
-        if not erd_success:
-            return
-        return 
+                erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
+                if not erd_success:
+                    return
+            return 
 
     except Exception as e:
         st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
