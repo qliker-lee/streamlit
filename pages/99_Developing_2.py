@@ -1071,7 +1071,7 @@ def main():
         # ERD 생성 버튼
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
-                erd_button = st.button("🔗 ERD 생성", type="primary", use_container_width=True)
+                erd_button = st.button("🔗 ERD 생성", type="primary", width="stretch")
 
         if erd_button:
             # ☁️ Cloud 환경 처리
@@ -1095,6 +1095,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
