@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-📘 🔗 데이터 관계 (ERD) 시각화 (CodeMapping_relationship.csv 기반)
-2025.12.17 Qliker
-초기 import 시 경로설정, streamlit warnings 억제 설정 순서 중요
+🔗 DataSense Logical ERD Generator (Final)
+--------------------------------------------------
+✔ Cloud / Local 환경 자동 감지
+✔ Cloud : 예제 이미지 출력
+✔ Local : 실제 Graphviz ERD 생성
+✔ Streamlit rerun 대응 (session_state 유지)
+Author: Qliker
+Date  : 2025-12-20
 """
-# -------------------------------------------------------------------
-# 1. 경로 설정 (Streamlit warnings import 전에 필요)
-# -------------------------------------------------------------------
+
+# -------------------------------------------------
+# 1. Path / Warning setup (Streamlit import 전)
+# -------------------------------------------------
 import sys
 from pathlib import Path
 
@@ -15,51 +21,70 @@ PROJECT_ROOT = CURRENT_DIR.parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-# -------------------------------------------------------------------
-# 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
-# -------------------------------------------------------------------
 from DataSense.util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
-# -------------------------------------------------------------------
-# 3. 필수 라이브러리 import
-# -------------------------------------------------------------------
-# 표준 라이브러리
-import os
-from collections import defaultdict
+# -------------------------------------------------
+# 2. Standard / Third-party imports
+# -------------------------------------------------
+import shutil
 from datetime import datetime
+from collections import defaultdict
 
-# 서드파티 라이브러리
 import streamlit as st
 import pandas as pd
 import graphviz
 import streamlit.components.v1 as components
 from PIL import Image
 
-#----------------------------------------------------------------------------
-# 4. 로컬 모듈 import
-#----------------------------------------------------------------------------
-from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
+# -------------------------------------------------
+# 3. Local imports
+# -------------------------------------------------
+from DataSense.util.Files_FunctionV20 import set_page_config
+from DataSense.util.Display import display_kpi_metrics
 
-from DataSense.util.Display import (
-    create_metric_card,
-    display_kpi_metrics     # df, colors, title
-)
-
+# -------------------------------------------------
+# 4. App Config
+# -------------------------------------------------
 APP_NAME = "Developing 2"
-APP_KOR_NAME = "개발 2"
-APP_TITLE = "🔗 데이터 관계 (ERD) 분석"
-APP_DESCRIPTION = "데이터 값에 의한 논리적 ERD를 생성합니다. CodeMapping 기반으로 생성합니다."
-# -------------------------------------------------------------------
-# 상수 설정
-# -------------------------------------------------------------------
+APP_TITLE = "🔗 데이터 관계 (ERD) 분석 ver 3"
+APP_DESCRIPTION = "CodeMapping 기반 논리적 ERD 생성"
+
+OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
 MAPPING_FILE = "CodeMapping_relationship.csv"
 MAPPING_ORG_FILE = "CodeMapping.csv"
-OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
+MAX_RELATED_TABLE_COUNT = 100
 
 set_page_config(APP_NAME)
 
-MAX_RELATED_TABLE_COUNT = 100
+# -------------------------------------------------
+# 5. Utility: Cloud / Local detection
+# -------------------------------------------------
+def is_cloud_env() -> bool:
+    try:
+        return shutil.which("dot") is None
+    except Exception:
+        return True
+
+# -------------------------------------------------
+# 6. Example ERD (Cloud)
+# -------------------------------------------------
+def show_example_erd_images():
+    st.info("""
+    ** Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
+    실제 ERD 대신 생성된 예제 이미지를 표시합니다.
+    """)
+    try:
+        tab1, tab2 = st.tabs(["ERD 예제 (단순)", "ERD 예제 (복잡)"])
+        with tab1:
+            img1 = Image.open(OUTPUT_DIR / "DataSense_Logical_COMPANY.png")
+            st.image(img1, caption="ERD 예제 (단순)", width=480)
+        with tab2:
+            img2 = Image.open(OUTPUT_DIR / "DataSense_Logical_ERD_복잡한예.png")
+            st.image(img2, caption="ERD 예제 (복잡)", width=480)
+    except Exception as e:
+        st.error(f"예제 이미지 로드 실패: {e}")
+
 #----------------------------------------------------------------------------
 # 5. 함수 정의
 #----------------------------------------------------------------------------
@@ -87,10 +112,8 @@ def parse_relationship(relationship_str):
                 'Parent_Table': parent_file,
                 'Parent_Column': parent_col
             })
-            
         except ValueError:
             continue
-            
     return relationships
 
 def _extract_and_load_erd_data_impl(input_file_path: Path):
@@ -384,10 +407,7 @@ def export_summary_result(integrated_df: pd.DataFrame, selected_tables: list = N
 
 #----------------------------------------------------------------------------
 def export_summary_result_new(integrated_df: pd.DataFrame):
-    """
-    FileName 기준으로 집계하여 요약 정보를 저장합니다. (Level Rel Table # 계산 추가)
-    """
-    
+    """    FileName 기준으로 집계하여 요약 정보를 저장합니다. (Level Rel Table # 계산 추가)    """
     # Level_Relationship 문자열에서 모든 고유 파일 이름을 추출하는 유틸리티 함수
     def extract_unique_files_from_chain(relationship_str):
         if not isinstance(relationship_str, str) or not relationship_str.strip():
@@ -433,16 +453,13 @@ def export_summary_result_new(integrated_df: pd.DataFrame):
         lambda x: len(set.union(*x)) if x.any() else 0
     ).to_dict()
 
-    # 4. 결과 DataFrame에 병합
     summary_df = table_stats.copy()
 
-    # **사용자 요청 필드 추가**
     summary_df['Rel Table #'] = summary_df['FileName'].apply(
         lambda x: total_rel_files_map.get(x, 0)
     )
     
     summary_df = summary_df.sort_values(by='FileName').fillna(0)
-    
     return summary_df
 
 def get_related_tables(selected_tables: list, it_df: pd.DataFrame):
@@ -514,103 +531,99 @@ def get_related_tables(selected_tables: list, it_df: pd.DataFrame):
 
 def generate_erd_graph(selected_tables: list, all_tables: set, pk_map: dict, it_df: pd.DataFrame):
     """Graphviz 객체를 생성하고 ERD 관계를 추가합니다."""
-    try:
 
-        table_count = len(all_tables)
-        graph_size = max(20, min(20 + table_count * 3, 150))
+    table_count = len(all_tables)
+    graph_size = max(20, min(20 + table_count * 3, 150))
+    
+    dot = graphviz.Digraph(comment='Dynamic ERD', engine='dot', graph_attr={
+        'rankdir': 'LR', 
+        'splines': 'curved', 
+        'concentrate': 'true',
+        'nodesep': '0.25',
+        'ranksep': '1',
+        'size': f'{graph_size},{graph_size}'
+    })
+    dot.attr('node', shape='none', fontname='Malgun Gothic', fontsize='10')
+    dot.attr('edge', fontname='Malgun Gothic', fontsize='10', penwidth='1.0')
+    
+    # ERD와 동일한 로직으로 관계 추출
+    relationships_list = _extract_relationships_from_erd_logic(selected_tables, all_tables, it_df)
+    # 연결된 컬럼 수집
+    connected_columns = {}
+    for from_file, from_col, to_file, to_col in relationships_list:
+        if from_file not in connected_columns:
+            connected_columns[from_file] = set()
+        connected_columns[from_file].add(from_col)
         
-        dot = graphviz.Digraph(comment='Dynamic ERD', engine='dot', graph_attr={
-            'rankdir': 'LR', 
-            'splines': 'curved', 
-            'concentrate': 'true',
-            'nodesep': '0.25',
-            'ranksep': '1',
-            'size': f'{graph_size},{graph_size}'
-        })
-        dot.attr('node', shape='none', fontname='Malgun Gothic', fontsize='10')
-        dot.attr('edge', fontname='Malgun Gothic', fontsize='10', penwidth='1.0')
-        
-        # ERD와 동일한 로직으로 관계 추출
-        relationships_list = _extract_relationships_from_erd_logic(selected_tables, all_tables, it_df)
-        # 연결된 컬럼 수집
-        connected_columns = {}
-        for from_file, from_col, to_file, to_col in relationships_list:
-            if from_file not in connected_columns:
-                connected_columns[from_file] = set()
-            connected_columns[from_file].add(from_col)
-            
-            if to_file not in connected_columns:
-                connected_columns[to_file] = set()
-            connected_columns[to_file].add(to_col)
-        
-        # 2. 각 테이블별로 표시할 컬럼 결정
-        display_columns = {}
-        for table_name in all_tables:
-            pk_cols_ordered = pk_map.get(table_name, [])
-            pk_cols_set = set(pk_cols_ordered)
-            connected_cols = connected_columns.get(table_name, set())
-            pk_to_display = [col for col in pk_cols_ordered if col in connected_cols]
-            other_to_display = sorted(list(connected_cols - pk_cols_set))
-            display_columns[table_name] = pk_to_display + other_to_display
+        if to_file not in connected_columns:
+            connected_columns[to_file] = set()
+        connected_columns[to_file].add(to_col)
+    
+    # 2. 각 테이블별로 표시할 컬럼 결정
+    display_columns = {}
+    for table_name in all_tables:
+        pk_cols_ordered = pk_map.get(table_name, [])
+        pk_cols_set = set(pk_cols_ordered)
+        connected_cols = connected_columns.get(table_name, set())
+        pk_to_display = [col for col in pk_cols_ordered if col in connected_cols]
+        other_to_display = sorted(list(connected_cols - pk_cols_set))
+        display_columns[table_name] = pk_to_display + other_to_display
 
-        # 3. 테이블 노드 생성
-        def escape_html(text):
-            return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    # 3. 테이블 노드 생성
+    def escape_html(text):
+        return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    
+    for table_name in sorted(all_tables):
+        pk_cols_ordered = pk_map.get(table_name, [])
+        pk_cols_set = set(pk_cols_ordered)
+        table_cols = display_columns.get(table_name, [])
         
-        for table_name in sorted(all_tables):
-            pk_cols_ordered = pk_map.get(table_name, [])
-            pk_cols_set = set(pk_cols_ordered)
-            table_cols = display_columns.get(table_name, [])
-            
-            is_selected = table_name in selected_tables
-            title_bgcolor = '#FFA500' if is_selected else '#FFF8DC'
-            
-            table_label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">'
-            table_label += f'<TR><TD COLSPAN="2" PORT="title" BGCOLOR="{title_bgcolor}"><B>{escape_html(table_name)}</B></TD></TR>'
-            
-            pk_to_display = [col for col in table_cols if col in pk_cols_set]
-            other_to_display = [col for col in table_cols if col not in pk_cols_set]
-            
-            for col in pk_to_display:
-                safe_col = escape_html(col)
-                table_label += f'<TR><TD ALIGN="LEFT" BGCOLOR="#E6E6FA" PORT="{safe_col}"><B>🔑 {safe_col}</B></TD></TR>'
-            
-            for col in other_to_display:
-                safe_col = escape_html(col)
-                table_label += f'<TR><TD ALIGN="LEFT" PORT="{safe_col}"><B>🔗 {safe_col}</B></TD></TR>'
-            
-            table_label += '</TABLE>>'
-            dot.node(table_name, table_label, shape='none')
+        is_selected = table_name in selected_tables
+        title_bgcolor = '#FFA500' if is_selected else '#FFF8DC'
+        
+        table_label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">'
+        table_label += f'<TR><TD COLSPAN="2" PORT="title" BGCOLOR="{title_bgcolor}"><B>{escape_html(table_name)}</B></TD></TR>'
+        
+        pk_to_display = [col for col in table_cols if col in pk_cols_set]
+        other_to_display = [col for col in table_cols if col not in pk_cols_set]
+        
+        for col in pk_to_display:
+            safe_col = escape_html(col)
+            table_label += f'<TR><TD ALIGN="LEFT" BGCOLOR="#E6E6FA" PORT="{safe_col}"><B>🔑 {safe_col}</B></TD></TR>'
+        
+        for col in other_to_display:
+            safe_col = escape_html(col)
+            table_label += f'<TR><TD ALIGN="LEFT" PORT="{safe_col}"><B>🔗 {safe_col}</B></TD></TR>'
+        
+        table_label += '</TABLE>>'
+        dot.node(table_name, table_label, shape='none')
 
-        # 4. FK 관계 (Edge) 추가
-        edge_groups = {}
-        for from_file, from_col, to_file, to_col in relationships_list:
-            key = (from_file, to_file)
-            if key not in edge_groups:
-                edge_groups[key] = []
-            edge_groups[key].append((from_col, to_col))
+    # 4. FK 관계 (Edge) 추가
+    edge_groups = {}
+    for from_file, from_col, to_file, to_col in relationships_list:
+        key = (from_file, to_file)
+        if key not in edge_groups:
+            edge_groups[key] = []
+        edge_groups[key].append((from_col, to_col))
+    
+    edge_count = 0
+    for (from_file, to_file), cols_list in edge_groups.items():
+        if from_file not in all_tables or to_file not in all_tables:
+            continue
         
-        edge_count = 0
-        for (from_file, to_file), cols_list in edge_groups.items():
-            if from_file not in all_tables or to_file not in all_tables:
-                continue
-            
-            from_col, to_col = cols_list[0]
-            safe_from_col = escape_html(from_col)
-            safe_to_col = escape_html(to_col)
-            
-            dot.edge(f'{from_file}:{safe_from_col}', 
-                    f'{to_file}:{safe_to_col}',
-                    dir='both',
-                    arrowtail='crow',
-                    arrowhead='none',
-                    constraint='true')
-            edge_count += 1
+        from_col, to_col = cols_list[0]
+        safe_from_col = escape_html(from_col)
+        safe_to_col = escape_html(to_col)
         
-        return dot, edge_count
-    except Exception as e:
-        st.error(f"Graphviz 객체 생성 중 오류 발생: {e}")
-        return None, 0
+        dot.edge(f'{from_file}:{safe_from_col}', 
+                f'{to_file}:{safe_to_col}',
+                dir='both',
+                arrowtail='crow',
+                arrowhead='none',
+                constraint='true')
+        edge_count += 1
+    
+    return dot, edge_count
 
 def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: dict, it_df: pd.DataFrame):
     """ERD 생성 결과를 데이터프레임으로 정리합니다. ERD와 동일한 필터링 로직 사용."""
@@ -677,7 +690,6 @@ def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: 
                 if from_table:
                     child_tables_set.add(from_table)
         
-        # 관계 수: ERD와 동일하게 엣지 그룹 개수로 계산
         from_edge_count = len(from_edge_groups.get(table_name, set()))
         to_edge_count = len(to_edge_groups.get(table_name, set()))
         
@@ -697,27 +709,9 @@ def create_erd_result_dataframe(selected_tables: list, all_tables: set, pk_map: 
 # Master KPI 
 def Display_File_Statistics(filestats_df):
     """ Master Statistics KPIs """
-    # def calculate_master_type_counts(df):
-    #     """Code Type별 파일 수 계산"""
-    #     if 'MasterType' not in df.columns or 'FileName' not in df.columns:
-    #         return {}
-    #     try:
-    #         master_type_counts = df.groupby('MasterType')['FileName'].nunique()
-    #         expected_types = ['Master', 'Operation', 'Attribute', 'Common', 'Reference', 'Validation']
-            
-    #         result = {}
-    #         for master_type in expected_types:
-    #             count = master_type_counts.get(master_type, 0)
-    #             result[master_type] = f"{count:,}"
-    #         return result
-    #     except Exception as e:
-    #         st.error(f"MasterType 계산 중 오류 발생: {str(e)}")
-    #         return {}
-
     df = filestats_df.copy()
     df = df[(df['MasterType'] != 'Common') & (df['MasterType'] != 'Reference') & (df['MasterType'] != 'Validation')]
     
-    # KPI 계산
     total_files = len(df['FileName'].unique()) if 'FileName' in df.columns else 0
     total_records = df['RecordCnt'].sum() if 'RecordCnt' in df.columns else 0
     total_filesize = df['FileSize'].sum() if 'FileSize' in df.columns else 0
@@ -747,11 +741,9 @@ def Display_File_Statistics(filestats_df):
         "Code File #": f"{total_files:,}",
         "Total Record #": f"{total_records:,.0f} {total_records_unit}",
         "Total File Size": f"{total_filesize:,.0f} {total_filesize_unit}",
-        # "Code Type #": f"{total_master_types:,}",
         "Work Date": f"{work_date}"
     }
 
-    # 각 메트릭에 대한 색상 정의
     metric_colors = {
         "Code File #":      "#1f77b4",
         "Total Record #":   "#2ca02c", 
@@ -759,16 +751,25 @@ def Display_File_Statistics(filestats_df):
         "Work Date":        "#9467bd"     # 보라색
     }
 
-    # 메트릭 표시
     display_kpi_metrics(summary, metric_colors, 'File Statistics')
-
-
     return True
 #---------------------------------------------------------------------------
+
+# -------------------------------------------------
+# 7. Data Load
+# -------------------------------------------------
+def load_data_mapping_new():
+    file_path = OUTPUT_DIR / MAPPING_FILE
+    if not file_path.exists():
+        st.error(f"{MAPPING_FILE} 파일이 없습니다")
+        return None, None
+    df = pd.read_csv(file_path, encoding='utf-8-sig')
+    pk_map = df[df['PK'] == 1].groupby('FileName')['ColumnName'].apply(list).to_dict()
+    return pk_map, df
+
+
 def load_data_mapping():
-    """ 
-    1st Step: 데이터 추출 및 로드
-    """
+    """     1st Step: 데이터 추출 및 로드    """
     mapping_file_path = OUTPUT_DIR / MAPPING_FILE
     
     if not mapping_file_path.exists():
@@ -786,9 +787,7 @@ def load_data_mapping():
     return pk_map, fk_df, it_df
 
 def load_data_org():
-    """ 
-    1.1st Step: CodeMapping.csv 기반 데이터 추출 및 로드
-    """
+    """     1.1st Step: CodeMapping.csv 기반 데이터 추출 및 로드    """
     try:
         file_path = OUTPUT_DIR / MAPPING_ORG_FILE
         df = pd.read_csv(file_path, encoding='utf-8-sig')
@@ -798,9 +797,7 @@ def load_data_org():
         return None
 
 def load_data_filestats():
-    """ 
-    1.2nd Step: filestats.csv 기반 데이터 추출 및 로드
-    """
+    """     1.2nd Step: filestats.csv 기반 데이터 추출 및 로드    """
     try:
         file_path = OUTPUT_DIR / "FileStats.csv"
         df = pd.read_csv(file_path, encoding='utf-8-sig')
@@ -811,9 +808,7 @@ def load_data_filestats():
     return df
 
 def select_tables(it_df, it_org_df) -> list:
-    """ 
-    2nd Step: 테이블 선택
-    """
+    """   2nd Step: 테이블 선택    """
     st.subheader("1. 테이블 선택")
     #-----------------------------------------------
     # CodeMapping.csv 기반 데이터 가공 및 병합
@@ -891,10 +886,9 @@ def select_tables(it_df, it_org_df) -> list:
 
     return selected_tables
 
+
 def generate_erd(selected_tables, pk_map, it_df):
-    """ 
-    3rd Step: Logical ERD 생성
-    """
+    """     3rd Step: Logical ERD 생성     """
     
     st.subheader("2. Logical ERD 분석 결과")
     related_tables = get_related_tables(selected_tables, it_df)
@@ -911,21 +905,34 @@ def generate_erd(selected_tables, pk_map, it_df):
     try:
         graph, erd_edge_count = generate_erd_graph(selected_tables, related_tables, pk_map, it_df)
         
+        if graph is None:
+            st.error("❌ ERD 그래프 객체를 생성할 수 없습니다.")
+            return False
+        
         file_time = datetime.now().strftime("%Y%m%d_%H%M%S")
         png_filename = f"DataSense_Logical_ERD_{file_time}.png"
         png_filepath = OUTPUT_DIR / png_filename
        
+        # PNG 저장 시도
+        png_success = False
+        actual_png_filepath = None
         try:
             graph.attr(dpi='300')
             erd_path = png_filepath.with_suffix('')
             graph.render(str(erd_path), format='png', cleanup=True)
             actual_png_filepath = OUTPUT_DIR / f"{erd_path.name}.png"
-            st.caption(f"📁 저장 경로: `{actual_png_filepath}`")
+            
+            if actual_png_filepath.exists():
+                png_success = True
+                st.caption(f"📁 저장 경로: `{actual_png_filepath}`")
+            else:
+                st.warning(f"⚠️ PNG 파일이 생성되었지만 파일을 찾을 수 없습니다: 저장 경로: `{actual_png_filepath}`")
         except Exception as e:
-            st.error(f"PNG 파일 저장 실패: {e}")
-            actual_png_filepath = None
+            st.warning(f"⚠️ PNG 파일 저장 실패: {e}")
+            return False
         
-        if actual_png_filepath and actual_png_filepath.exists():
+        # PNG 파일이 성공적으로 생성된 경우
+        if png_success and actual_png_filepath:
             with open(actual_png_filepath, 'rb') as f:
                 png_data = f.read()
             if png_data:
@@ -939,24 +946,36 @@ def generate_erd(selected_tables, pk_map, it_df):
             image = Image.open(actual_png_filepath)
             caption = f"ERD: {', '.join(selected_tables[:5])}{'...' if len(selected_tables) > 5 else ''}"
             st.image(image, caption=caption, width=1000)
-
-        else:
-            st.error("PNG 파일 저장에 실패했습니다. SVG 형식으로 표시합니다.")
+            return True
+ 
+        # PNG 실패 시 SVG로 대체 시도
+        try:
+            st.info("🔄 SVG 형식으로 ERD를 표시합니다...")
             svg_data = graph.pipe(format='svg').decode('utf-8')
-            components.html(svg_data, height=800, scrolling=True)   
-
-        return related_tables
+            if svg_data and len(svg_data) > 0:
+                components.html(svg_data, height=800, scrolling=True)
+                st.success("✅ ERD가 SVG 형식으로 표시되었습니다.")
+                return related_tables
+            else:
+                st.error("❌ SVG 데이터가 비어있습니다.")
+                return False
+        except Exception as e:
+            st.warning(f"⚠️ SVG 파일 저장 실패: {e}")
+            return False
 
     except Exception as e:
-        st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
+        st.error(f"❌ ERD 생성 중 오류가 발생했습니다: {e}")
         return False
 
-def display_erd_result(selected_tables, related_tables, pk_map, it_df):
+def display_erd_result(selected_tables, pk_map, it_df):
     """ 
     4th Step: ERD 결과 요약
     """
     st.divider()
     st.subheader("3. ERD 결과 요약")
+
+    related_tables = get_related_tables(selected_tables, it_df)
+
     tab1, tab2, tab3 = st.tabs(["ERD 결과 요약", "선택된 테이블 상세 정보", "관계된 테이블 상세 정보"])
     with tab1:
         erd_result_df = create_erd_result_dataframe(selected_tables, related_tables, pk_map, it_df)
@@ -964,7 +983,7 @@ def display_erd_result(selected_tables, related_tables, pk_map, it_df):
             erd_result_df,
             hide_index=True,
             width='stretch',    
-            height=400,
+            height=500,
             column_config={
                 '테이블명': st.column_config.TextColumn('테이블명', width=150),
                 '선택여부': st.column_config.TextColumn('선택', width=50),
@@ -979,29 +998,42 @@ def display_erd_result(selected_tables, related_tables, pk_map, it_df):
     with tab2:
         selected_tables_df = it_df[it_df['FileName'].isin(selected_tables)]
         selected_tables_df = selected_tables_df.drop(columns=['FilePath'])
-        st.dataframe(selected_tables_df, hide_index=True, width=1000, height=400)
+        st.dataframe(selected_tables_df, hide_index=True, width=1000, height=500)
 
     with tab3:
         related_tables_df = it_df[it_df['FileName'].isin(related_tables)]
         related_tables_df = related_tables_df.drop(columns=['FilePath'])
-        st.dataframe(related_tables_df, hide_index=True, width=1000, height=400)
+        st.dataframe(related_tables_df, hide_index=True, width=1000, height=500)
 
     st.divider()
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("총 테이블 수", len(erd_result_df))
-    with col2:
-        st.metric("선택된 테이블 수", len(erd_result_df[erd_result_df['선택여부'] == '✓']))
-    with col3:
-        st.metric("총 관계 수", erd_result_df['관계 수'].sum())
-    with col4:
-        st.metric("PK 보유 테이블", len(erd_result_df[erd_result_df['PK 컬럼'] != '']))
+    # col1, col2, col3, col4 = st.columns(4)
+    # with col1:
+    #     st.metric("총 테이블 수", len(erd_result_df))
+    # with col2:
+    #     st.metric("선택된 테이블 수", len(erd_result_df[erd_result_df['선택여부'] == '✓']))
+    # with col3:
+    #     st.metric("총 관계 수", erd_result_df['관계 수'].sum())
+    # with col4:
+    #     st.metric("PK 보유 테이블", len(erd_result_df[erd_result_df['PK 컬럼'] != '']))
 
-    return True
+    summary = {
+        "총 테이블 수": f"{len(erd_result_df)}",
+        "선택된 테이블 수": f"{len(erd_result_df[erd_result_df['선택여부'] == '✓'])}",
+        "총 관계 수": f"{erd_result_df['관계 수'].sum()}",
+        "PK 보유 테이블": f"{len(erd_result_df[erd_result_df['PK 컬럼'] != ''])}"
+    }
 
-#---------------------------------------------------------------------------
-# 6. main 함수
-#---------------------------------------------------------------------------
+    metric_colors = {
+        "총 테이블 수":      "#1f77b4",
+        "선택된 테이블 수":   "#2ca02c", 
+        "총 관계 수":  "#ff7f0e",
+        "PK 보유 테이블":  "#ff7f0e",
+    }
+
+    display_kpi_metrics(summary, metric_colors, 'ERD 결과 요약')
+# -------------------------------------------------
+# 11. Main
+# -------------------------------------------------
 def main():
     st.title(APP_TITLE)
     st.caption(APP_DESCRIPTION)
@@ -1011,10 +1043,13 @@ def main():
         pk_map, fk_df, it_df = load_data_mapping() # CodeMapping_relationship.csv 기반
 
         it_org_df = load_data_org() # CodeMapping.csv 기반
+        if it_org_df is None:
+            st.error("CodeMapping.csv 파일을 로드할 수 없습니다.")
+            return
         filestats_df = load_data_filestats() # filestats.csv 기반
        
-        if it_org_df is None or filestats_df is None:
-            st.error("CodeMapping.csv 또는 filestats.csv 파일을 로드할 수 없습니다.")
+        if filestats_df is None:
+            st.error("FileStats.csv 파일을 로드할 수 없습니다.")
             return
 
         # 1.1 KPI 표시
@@ -1025,30 +1060,31 @@ def main():
         if selected_tables is None:
             return
 
+        st.markdown(f"**최대 related_tables 수는 합계 {MAX_RELATED_TABLE_COUNT}개까지 가능합니다.**")
         # ERD 생성 버튼
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
-            erd_button = st.button("🔗 ERD 생성", type="primary", use_container_width=True)
+                erd_button = st.button("🔗 ERD 생성", type="primary", width="stretch")
+
+        if erd_button:
+            
+            # ☁️ Cloud 환경 처리
+            if is_cloud_env() or True:
+                show_example_erd_images()             
+           
+            else:    # 🖥️ Local 환경: 실제 ERD 생성
+                result_erd = generate_erd(selected_tables, pk_map, it_df)
+
+            display_erd_result(selected_tables, pk_map, it_df)
+
+            return
         
-        if not erd_button:
-            st.info(f"최대 related_tables 수는 합계 {MAX_RELATED_TABLE_COUNT}개까지 가능합니다.")
-            return
-
-        # 3. ERD 생성
-        related_tables = generate_erd(selected_tables, pk_map, it_df)
-        if not related_tables:
-            st.error("ERD 생성에 실패했습니다.")
-            return
-
-        erd_success = display_erd_result(selected_tables, related_tables, pk_map, it_df)
-        if not erd_success:
-            st.error("ERD 결과 요약에 실패했습니다.")
-            return
-        return 
-
     except Exception as e:
         st.error(f"ERD 생성 중 치명적인 오류가 발생했습니다: {e}")
         return
 
 if __name__ == '__main__':
     main()
+
+
+
