@@ -71,7 +71,7 @@ def is_cloud_env() -> bool:
 # -------------------------------------------------
 def show_example_erd_images():
     st.info("""
-    ** Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
+    **Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
     실제 ERD 대신 생성된 예제 이미지를 표시합니다.
     """)
     try:
@@ -1006,16 +1006,6 @@ def display_erd_result(selected_tables, pk_map, it_df):
         st.dataframe(related_tables_df, hide_index=True, width=1000, height=500)
 
     st.divider()
-    # col1, col2, col3, col4 = st.columns(4)
-    # with col1:
-    #     st.metric("총 테이블 수", len(erd_result_df))
-    # with col2:
-    #     st.metric("선택된 테이블 수", len(erd_result_df[erd_result_df['선택여부'] == '✓']))
-    # with col3:
-    #     st.metric("총 관계 수", erd_result_df['관계 수'].sum())
-    # with col4:
-    #     st.metric("PK 보유 테이블", len(erd_result_df[erd_result_df['PK 컬럼'] != '']))
-
     summary = {
         "총 테이블 수": f"{len(erd_result_df)}",
         "선택된 테이블 수": f"{len(erd_result_df[erd_result_df['선택여부'] == '✓'])}",
@@ -1024,13 +1014,13 @@ def display_erd_result(selected_tables, pk_map, it_df):
     }
 
     metric_colors = {
-        "총 테이블 수":      "#1f77b4",
-        "선택된 테이블 수":   "#2ca02c", 
-        "총 관계 수":  "#ff7f0e",
-        "PK 보유 테이블":  "#ff7f0e",
+        "총 테이블 수":     "#1f77b4",       # 파랑색
+        "선택된 테이블 수":  "#2ca02c",       # 초록색
+        "총 관계 수":       "#9467bd",       # 보라색
+        "PK 보유 테이블":   "#ff7f0e",       # 빨강색
     }
 
-    display_kpi_metrics(summary, metric_colors, 'ERD 결과 요약')
+    display_kpi_metrics(summary, metric_colors, 'ERD 결과 요약 지표')
 # -------------------------------------------------
 # 11. Main
 # -------------------------------------------------
@@ -1069,7 +1059,7 @@ def main():
         if erd_button:
             
             # ☁️ Cloud 환경 처리
-            if is_cloud_env() or True:
+            if is_cloud_env():
                 show_example_erd_images()             
            
             else:    # 🖥️ Local 환경: 실제 ERD 생성
