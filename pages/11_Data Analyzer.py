@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-2025.11.05  Qliker 
+2025.12.20  Qliker 
 📊 Data Analyzer (통합)
 - Data Quality Analyzer: 모든 파일의 각 컬럼들에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
 - Data Type & Rule Analyzer: Data Quality Analyzer 결과를 기반으로 각 컬럼에 대한 Rule 프로파일링 수행
@@ -47,7 +47,6 @@ APP_DESC2 = """
 - Data Quality Analyzer: 모든 데이터에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
 - Data Type & Rule Analyzer: 모든 데이터의 데이터 타입 및 사전 정의된 Rule 기반 프로파일링 수행
 - Data Relationship Analyzer: 데이터 간의 관계도를 작성
-###### 아래의 탭들을 단계적으로 수행합니다. 
 """
 
 
@@ -280,47 +279,6 @@ class DataQualityAnalyzer:
         
         df = df.drop(columns=['FilePath'])
         st.dataframe(df, width='stretch', height=550, hide_index=True)
-    
-    def display(self):
-        """메인 UI 표시"""
-        st.markdown("##### 모든 파일의 각 컬럼들에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성합니다.")
-        
-        # 통계 상세 내역 표시
-        self.display_statistics_info()
-        
-        st.divider()
-        st.markdown("##### 생성된 통계 정보를 기반으로 데이터 품질 분석을 수행하고, 코드간 관계도를 작성합니다.")
-        
-        st.divider()
-        col1, col2 = st.columns([1, 2])
-        with col1:
-            with st.expander("🔐 실행 패스워드 입력", expanded=True):
-                password_input = st.text_input(
-                    "패스워드를 입력하세요",
-                    type="password",
-                    key="quality_analyzer_password_input",
-                    help="Data Quality Analyzer 실행을 위한 패스워드가 필요합니다."
-                )
-        with col2:
-            st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다.")
-            if st.button("🔍 Data Quality Analyzer 실행", key="btn_quality_analyzer"):
-                if not password_input:
-                    st.error("❌ 패스워드를 입력하세요.")
-                elif password_input != self.password:
-                    st.error("❌ 패스워드가 올바르지 않습니다.")
-                else:
-                    with st.spinner("분석 실행 중... 잠시만 기다려주세요."):
-                        self.run_analyzer()
-        
-        st.divider()
-        st.caption(f"실행 후 결과 파일은 {self.output_path.parent} 하위에 저장됩니다.")
-        st.markdown("##### Data Quality Analyzer의 결과 입니다. 스크롤하여 전체 내용을 분석하세요.")
-        st.write("생성된 결과는 데이터 프레임에 커서를 위치하면 다운로드 버튼이 생성됩니다.")
-        
-        self.display_results()
-        
-        # st.markdown("##### Data Quality Information Menu 에서 상세 분석을 수행합니다.")
-
 # -------------------------------------------------------------------
 # DATA TYPE & RULE ANALYZER
 # -------------------------------------------------------------------
@@ -346,7 +304,7 @@ class DataTypeRuleAnalyzer:
             return False
         
         cmd = [sys.executable, str(self.script_path)]
-        
+
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
@@ -378,38 +336,6 @@ class DataTypeRuleAnalyzer:
 
         st.dataframe(df, width='stretch', height=600, hide_index=True)
     
-    def display(self):
-        """메인 UI 표시"""
-        st.markdown("##### Data Quality Analyzer 결과를 기반으로 각 컬럼에 대한 Rule 프로파일링을 수행합니다.")
-        st.markdown("##### Value 구성(패턴) 정보를 통해 각 컬럼에 대한 기본적인 속성을 정의합니다.")
-        
-        st.divider()
-        col1, col2 = st.columns([1, 2])
-        with col1:
-            with st.expander("🔐 실행 패스워드 입력", expanded=True):
-                password_input = st.text_input(
-                    "패스워드를 입력하세요",
-                    type="password",
-                    key="rule_analyzer_password_input",
-                    help="Data Type & Rule Analyzer 실행을 위한 패스워드가 필요합니다."
-                )
-        with col2:
-            st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다.")
-            if st.button("🔍 Data Type & Rule 분석 실행", key="btn_rule_analyzer"):
-                if not password_input:
-                    st.error("❌ 패스워드를 입력하세요.")
-                elif password_input != self.password:
-                    st.error("❌ 패스워드가 올바르지 않습니다.")
-                else:
-                    with st.spinner("분석 실행 중... 잠시만 기다려주세요."):
-                        self.run_analyzer()
-        
-        st.divider()
-        st.caption(f"결과 파일은 {self.output_path.parent} 하위에 저장됩니다.")
-        st.markdown("##### Data Quality Information Menu에서 상세 분석을 수행합니다.")
-        
-        self.display_results()
-
 # -------------------------------------------------------------------
 # CODE RELATIONSHIP ANALYZER
 # -------------------------------------------------------------------
@@ -457,37 +383,6 @@ class CodeRelationshipAnalyzer:
 
         st.dataframe(df, width='stretch', height=600, hide_index=True)
     
-    def display(self):
-        """메인 UI 표시"""
-        st.markdown("##### Data Quality Analyzer 결과를 기반으로 모든 파일의 컬럼들에 대한 관계도를 작성합니다.")
-        
-        st.divider()
-        col1, col2 = st.columns([1, 2])
-        with col1:
-            with st.expander("🔐 실행 패스워드 입력", expanded=True):
-                password_input = st.text_input(
-                    "패스워드를 입력하세요",
-                    type="password",
-                    key="code_relationship_password_input",
-                    help="Code Relationship Analyzer 실행을 위한 패스워드가 필요합니다."
-                )
-        with col2:
-            st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다. (약 10분 이상 소요)")
-            if st.button("🔍 Code Relationship 분석 실행", key="btn_relationship_analyzer"):
-                if not password_input:
-                    st.error("❌ 패스워드를 입력하세요.")
-                elif password_input != self.password:
-                    st.error("❌ 패스워드가 올바르지 않습니다.")
-                else:
-                    with st.spinner("분석 실행 중... 잠시만 기다려주세요."):
-                        self.run_analyzer()
-        
-        st.divider()
-        st.caption(f"결과 파일은 {self.output_path.parent} 하위에 저장됩니다.")
-        st.markdown("##### Data Quality Information Menu에서 상세 분석을 수행합니다.")
-        
-        self.display_results()
-
 # -------------------------------------------------------------------
 # MAIN APP
 # -------------------------------------------------------------------
@@ -500,6 +395,7 @@ class DataAnalyzerApp:
         self.quality_analyzer = None
         self.rule_analyzer = None
         self.relationship_analyzer = None
+        self.password = None
     
     def initialize(self) -> bool:
         """초기화"""
@@ -509,34 +405,70 @@ class DataAnalyzerApp:
             self.quality_analyzer = DataQualityAnalyzer(self.yaml_config, self.loader)
             self.rule_analyzer = DataTypeRuleAnalyzer(self.yaml_config, self.loader)
             self.relationship_analyzer = CodeRelationshipAnalyzer(self.yaml_config, self.loader)
+            self.password = self.yaml_config.get("DataSense_Password", "tkfkdgo")
             return True
         except Exception as e:
             st.error(f"초기화 오류: {e}")
             return False
     
-    def display(self):
+    def data_analyzer(self):
         """메인 UI 표시"""
         st.title(f"📊 {APP_NAME}")
         st.markdown(APP_DESC)
         st.markdown(APP_DESC2)
         
-        tab1, tab2, tab3 = st.tabs([
-            "📊 Data Quality Analyzer", 
-            "📋 Data Type & Rule Analyzer", 
-            "🔗 Data Relationship Analyzer"
-        ])
-        
-        with tab1:
-            self.quality_analyzer.display()
-        
-        with tab2:
-            self.rule_analyzer.display()
-        
-        with tab3:
-            self.relationship_analyzer.display()
+        st.divider()
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            password_input = None
+            with st.expander("🔐 실행 패스워드 입력", expanded=True):
+                password_input = st.text_input(
+                    "패스워드를 입력하세요",
+                    type="password",
+                    key="data_analyzer_password_input",
+                    help="Data Analyzer 실행을 위한 패스워드가 필요합니다."
+                )
 
-        st.markdown("##### Data Quality Information Menu 에서 상세 분석을 수행합니다.")
-
+        with col2:
+            st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다. (약 10분 이상 소요)")
+            if st.button("🔍 통합 분석(Quality/Rule/Relationship) 실행", key="btn_integrated_analyzer"):
+                if not password_input:
+                    st.error("❌ 패스워드를 입력하세요.")
+                elif password_input != self.password:
+                    st.error("❌ 패스워드가 올바르지 않습니다.")
+                else:
+                    # 통합 분석 프로세스 시작
+                    with st.spinner("전체 데이터 분석 프로세스를 진행 중입니다..."):
+                        # 1. 프로그레스 바와 상태 텍스트 영역 생성
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        # --- [1단계: Data Quality] ---
+                        status_text.write("⏳ [1/3] Data Quality 분석을 수행 중입니다... (33%)")
+                        progress_bar.progress(10) # 시작 시 약간 채움
+                        
+                        if self.quality_analyzer.run_analyzer():
+                            progress_bar.progress(33)
+                            
+                            # --- [2단계: Data Type & Rule] ---
+                            status_text.write("⏳ [2/3] Data Type & Rule 분석을 수행 중입니다... (66%)")
+                            if self.rule_analyzer.run_analyzer():
+                                progress_bar.progress(66)
+                                
+                                # --- [3단계: Code Relationship] ---
+                                status_text.write("⏳ [3/3] Code Relationship 분석을 수행 중입니다... (100%)")
+                                if self.relationship_analyzer.run_analyzer():
+                                    progress_bar.progress(100)
+                                    status_text.empty() # 진행 텍스트 삭제
+                                    
+                                    st.success("🎉 모든 분석 단계(Quality -> Rule -> Relationship)가 완료되었습니다!")
+                                    st.balloons()
+                                else:
+                                    st.error("❌ 3단계(Relationship) 분석 중 오류가 발생했습니다.")
+                            else:
+                                st.error("❌ 2단계(Rule) 분석 중 오류가 발생했습니다.")
+                        else:
+                            st.error("❌ 1단계(Quality) 분석 중 오류가 발생했습니다.")
 # -------------------------------------------------------------------
 # MAIN
 # -------------------------------------------------------------------
@@ -544,7 +476,7 @@ def main():
     try:
         app = DataAnalyzerApp()
         if app.initialize():
-            app.display()
+            app.data_analyzer()
         else:
             st.error("DataAnalyzerApp 초기화 실패")
     except Exception as e:
