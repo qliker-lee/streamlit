@@ -51,7 +51,7 @@ APP_TITLE = "🔗 데이터 관계 (Data Relationship Diagram)"
 APP_DESCRIPTION = "Data Value Mapping 기반 논리적 Data Relationship Diagram을 생성합니다."
 
 OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
-IMAGE_DIR = OUTPUT_DIR / 'Images'
+IMAGE_DIR = OUTPUT_DIR / 'images'
 IMAGE_FILE = "Datasense_DRD"
 MAPPING_FILE = "CodeMapping_relationship.csv"
 MAPPING_ORG_FILE = "CodeMapping.csv"
