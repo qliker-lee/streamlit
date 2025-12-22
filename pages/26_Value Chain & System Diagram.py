@@ -254,6 +254,92 @@ def create_system_architecture_diagram(industry, mode="Summary"):
     return dot
 
 # ============================================================================
+# Value Chain & File Diagram 생성 함수
+# ============================================================================
+
+def create_valuechain_file_diagram(industry):
+    """Value Chain Activity와 FileName을 직접 연결하는 Diagram을 생성합니다.
+    System Architecture Detail과 비슷하게 Activity별로 FileName을 박스로 묶어서 표시합니다."""
+    df_vc = load_data(VALUECHAIN_CSV_PATH)
+    df_mapping = load_data(MAPPING_CSV_PATH)
+
+    if df_vc.empty:
+        return None
+
+    industry_vc = df_vc[df_vc["Industry"] == industry].sort_values("Activity_Seq").copy()
+    if industry_vc.empty:
+        return None
+
+    industry_mapping = df_mapping[df_mapping["Industry"] == industry]
+    if industry_mapping.empty:
+        return None
+    
+    dot = Digraph(name=f"ValueChain_File_{industry}", format='png', engine='dot')
+    # 파일 목록이 포함되므로 간격을 넓게 설정
+    dot.attr(rankdir='TB', size='40,30', nodesep='0.5', ranksep='2.5')
+    
+    font_name = 'Malgun Gothic' if platform.system() == 'Windows' else 'NanumGothic'
+
+    # --- 1. 상단 레이어: 가로 정렬 Activity ---
+    activity_node_ids = []
+    with dot.subgraph() as s:
+        s.attr(rank='same')
+        for _, row in industry_vc.iterrows():
+            act_id = f"act_{row['Activity']}"
+            display_name = row['Activity_Kor'] if pd.notna(row.get('Activity_Kor')) else row['Activity']
+            label = f"{display_name}\\n({row['Activity']})"
+            
+            if row.get('Activity_Type') == 'Primary':
+                f_color, b_color = '#E3F2FD', '#1E88E5'
+            else:
+                f_color, b_color = '#FFF9C4', '#FBC02D'
+            
+            s.node(act_id, label=label, shape='box', style='filled,rounded', 
+                   fillcolor=f_color, color=b_color, fontname=font_name, 
+                   width='2.2', height='0.8', penwidth='2')
+            activity_node_ids.append(act_id)
+
+    for i in range(len(activity_node_ids) - 1):
+        dot.edge(activity_node_ids[i], activity_node_ids[i+1], style='invis')
+
+    # --- 2. 하단 레이어: Activity별 FileName 박스 ---
+    file_box_node_ids = {}
+    
+    with dot.subgraph() as fs:
+        fs.attr(rank='same')
+        for _, row in industry_vc.iterrows():
+            activity = row['Activity']
+            act_id = f"act_{activity}"
+            
+            # 해당 Activity에 연결된 FileName들 가져오기
+            files = industry_mapping[industry_mapping["Activity"] == activity]["FileName"].dropna().unique()
+            
+            if len(files) > 0:
+                # 파일 목록을 줄바꿈으로 표시
+                file_list_str = "\\n".join([f"• {f}" for f in files])
+                
+                # Activity 정보를 포함한 박스 레이블 생성
+                display_name = row['Activity_Kor'] if pd.notna(row.get('Activity_Kor')) else activity
+                detail_label = f"{{ {display_name} ({activity}) | {file_list_str} }}"
+                
+                # 각 Activity별 File 박스 노드 생성
+                file_box_id = f"filebox_{activity}"
+                fs.node(file_box_id, label=detail_label, shape='record',
+                       style='filled', fillcolor='#F3E5F5', color='#9C27B0',
+                       fontname=font_name, penwidth='1.5')
+                
+                file_box_node_ids[activity] = file_box_id
+
+    # --- 3. 연결선 (Activity -> FileName 박스) ---
+    for activity in file_box_node_ids.keys():
+        act_id = f"act_{activity}"
+        if act_id in activity_node_ids and activity in file_box_node_ids:
+            dot.edge(act_id, file_box_node_ids[activity],
+                     color='#9E9E9E', arrowhead='vee', penwidth='1.5')
+
+    return dot
+
+# ============================================================================
 # 메인 UI 함수
 # ============================================================================
 
@@ -421,9 +507,80 @@ def system_architecture_tab(selected_industry, mode="Summary"):
         st.error(f"❌ Diagram 생성 중 오류가 발생했습니다: {e}")
         st.info("Graphviz가 설치되어 있고 PATH에 추가되었는지 확인해주세요.")
 
+def valuechain_file_tab(selected_industry):
+    """Value Chain & File Diagram 탭"""
+    st.markdown(f"### 📁 Value Chain & File Diagram: **{selected_industry}**")
+    st.markdown("##### Value Chain Activity와 FileName을 직접 연결하는 구성도를 표시합니다.")
+    
+    # 데이터 로드
+    df_vc = load_data(VALUECHAIN_CSV_PATH)
+    df_mapping = load_data(MAPPING_CSV_PATH)
+    
+    # 선택된 Industry의 데이터 필터링
+    industry_vc = df_vc[df_vc["Industry"] == selected_industry].copy() if not df_vc.empty else pd.DataFrame()
+    industry_mapping = df_mapping[df_mapping["Industry"] == selected_industry].copy() if not df_mapping.empty else pd.DataFrame()
+    
+    # 데이터 미리보기
+    with st.expander("📋 Value Chain & File Data Preview", expanded=False):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Value Chain Activities**")
+            if not industry_vc.empty:
+                vc_display = industry_vc[["Activity_Seq", "Activity_Type", "Activity", "Activity_Kor"]].copy()
+                vc_display.columns = ["Seq", "Type", "Activity (EN)", "Activity (KR)"]
+                st.dataframe(vc_display, use_container_width=True, hide_index=True)
+            else:
+                st.info("No Value Chain data")
+        
+        with col2:
+            st.markdown("**Activity-File Mapping**")
+            if not industry_mapping.empty:
+                # Activity와 FileName만 표시 (System은 제외)
+                mapping_display = industry_mapping[["Activity", "FileName"]].drop_duplicates().copy()
+                mapping_display.columns = ["Activity", "File Name"]
+                st.dataframe(mapping_display, use_container_width=True, hide_index=True)
+            else:
+                st.info("No Mapping data")
+    
+    # Cloud 환경 체크
+    if is_cloud_env():
+        show_sample_image("sample_ValueChain_File.png", f"Value Chain & File Diagram: {selected_industry} (Sample)")
+        return
+    
+    try:
+        graph = create_valuechain_file_diagram(selected_industry)
+        if graph:
+            file_time = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+            path = IMAGE_DIR / f"ValueChain_File_{selected_industry}_{file_time}"
+            graph.attr(dpi='300')
+            graph.render(str(path), format='png', cleanup=True)
+            actual_png_filepath = IMAGE_DIR / f"{path.name}.png"
+            
+            if actual_png_filepath.exists():
+                st.image(str(actual_png_filepath), use_container_width=True)
+                
+                # 다운로드 버튼
+                with open(actual_png_filepath, "rb") as f:
+                    png_data = f.read()
+                if png_data:
+                    st.download_button(
+                        "📥 Value Chain & File 이미지 다운로드",
+                        png_data,
+                        file_name=f"ValueChain_File_{selected_industry}.png",
+                        mime="image/png",
+                        key="vc_file_download"
+                    )
+        else:
+            st.warning("⚠️ Diagram을 생성할 수 없습니다. 매핑 데이터를 확인해주세요.")
+            
+    except Exception as e:
+        st.error(f"❌ Diagram 생성 중 오류가 발생했습니다: {e}")
+        st.info("Graphviz가 설치되어 있고 PATH에 추가되었는지 확인해주세요.")
+
 def main():
     st.set_page_config(layout="wide")
-    st.title("📊 Value Chain & System Diagram Generator")
+    st.title("📊 Value Chain & System Architecture Diagram")
     st.markdown("##### Industry별 Value Chain Diagram과 System Architecture Diagram을 생성합니다.")
     
     # 데이터 로드
@@ -455,10 +612,11 @@ def main():
     st.divider()
     
     # 탭 생성
-    tab_vc, tab_sys_summary, tab_sys_detail = st.tabs([
+    tab_vc, tab_sys_summary, tab_sys_detail, tab_vc_file = st.tabs([
         "📊 Value Chain Diagram",
         "🏗️ System Architecture",
-        "🔍 System Architecture Detail"
+        "🔍 System Architecture Detail",
+        "📁 Value Chain & File"
     ])
     
     with tab_vc:
@@ -469,6 +627,9 @@ def main():
     
     with tab_sys_detail:
         system_architecture_tab(selected_industry, mode="Detailed")
+    
+    with tab_vc_file:
+        valuechain_file_tab(selected_industry)
 
 if __name__ == "__main__":
     main()
