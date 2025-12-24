@@ -7,7 +7,7 @@ from pathlib import Path
 # 페이지 설정
 st.set_page_config(page_title="DataSense Independent Analyzer", layout="wide")
 
-# 파일 경로 설정
+# 경로 설정 (Pathlib 활용)
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BASE_PATH = PROJECT_ROOT / "DataSense"
 OUTPUT_DIR = BASE_PATH / "DS_Output"
@@ -21,21 +21,23 @@ def load_data(file_path):
     return None
 
 def get_file_summary(file_names, df_mapping):
-    """선택된 파일들의 FileName, ColumnCnt, PK List를 추출하는 함수"""
+    """선택된 파일 리스트에 대해 FileName, ColumnCnt, PK List를 추출"""
     if df_mapping is None or len(file_names) == 0:
         return pd.DataFrame(columns=['FileName', 'ColumnCnt', 'PK_List'])
     
-    # 해당 파일들만 필터링
     relevant_mapping = df_mapping[df_mapping['FileName'].isin(file_names)]
-    
     summary = []
     for f_name in file_names:
         f_data = relevant_mapping[relevant_mapping['FileName'] == f_name]
         col_cnt = len(f_data)
-        # PK가 1인 컬럼들 추출
-        pk_cols = f_data[f_data['PK'].astype(str) == '1']['ColumnName'].tolist()
-        pk_str = ", ".join(pk_cols) if pk_cols else "-"
         
+        # PK 컬럼 추출 (PK 값이 1인 컬럼들)
+        pk_str = "-"
+        if 'PK' in f_data.columns:
+            pk_cols = f_data[f_data['PK'].astype(str).str.contains('1', na=False)]['ColumnName'].tolist()
+            if pk_cols:
+                pk_str = ", ".join(pk_cols)
+            
         summary.append({
             'FileName': f_name,
             'ColumnCnt': col_cnt,
@@ -46,80 +48,83 @@ def get_file_summary(file_names, df_mapping):
 
 def main():
     st.title("📊 DataSense Independent Analysis Dashboard")
-    
+    st.markdown(f"**Data Location:** `{OUTPUT_DIR}`")
+
     df_vc = load_data(VC_FILE)
-    df_mapping = load_data(MAPPING_FILE)
+    df_mapping = load_data(load_mapping_path := MAPPING_FILE)
 
     if df_vc is None:
-        st.error(f"기초 데이터를 찾을 수 없습니다. (경로: {VC_FILE})")
+        st.error(f"데이터 파일을 찾을 수 없습니다: {VC_FILE}")
         return
 
-    # 전처리: Unknown 제외
+    # --- [전처리] Unknown 제외 ---
     df_vc = df_vc.dropna(subset=['Activity', 'System'])
     df_vc = df_vc[(df_vc['Activity'] != 'Unknown') & (df_vc['System'] != 'Unknown')]
 
-    # [STEP 1] Industry 선택 (전체 데이터 필터 기준)
-    st.header("🏢 Industry Selection")
+    # 1. Industry 선택 (대시보드 공통 필터)
+    st.header("🏢 1. Industry Selection")
     industries = sorted(df_vc['Industry'].unique())
     selected_industry = st.selectbox("분석할 산업군을 선택하세요", industries)
+    
+    # 해당 산업군 데이터 (Activity와 System 섹션의 독립적 소스)
     df_ind = df_vc[df_vc['Industry'] == selected_industry]
-    
-    st.markdown("---")
+    st.divider()
 
-    # [STEP 2] Activity 별 독립 정보 출력
-    st.header(f"⚙️ Activity Analysis ({selected_industry})")
-    act_list = sorted(df_ind['Activity'].unique())
+    # ---------------------------------------------------------
+    # 2. Activity 섹션 (파이 차트 + 독립 정보)
+    # ---------------------------------------------------------
+    st.header(f"⚙️ Activity Analysis: {selected_industry}")
+    all_activities = sorted(df_ind['Activity'].unique())
     
-    col1, col2 = st.columns([1, 2])
-    with col1:       
-        # 차트: 해당 산업 내 전체 Activity 분포
+    act_col1, act_col2 = st.columns([1.5, 2.5])
+    
+    with act_col1:
+        selected_act = st.selectbox("Activity를 선택하세요", all_activities, key="sel_act")
+        
+        # 파이 차트 생성 (도넛 형태)
         act_counts = df_ind.groupby('Activity')['FileName'].count().reset_index()
-        fig_act = px.pie(act_counts, names='Activity', values='FileName', title="Activity 분포", hole=0.4)
+        fig_act = px.pie(act_counts, names='Activity', values='FileName', 
+                         title=f"Activity별 파일 비중",
+                         hole=0.4, # 도넛 형태
+                         color_discrete_sequence=px.colors.qualitative.Pastel)
+        fig_act.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_act, use_container_width=True)
 
-    with col2:
-        selected_act = st.selectbox("Activity 선택", act_list, key="sb_act")
-        # 선택된 Activity에 속한 파일들
+    with act_col2:
+        st.subheader(f"📄 '{selected_act}' 소속 파일 정보")
         act_files = df_ind[df_ind['Activity'] == selected_act]['FileName'].unique()
-
-        st.subheader(f"📄 '{selected_act}' 소속 파일 요약")
         act_summary = get_file_summary(act_files, df_mapping)
         st.dataframe(act_summary, use_container_width=True, hide_index=True)
 
-    st.markdown("---")
+    st.divider()
 
-    # [STEP 3] System 별 독립 정보 출력
-    st.header(f"💻 System Analysis ({selected_industry})")
-    sys_list = sorted(df_ind['System'].unique())
+    # ---------------------------------------------------------
+    # 3. System 섹션 (막대 차트 + 독립 정보)
+    # ---------------------------------------------------------
+    st.header(f"💻 System Analysis: {selected_industry}")
+    all_systems = sorted(df_ind['System'].unique())
     
-    col3, col4 = st.columns([1, 2])
-    with col3:
-        # 차트: 해당 산업 내 전체 System 분포
-        sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
-        # # 막대차트 생성 (use_container_width로 자동 크기 조절)
-        # fig_sys = px.bar(sys_counts, x='System', y='FileName', title="System별 파일 수", color='System', 
-        # height=300, width=600, bar_width=0.5)
-        # st.plotly_chart(fig_sys, use_container_width=True)
-
-        # 사용자님 요청사항 반영: 막대 너비를 크게 조정
-        fig_sys = px.bar(sys_counts, x='System', y='FileName', color='System', height=400)
+    sys_col1, sys_col2 = st.columns([1.5, 2.5])
+    
+    with sys_col1:
+        selected_sys = st.selectbox("System을 선택하세요", all_systems, key="sel_sys")
         
-        # [핵심] bargap=0.1~0.3 정도로 설정하면 막대가 훨씬 듬직하게 보입니다.
-        fig_sys.update_layout(
-            bargap=0.15, 
-            showlegend=False,
-            margin=dict(l=20, r=20, t=40, b=20)
-        )
+        # 막대 차트 생성
+        sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
+        fig_sys = px.bar(sys_counts, x='System', y='FileName', 
+                         title="System별 파일 수 (너비 확장)", 
+                         color='System', height=400)
+        
+        # [수정] 막대 너비 확장을 위해 bargap 조정 (0.2는 막대가 80%를 차지함을 의미)
+        fig_sys.update_layout(bargap=0.2, showlegend=False)
         st.plotly_chart(fig_sys, use_container_width=True)
 
-    with col4:
-        selected_sys = st.selectbox("System 선택", sys_list, key="sb_sys")
-        # 선택된 System에 속한 파일들
+    with sys_col2:
+        st.subheader(f"📋 '{selected_sys}' 소속 파일 정보")
         sys_files = df_ind[df_ind['System'] == selected_sys]['FileName'].unique()
-
-        st.subheader(f"📋 '{selected_sys}' 소속 파일 요약")
         sys_summary = get_file_summary(sys_files, df_mapping)
         st.dataframe(sys_summary, use_container_width=True, hide_index=True)
+
 
     # ---------------------------------------------------------
     # STEP 4: 파일 선택 및 상세 속성 (CodeMapping)
