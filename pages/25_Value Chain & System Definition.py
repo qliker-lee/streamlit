@@ -2,19 +2,37 @@
 """
 Value Chain & System 데이터 관리 (통합)
 Industry별 Value Chain, System 정의 및 File 매핑을 관리하는 통합 도구입니다.
+2025.12.24 Qliker (Integrated Version)
 """
+# -------------------------------------------------
+# 1. Path / Warning setup (Streamlit import 전)
+# -------------------------------------------------
+import sys
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+setup_streamlit_warnings()
+
+# -------------------------------------------------
+# 2. Standard / Third-party imports
+# -------------------------------------------------
 import streamlit as st
 import pandas as pd
 from pathlib import Path
 import re
 import os
 import logging
+from PIL import Image
 
 # -------------------------------------------------------------------
 # 0. Streamlit 경고 억제 설정 (ScriptRunContext 관련)
 # -------------------------------------------------------------------
 logging.getLogger('streamlit.runtime.scriptrunner.script_run_context').setLevel(logging.ERROR)
-
 # -------------------------------------------------------------------
 # 1. 경로 및 상수 설정
 # -------------------------------------------------------------------
@@ -42,6 +60,19 @@ SYSTEM_COLUMNS = [
 # -------------------------------------------------------------------
 # 2. 공통 유틸리티 함수
 # -------------------------------------------------------------------
+def show_sample_image(image_filename, caption):
+    """Sample 이미지를 표시합니다."""
+    try:
+        sample_path = PROJECT_ROOT / "DataSense/DS_Output/images" / image_filename
+        if sample_path.exists():
+            image = Image.open(sample_path)
+            st.image(image, caption=caption, width=600)
+            st.info("**위의 이미지는 Value Chain의 예제 이미지입니다.**")
+        else:
+            st.warning(f"⚠️ Sample 이미지를 찾을 수 없습니다: {image_filename}")
+    except Exception as e:
+        st.error(f"❌ Sample 이미지 로드 중 오류가 발생했습니다: {e}")
+
 def check_no_korean(text):
     """영문 필드에 한글이 포함되어 있는지 확인 (True면 한글 없음)"""
     return not bool(re.search('[가-힣]', str(text)))
@@ -139,17 +170,18 @@ def value_chain_tab(target_industry):
         if industry_df.empty:
             st.info("등록된 활동이 없습니다. 'Add New Activity' 탭에서 첫 번째 항목을 추가하세요.")
         else:
-            st.markdown("💡 **수정 방법:** 표 내부의 값을 직접 클릭하여 수정 후 하단 저장 버튼을 클릭하세요.")
+            st.markdown("💡 **수정 방법:** 표 내부의 값을 직접 클릭하여 수정 후 하단 변경사항 저장 버튼을 클릭하세요.")
+            st.markdown("**순번**은 중복이 되지 않도록 순차적으로 일련번호를 부여합니다.")
             
             edited_df = st.data_editor(
                 industry_df,
                 key=f"vc_editor_{target_industry}",
                 num_rows="dynamic",
-                use_container_width='stretch',
+                width='stretch',
                 hide_index=True,
                 column_config={
                     "Industry": st.column_config.TextColumn("산업군", disabled=True),
-                    "Activity_Seq": st.column_config.NumberColumn("순번", disabled=True, width="small"),
+                    "Activity_Seq": st.column_config.NumberColumn("순번", required=True, width="small"),
                     "Activity_Type": st.column_config.SelectboxColumn(
                         "구분", options=["Primary", "Support"], required=True, width="small"
                     ),
@@ -157,7 +189,6 @@ def value_chain_tab(target_industry):
                     "Activity_Kor": st.column_config.TextColumn("활동명(한글)", required=True, width="medium"),
                     "Activity_Description": st.column_config.TextColumn("설명", width="large")
                 },
-                width="stretch"
             )
             
             if st.button("💾 변경사항 저장", key=f"vc_save_{target_industry}", type="primary"):
@@ -178,6 +209,21 @@ def value_chain_tab(target_industry):
     
     # [Tab: 새 활동 등록]
     with tab_add:
+        st.dataframe(
+            industry_df,
+            width='stretch',
+            hide_index=True,
+            column_config={
+                "Industry": st.column_config.TextColumn("산업군"),
+                "Activity_Seq": st.column_config.NumberColumn("순번", width="small"),
+                "Activity_Type": st.column_config.SelectboxColumn("구분", width="small"),
+                "Activity": st.column_config.TextColumn("활동명(영문)", width="medium"),
+                "Activity_Kor": st.column_config.TextColumn("활동명(한글)", width="medium"),
+                "Activity_Description": st.column_config.TextColumn("설명", width="large")
+            },
+            # width="stretch",
+            height=300
+        )
         with st.form("add_activity_form", clear_on_submit=True):
             st.markdown("##### ➕ Add New Activity")
             c1, c2, c3 = st.columns([1, 2, 2])
@@ -254,29 +300,29 @@ def system_tab(target_industry):
     industry_df = df[df["Industry"] == target_industry].sort_values("System_Seq")
     
     # 서브 탭
-    tab_list, tab_add = st.tabs(["📋 System 목록 (수정/삭제)", "➕ 새 System 등록"])
+    tab_list, tab_add = st.tabs(["📋 System List", "➕ Add New System"])
     
     # [Tab: 목록 및 수정/삭제]
     with tab_list:
         if industry_df.empty:
-            st.info("등록된 System이 없습니다. '새 System 등록' 탭에서 첫 번째 항목을 추가하세요.")
+            st.info("등록된 System이 없습니다. 'Add New System' 탭에서 첫 번째 항목을 추가하세요.")
         else:
-            st.markdown("💡 **수정 방법:** 표 내부의 값을 직접 클릭하여 수정 후 하단 저장 버튼을 클릭하세요.")
+            st.markdown("💡 **수정 방법:** 표 내부의 값을 직접 클릭하여 수정 후 하단 변경사항 저장 버튼을 클릭하세요.")
+            st.markdown("**순번** 은 중복이 되지 않도록 일련번호를 부여합니다.")
             
             edited_df = st.data_editor(
                 industry_df,
                 key=f"sys_editor_{target_industry}",
                 num_rows="dynamic",
-                use_container_width='stretch',
+                width='stretch',
                 hide_index=True,
                 column_config={
                     "Industry": st.column_config.TextColumn("산업군", disabled=True),
-                    "System_Seq": st.column_config.NumberColumn("순번", disabled=True, width="small"),
+                    "System_Seq": st.column_config.NumberColumn("순번", required=True, width="small"),
                     "System": st.column_config.TextColumn("System명(영문)", required=True, width="medium"),
                     "System_Kor": st.column_config.TextColumn("System명(한글)", required=True, width="medium"),
                     "System_Description": st.column_config.TextColumn("설명", width="large")
                 },
-                width="stretch"
             )
             
             if st.button("💾 변경사항 저장", key=f"sys_save_{target_industry}", type="primary"):
@@ -299,6 +345,19 @@ def system_tab(target_industry):
     with tab_add:
         with st.form("add_system_form", clear_on_submit=True):
             st.markdown("##### ➕ 새로운 System 추가")
+            st.dataframe(
+                industry_df,
+                width='stretch',
+                hide_index=True,
+                column_config={
+                    "Industry": st.column_config.TextColumn("산업군"),
+                    "System_Seq": st.column_config.NumberColumn("순번", width="small"),
+                    "System": st.column_config.TextColumn("System명(영문)", width="medium"),
+                    "System_Kor": st.column_config.TextColumn("System명(한글)", width="medium"),
+                    "System_Description": st.column_config.TextColumn("설명", width="large")
+                },
+                height=300
+            )
             c1, c2, c3 = st.columns([1, 2, 2])
             with c1:
                 System = st.text_input("System명 (English Only)")
@@ -425,7 +484,7 @@ def mapping_file_tab(target_industry):
     edited_df = st.data_editor(
         display_df,
         key=f"mapping_editor_{target_industry}",
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
         column_config={
             "FileNo": st.column_config.NumberColumn("No", disabled=True),
@@ -486,7 +545,7 @@ def mapping_file_tab(target_industry):
         if file_no:
             df_file = df_format[df_format["FileNo"] == file_no]
             if not df_file.empty:
-                st.dataframe(df_file[format_cols], use_container_width=True, hide_index=True, height=500)
+                st.dataframe(df_file[format_cols], width='stretch', hide_index=True, height=500)
             else:
                 st.error("🔍 해당 No의 파일이 없습니다.")
 
@@ -497,6 +556,7 @@ def main():
     st.title("🏭 Value Chain & System Management")
     st.markdown("##### This is a unified tool to manage Value Chain, System Definition and File Mapping by Industry.")
     
+    show_sample_image("Sample_ValueChain_Licened.jfif", "Value Chain Image")
     # --- [Section 1: Industry Selection and Management] ---
     st.markdown("### 1️⃣ Select Industry")
     
