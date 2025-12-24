@@ -49,7 +49,7 @@ try:
         add_dq_scores, apply_score_importance, compute_snapshot_drift
     )
 except ImportError as e:
-    print(f"❌ 필수 모듈 로드 실패: {e}")
+    print(f"필수 모듈 로드 실패: {e}")
     sys.exit(1)
 
 # --- [2. 유틸리티 클래스: 반복 로직 처리] ---
@@ -184,7 +184,7 @@ class ColumnProfiler:
                 res['DetailDataType'] = dt_result if dt_result else ""
             except Exception as e:
                 res['DetailDataType'] = "Error"
-                print(f"⚠️ {self.col} 타입 판별 중 오류: {e}")
+                print(f"{self.col} 타입 판별 중 오류: {e}")
 
             # --- 포맷 통계 (1st, 2nd, 3rd) ---
             res['FormatCnt'] = format_cnt
@@ -299,14 +299,14 @@ class DQEngine:
                     all_column_results.append(col_res)
                 
             except Exception as e:
-                print(f"⚠️ 에러 발생 ({os.path.basename(f_path)}): {e}")
+                print(f"에러 발생 ({os.path.basename(f_path)}): {e}")
                 continue
         
         # 중요: 컬럼 분석 결과와 파일 통계를 모두 리턴함
         return all_column_results, local_file_stats
 
     def run(self, codelist):
-        print(f"🚀 분석 시작 (CPU Core: {cpu_count()})")
+        print(f"분석 시작 (CPU Core: {cpu_count()})")
         
         with Pool(cpu_count()) as pool:
             # results는 [(col_res1, stat_res1), (col_res2, stat_res2), ...] 형태가 됨
@@ -321,7 +321,7 @@ class DQEngine:
             all_file_stats.extend(stat_res)
         
         if not flat_column_results:
-            print("❌ 분석된 데이터가 없습니다.")
+            print("Error: 분석된 데이터가 없습니다.")
             return
 
         # 2. DQ 결과 저장
@@ -351,7 +351,7 @@ class DQEngine:
             
             save_path = self.output_path / "FileFormat.csv"
             final_df.to_csv(save_path, index=False, encoding='utf-8-sig')
-            print(f"✅ DQ 결과 저장 완료: {save_path}")
+            print(f"DQ 결과 저장 완료: {save_path}")
 
         # 3. FileStats 저장
         if all_file_stats:
@@ -363,7 +363,7 @@ class DQEngine:
             stats_final_path = os.path.join(out_path, "FileStats.csv")
             
             stats_df.to_csv(stats_final_path, index=False, encoding="utf-8-sig")
-            print(f"✅ 파일 단위 통계 저장 완료: {stats_final_path}")
+            print(f"파일 단위 통계 저장 완료: {stats_final_path}")
 
 
 # --- [5. 실행부] ---
@@ -382,6 +382,5 @@ if __name__ == "__main__":
     engine = DQEngine(main_config)
     engine.run(codelist_list)
 
-    print(f"⏱️ 총 소요 시간: {time.time() - start_time:.2f}초")
+    print(f"총 소요 시간: {time.time() - start_time:.2f}초")
 
-    

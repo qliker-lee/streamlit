@@ -174,7 +174,7 @@ def DataType_Analysis(config, source_dir_list):
         files = list(source_path.glob(file_pattern))
 
         if not files:
-            print(f"⚠️ No files found in {source_path}")
+            print(f"No files found in {source_path}")
             continue
 
         print(f"\n {source_config['type']} 코드 분석 중... (총 {len(files)}개 파일)")
@@ -708,7 +708,6 @@ def MasterRuleDataType(config):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     ruldatatype_file = config["files"]["ruldatatype"]
-    # _ = Backup_File(str(base_path), ruldatatype_file, "csv")
 
     error_count = 0
 
@@ -718,10 +717,6 @@ def MasterRuleDataType(config):
     rule_definition_f = base_path / config['files']['rule_definition']
     rule_definition_validdata_f = base_path / config['files']['rule_definition_validdata']
 
-    # datatype_f = str(base_path) + config['files']['datatype'] + '.csv'
-    # fileformat_f = str(base_path) + config['files']['fileformat'] + '.csv'
-    # rule_definition_f = str(base_path) + config['files']['rule_definition'] 
-    # rule_definition_validdata_f = str(base_path) + config['files']['rule_definition_validdata'] 
 
     dt = read_csv_any(datatype_f)
     ff = read_csv_any(fileformat_f)

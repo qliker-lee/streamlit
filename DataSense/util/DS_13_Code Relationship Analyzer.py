@@ -409,7 +409,7 @@ try:
     )
 
 except ImportError as e:
-    print(f"❌ 필수 모듈 로드 실패: {e}")
+    print(f"필수 모듈 로드 실패: {e}")
     sys.exit(1)
 
 class Initializing_Main_Class:
