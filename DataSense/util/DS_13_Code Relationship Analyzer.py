@@ -1,220 +1,597 @@
 # -*- coding: utf-8 -*-
-"""
-DS_13_CodeMapping 
-2025.11.16 Qliker
-- 모든 핵심 메서드(Reference/Internal/Rule mapping, pivot, final)를 포함합니다.
-"""
+# DS_13_Code Relationship Analyzer.py
+# 코드 관계 분석 프로그램은 파일 형식 매핑 결과와 룰 매핑 결과를 기반으로 코드 관계 분석을 수행합니다.
+# 2025.12.24 Qliker
 
-from __future__ import annotations
-import os
-import re
-import sys
-import time
-import logging
-import unicodedata
-from pathlib import Path
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Dict, Any, Iterable, Optional, Sequence, List, Set
-
-import numpy as np
 import pandas as pd
+import numpy as np
+import os
+import sys
+import logging
 
-# -------------------------------------------------------------------
-# 경로 설정
-# -------------------------------------------------------------------
-# ✅ QDQM 루트 디렉토리 추적 (DataSense/util/ 까지 들어왔을 때)
-ROOT_PATH = Path(__file__).resolve().parents[2]
-if str(ROOT_PATH) not in sys.path:
-    sys.path.insert(0, str(ROOT_PATH))
-
-# ✅ YAML 파일 절대 경로 설정
-YAML_PATH = ROOT_PATH / "DataSense" / "util" / "DS_Master.yaml"
-
-from DataSense.util.io import Load_Yaml_File, Backup_File   
-# -------------------------------------------------------------------
-# 외부 유틸 (기존 프로젝트의 util 패키지)
-from DataSense.util.dq_format import Expand_Format, Combine_Format
-from DataSense.util.dq_validate import (
-    init_reference_globals,
-    validate_date, validate_yearmonth, validate_latitude, validate_longitude,
-    validate_YYMMDD, validate_year, validate_tel, validate_cellphone,
-    validate_url, validate_email, validate_kor_name, validate_address,
-    validate_country_code, validate_gender, validate_gender_en, validate_car_number,
-    validate_time, validate_timestamp,
-)
+from pathlib import Path
+import traceback
+from typing import Dict, Any, Iterable, Optional, Sequence, List
+from multiprocessing import Pool, cpu_count, Manager
+from itertools import combinations
 
 # ---------------------- 전역 기본값 ----------------------
-DEBUG_MODE = True
+DEBUG_MODE = True   # 디버그 모드 여부 (True: 디버그 모드, False: 운영 모드)
 
-OUTPUT_FILE_NAME = 'CodeMapping'
-OUTPUT_FILEFORMAT = 'FileFormatMapping'
-OUTPUT_FILENUMERIC = 'FileNumericStats'
+OUTPUT_FILE_NAME = 'CodeMapping'       # 코드 관계 분석 결과 파일 이름
+OUTPUT_FILEFORMAT = 'FileFormatMapping' # 파일 형식 매핑 결과 파일 이름
+OUTPUT_FILENUMERIC = 'FileNumericStats' # 숫자 형식 통계 결과 파일 이름
 
+MATCH_RATE_THRESHOLD = 20 # 매핑 결과 중 MatchRate(%) 20% 이상인 레코드만 선택 (기본값: 20%)
 
-MATCH_RATE_THRESHOLD = 20 # 매핑 결과 중 MatchRate(%) 20% 이상인 레코드만 선택
-# ---------------------- Dataclasses ----------------------
-@dataclass
-class DirectoriesConfig:
-    root_path: Path
-    input_dir: Path
-    output_dir: Path
-    meta_dir: Path
-    master_csv_dir: Path
-    reference_source_dir: Path
-
-@dataclass
-class FilesConfig:
-    fileformat: Path
-    master_meta: Path
-    ruldatatype: Path
-
-# ---------------------- Helpers ----------------------
-def _norm(s: str) -> str:
-    s = unicodedata.normalize("NFC", str(s))
-    s = s.replace("\u3000", " ")
-    return " ".join(s.split())
-
+# ---------------------- 함수 선언 ----------------------
 def _clean_headers(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    데이터프레임의 헤더를 정리하는 함수
+    """
     out = df.copy()
     out.columns = [str(c).replace('\ufeff', '').strip() for c in out.columns]
     return out
 
-# ---------------------- Main Class ----------------------
-class Initializing_Main_Class:
-    def __init__(self, yaml_path: Optional[str] = None):
-        self.logger = None
-        self.config: Dict[str, Any] = {}
-        self.files_config: Optional[FilesConfig] = None
-        self.directories_config: Optional[DirectoriesConfig] = None
-        self.loaded_data: Dict[str, pd.DataFrame] = {}
-
-        self._setup_logger()
-        yaml_path = Path(yaml_path or self._get_default_yaml_path())
-        if not yaml_path.exists():
-            raise FileNotFoundError(f"Yaml 파일을 찾을 수 없습니다: {yaml_path}")
-        self.logger.info(f"Yaml File: {yaml_path}")
-
-        self.config = self._load_yaml_config(yaml_path)
-        
-        # ROOT_PATH가 YAML에 없으면 자동으로 설정
-        if 'ROOT_PATH' not in self.config or not self.config.get('ROOT_PATH'):
-            self.config['ROOT_PATH'] = str(ROOT_PATH)
-            self.logger.info(f"ROOT_PATH 자동 설정: {self.config['ROOT_PATH']}")
-        
-        self.directories_config = self._setup_directories_config()
-
-        # 전역 참조 세트 초기화 (시도/성씨/ISO3/연월일 등)
-        init_reference_globals(self.directories_config.root_path, strict_columns=True, verbose=DEBUG_MODE)
-
-        self.files_config = self._setup_files_config()
-        self.loaded_data = self._load_files()
-
-    # ------------ 초기화/로딩 ------------
-    @staticmethod
-    def _get_default_yaml_path() -> Path:
-        return Path(__file__).parent / YAML_PATH
-
-    def _setup_logger(self) -> None:
-        log_dir = Path('logs'); log_dir.mkdir(exist_ok=True)
-        log_file = log_dir / f"codemapping_{datetime.now():%Y%m%d_%H%M%S}.log"
-        level = logging.DEBUG if DEBUG_MODE else logging.INFO
-        logging.basicConfig(
-            level=level,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[logging.FileHandler(log_file, encoding='utf-8'), logging.StreamHandler()]
-        )
-        self.logger = logging.getLogger(__name__)
-
-    def _load_yaml_config(self, yaml_path: Path) -> Dict[str, Any]:
-        import yaml
-        try:
-            with open(yaml_path, 'r', encoding='utf-8') as f:
-                return yaml.safe_load(f)
-        except UnicodeDecodeError:
-            with open(yaml_path, 'r', encoding='euc-kr') as f:
-                return yaml.safe_load(f)
-
-    def _setup_directories_config(self) -> DirectoriesConfig:
-        root = Path(self.config['ROOT_PATH'])
-        directories = self.config.get('directories', {})
-        dc = DirectoriesConfig(
-            root_path=root,
-            input_dir=root / directories.get('input', 'DS_Input').strip('/'),
-            output_dir=root / directories.get('output', 'DS_Output').strip('/'),
-            master_csv_dir=root / directories.get('master_csv', '@Master/csv').strip('/'),
-            meta_dir=root / directories.get('meta', 'DS_Meta').strip('/'),
-            reference_source_dir=root / directories.get('reference_source_dir', '5_Reference_Code/Source').strip('/'),
-        )
-        dc.output_dir.mkdir(parents=True, exist_ok=True)
-        missing = []
-        for name in ('input_dir', 'master_csv_dir', 'meta_dir'):
-            p = getattr(dc, name)
-            if not p.exists():
-                missing.append(f"{name}={p}")
-        if missing:
-            raise RuntimeError("필수 디렉토리 없음: " + ", ".join(missing))
-        return dc
-
-    def _setup_files_config(self) -> FilesConfig:
-        root = Path(self.config['ROOT_PATH'])
-        files = self.config.get('files', {})
-        # allow user to specify with or without extension
-        return FilesConfig(
-            fileformat = Path(f"{root}/{files.get('fileformat', 'DS_Output/CodeFormat')}"),
-            ruldatatype= Path(f"{root}/{files.get('ruldatatype','DS_Output/RuleDataType')}"),
-            master_meta= Path(f"{root}/{files.get('master_meta','DS_Meta/Master_Meta')}"),
-        )
-
-    def _resolve_file(self, path: Path) -> Optional[Path]:
-        """주어진 Path (파일 또는 파일-기본명) -> 실제 존재하는 파일 Path 반환"""
-        path_obj = Path(path)
-        if path_obj.exists() and path_obj.is_file():
-            return path_obj
-        # try with common extensions
-        for ext in ('.csv', '.xlsx', '.pkl'):
-            cand = path_obj.with_suffix(ext)
-            if cand.exists():
-                return cand
-        # if directory provided, try to find one file
-        if path_obj.exists() and path_obj.is_dir():
-            for ext in ('.csv', '.xlsx'):
-                found = next(path_obj.glob(f"*{ext}"), None)
-                if found:
-                    return found
+# ---------------------------------------------------------
+# 1. 워커 함수 (CPU 코어별로 독립 실행되는 비교 로직) internal mapping 에서 사용
+# ---------------------------------------------------------
+def compare_columns_worker(task_info):
+    """
+    각 코어에서 실행될 독립적인 비교 함수
+    task_info: (a_meta, b_meta, a_set, b_set)
+    """
+    a, b, a_set, b_set = task_info
+    
+    if not a_set or not b_set:
         return None
 
-    def _load_files(self) -> Dict[str, pd.DataFrame]:
-        """fileformat, ruldatatype, master_meta 파일을 로드하여 self.loaded_data 반환"""
-        files_to_load = {
-            'fileformat': self.files_config.fileformat,
-            'ruldatatype': self.files_config.ruldatatype,
-            'master_meta': self.files_config.master_meta,
-        }
-        loaded: Dict[str, pd.DataFrame] = {}
-        for name, raw in files_to_load.items():
-            resolved = self._resolve_file(Path(raw))
-            if not resolved:
-                raise RuntimeError(f"{name} 파일이 존재하지 않습니다: {raw}")
-            try:
-                if resolved.suffix.lower() == '.csv':
-                    df = pd.read_csv(resolved, dtype=str, low_memory=False)
-                elif resolved.suffix.lower() == '.xlsx':
-                    df = pd.read_excel(resolved, dtype=str)
-                elif resolved.suffix.lower() == '.pkl':
-                    df = pd.read_pickle(resolved)
-                else:
-                    raise RuntimeError(f"{name} 파일 형식 미지원: {resolved.suffix}")
-                loaded[name] = _clean_headers(df)
-                self.logger.info(f"{name} 로드 완료: {resolved}")
-            except Exception as e:
-                self.logger.error(f"{name} 파일 로드 실패: {resolved} -> {e}")
-                raise
-        return loaded
+    # 교집합 연산 (Set 연산은 파이썬에서 가장 빠름)
+    intersection = a_set.intersection(b_set)
+    compare_count = len(intersection)
+    total_count = len(a_set)
+    
+    match_rate = round(compare_count / total_count * 100, 2) if total_count > 0 else 0.0
 
-    # ------------------ (1) Reference 값 비교 ------------------
-    def mapping_check(self, mapping_df: pd.DataFrame, sample: int = 10_000) -> pd.DataFrame:
+    # 임계치(예: 10%) 미만은 결과에서 제외하여 메모리 절약
+    if match_rate < 10.0:
+        return None
+
+    return {
+        "FilePath": a['FilePath'], "FileName": a['FileName'], "ColumnName": a['ColumnName'],
+        "MasterType": "Internal",
+        "MasterFilePath": b['FilePath'], "MasterFile": b['FileName'],
+        "ReferenceMasterType": "Internal", "MasterColumn": b['ColumnName'],
+        "CompareLength": a.get('CompareLength', 0),
+        "CompareCount": compare_count, "SourceCount": total_count, "MatchRate(%)": match_rate
+    }
+
+#-----------------------------------------------------------------------------------------------------    
+def Expand_Format(Source_df, Mode='Reference') -> pd.DataFrame:
+    """    Source_df의 상위 3개 포맷(Format_1~3)을 행으로 펼쳐서 반환.    """
+    try:
+
+        # 1) 전처리
+        s_df = Source_df.copy().rename(columns={
+            'Format':        'Format_1',
+            'Format2nd':     'Format_2',
+            'Format3rd':     'Format_3',
+            'FormatMin':     'FormatMin_1',
+            'FormatMax':     'FormatMax_1',
+            'FormatMedian':   'FormatMedian_1',
+            'Format2ndMin':  'FormatMin_2',
+            'Format2ndMax':  'FormatMax_2',
+            'Format2ndMedian': 'FormatMedian_2',
+            'Format3rdMin':  'FormatMin_3',
+            'Format3rdMax':  'FormatMax_3',
+            'Format3rdMedian': 'FormatMedian_3',
+            'FormatValue':   'FormatValue_1',
+            'Format2ndValue':'FormatValue_2',
+            'Format3rdValue':'FormatValue_3',
+            'Format(%)':     'Format(%)_1',
+            'Format2nd(%)':  'Format(%)_2',
+            'Format3rd(%)':  'Format(%)_3',
+        })
+
+        # 2) i=1..3 별로 분리 → 표준 컬럼명으로 통일 → 붙이기
+        frames = []
+        for i in (1, 2, 3):
+            cols_i = [
+                'FilePath', 'FileName', 'ColumnName', 'DetailDataType',  'MasterType', 'CompareLength', 'FormatCnt', 'UniqueCnt',
+                f'Format_{i}', f'FormatMin_{i}', f'FormatMax_{i}', f'FormatMedian_{i}', 
+                f'FormatValue_{i}', f'Format(%)_{i}'
+            ]
+
+            # 존재하는 컬럼만 선택
+            available_cols = [c for c in cols_i if c in s_df.columns]
+            if not available_cols:
+                continue
+                
+            df_i = s_df[available_cols].copy()
+            
+            # 컬럼명 변경 (존재하는 컬럼만)
+            rename_dict = {}
+            if f'Format_{i}' in df_i.columns:
+                rename_dict[f'Format_{i}'] = 'Format'
+            if f'FormatMin_{i}' in df_i.columns:
+                rename_dict[f'FormatMin_{i}'] = 'FormatMin'
+            if f'FormatMax_{i}' in df_i.columns:
+                rename_dict[f'FormatMax_{i}'] = 'FormatMax'
+            if f'FormatMedian_{i}' in df_i.columns:
+                rename_dict[f'FormatMedian_{i}'] = 'FormatMedian'
+            if f'FormatValue_{i}' in df_i.columns:
+                rename_dict[f'FormatValue_{i}'] = 'FormatValue'
+            if f'Format(%)_{i}' in df_i.columns:
+                rename_dict[f'Format(%)_{i}'] = 'Format(%)'
+            
+            if rename_dict:
+                df_i = df_i.rename(columns=rename_dict)
+
+            df_i['MatchNo'] = i
+
+            # 빈/결측 포맷 제거 (Format 컬럼이 있는 경우만)
+            if 'Format' in df_i.columns and not df_i.empty:
+                format_series = df_i['Format']
+                # Series인지 확인 (단일 컬럼 선택은 항상 Series 반환)
+                if isinstance(format_series, pd.Series):
+                    mask = format_series.notna() & (format_series.astype(str).str.strip() != '')
+                    df_i = df_i[mask]
+                # 이상 케이스: DataFrame이 반환된 경우는 스킵
+                elif isinstance(format_series, pd.DataFrame):
+                    continue
+
+            # 숫자형 정리
+            for col in ('FormatValue', 'Format(%)', 'CompareLength'):
+                if col in df_i.columns:
+                    df_i[col] = pd.to_numeric(df_i[col], errors='coerce')
+
+            frames.append(df_i)
+
+        if not frames:
+            return pd.DataFrame(columns=[
+                'FilePath', 'FileName', 'ColumnName', 'DetailDataType', 'MasterType', 'FormatCnt', 'UniqueCnt', 'MatchNo',
+                'Format', 'FormatMin', 'FormatMax', 'FormatMedian', 'FormatValue', 'Format(%)', 'CompareLength'
+            ])
+
+        result_df = pd.concat(frames, ignore_index=True)
+
+        # 정렬 & 중복 제거(선택)
+        result_df = (result_df
+                     .drop_duplicates()
+                     .sort_values(['FilePath','FileName','ColumnName','MasterType','Format(%)'], ascending=[True, True, True, True, False])
+                     .reset_index(drop=True))
+
+        return result_df
+
+    except Exception as e:
+        print(f"전체 처리 중 오류 발생: {e}")
+        raise
+
+
+def Combine_Format(source_df, reference_df):
+    """
+    source_df와 reference_df를 조합하여 반환 (기술적 최적화 버전)
+    """
+    try:
+        # 제외할 타입 리스트 (set으로 변환하여 검색 속도 향상)
+        except_types = {
+            'Time', 'Timestamp', 'Date', 'DateTime', 'DATECHAR', 'TIME', 'TIMESTAMP', 
+            'DATE', 'DATETIME', 'YEAR', 'YEARMONTH', 'YYMMDD', 'LATITUDE', 'LONGITUDE', 
+            'TEL', 'CELLPHONE', 'ADDRESS', 'Alpha_Flag', 'Num_Flag', 'YN_Flag', 
+            'NUM_Flag', 'KOR_Flag', 'KOR_Name'
+        }
+
+        # 1. 필터링 최적화: 불필요한 copy()를 줄이고 필터링 후 필요한 컬럼만 선택
+        if 'DetailDataType' in source_df.columns:
+            s_df = source_df[~source_df['DetailDataType'].isin(except_types)]
+        else:
+            s_df = source_df
+
+        if 'DetailDataType' in reference_df.columns:
+            r_df = reference_df[~reference_df['DetailDataType'].isin(except_types)]
+        else:
+            r_df = reference_df
+
+        # 2. Merge 전 필요한 컬럼만 추출 및 Rename (메모리 절약)
+        rename_map = {
+            'FilePath': 'MasterFilePath', 'FileName': 'MasterFile',
+            'MasterType': 'ReferenceMasterType', 'ColumnName': 'MasterColumn',
+            'FormatCnt': 'MasterFormatCnt', 'FormatMin': 'MasterMin',
+            'FormatMax': 'MasterMax', 'FormatMedian': 'MasterMedian',
+            'FormatValue': 'MasterValue', 'Format(%)': 'Master(%)',
+            'UniqueCnt': 'MasterUniqueCnt'
+        }
+        
+        # r_df에서 필요한 컬럼만 골라내며 바로 이름을 바꿉니다.
+        r_cols = ['Format'] + list(rename_map.keys())
+        r_df = r_df[r_cols].rename(columns=rename_map)
+
+        # 3. Merge 및 중복 제거
+        result_df = pd.merge(s_df, r_df, on='Format', how='left')
+        result_df = result_df.dropna(subset=['MasterFile'])
+        result_df = result_df.drop_duplicates(['FilePath', 'FileName', 'ColumnName', 'MasterFile', 'MasterColumn'])
+
+        # 4. 숫자형 변환 및 결측치 처리 (Vectorized fillna)
+        num_cols = [
+            'FormatCnt', 'FormatValue', 'UniqueCnt', 'CompareLength',
+            'MasterFormatCnt', 'MasterValue', 'MasterUniqueCnt'
+        ]
+        for c in num_cols:
+            if c in result_df.columns:
+                result_df[c] = pd.to_numeric(result_df[c], errors='coerce').fillna(0)
+
+        # 5. MasterCompareLength 계산 최적화
+        # .str 연산은 무거우므로 결측치 먼저 처리 후 마지막 글자 추출
+        mcol_series = result_df['MasterColumn'].astype(str)
+        last_char = mcol_series.str[-1]
+        result_df['MasterCompareLength'] = np.where(last_char.str.isdigit(), last_char, '0')
+
+        # 6. 플래그 계산 (불필요한 Series 생성을 피하고 numpy 연산 활용)
+        # result_df['Format']이 object일 수 있으므로 str.len() 연산 최적화
+        fmt_len = result_df['Format'].astype(str).str.len()
+
+        f0 = result_df['FormatMedian'].between(result_df['MasterMin'], result_df['MasterMax'])
+        f1 = fmt_len > 1
+        f2 = result_df['FormatCnt'] < result_df['MasterValue']
+        f3 = ~( (result_df['FormatCnt'] >= result_df['MasterFormatCnt'] * 1.5) & 
+                (result_df['FormatCnt'] >= 5) & 
+                (result_df['MasterCompareLength'] == '0') )
+        f5 = result_df['UniqueCnt'] >= 10
+        f6 = result_df['FormatValue'] >= 10
+        f8 = ~( (result_df['FilePath'] == result_df['MasterFilePath']) & 
+                (result_df['FileName'] == result_df['MasterFile']) & 
+                (result_df['ColumnName'] == result_df['MasterColumn']) )
+
+        # 7. 최종 결과 할당 (bool을 int로 바로 변환)
+        result_df['Match_Flag']  = f0.astype(int)
+        result_df['Match_Flag1'] = f1.astype(int)
+        result_df['Match_Flag2'] = f2.astype(int)
+        result_df['Match_Flag3'] = f3.astype(int)
+        result_df['Match_Flag4'] = 1
+        result_df['Match_Flag5'] = f5.astype(int)
+        result_df['Match_Flag6'] = f6.astype(int)
+        result_df['Match_Flag7'] = 1
+        result_df['Match_Flag8'] = f8.astype(int)
+
+        # Final_Flag 연산 (논리 연산 & 가 산술 곱셈보다 빠름)
+        # 모든 플래그가 1이어야 하므로 & 연산자를 사용합니다.
+        result_df['Final_Flag'] = (
+            result_df['Match_Flag'] & result_df['Match_Flag2'] & 
+            result_df['Match_Flag3'] & result_df['Match_Flag5'] & 
+            result_df['Match_Flag6'] & result_df['Match_Flag8']
+        ).astype(int)
+
+        return result_df
+
+    except Exception as e:
+        print(f"조합 처리 중 오류 발생: {e}")
+        raise
+
+def Combine_Format_old(source_df, reference_df):
+    """    source_df와 reference_df를 조합하여 반환.    """
+    try:
+        s_df = source_df.copy()
+
+        except_detail_data_types = ['Time', 'Timestamp', 'Date', 'DateTime', 'DATECHAR', 'TIME', 'TIMESTAMP', 
+            'DATE', 'DATETIME', 'YEAR', 'YEARMONTH', 'YYMMDD', 'LATITUDE', 'LONGITUDE', 'TEL', 'CELLPHONE', 'ADDRESS',
+            'Alpha_Flag', 'Num_Flag', 'YN_Flag', 'NUM_Flag', 'KOR_Flag', 'KOR_Name']
+
+        # DetailDataType 컬럼이 있는 경우만 필터링
+        if 'DetailDataType' in s_df.columns:
+            s_df = s_df[~s_df['DetailDataType'].isin(except_detail_data_types)].copy()
+        r_df = reference_df.copy()
+        if 'DetailDataType' in r_df.columns:
+            r_df = r_df[~r_df['DetailDataType'].isin(except_detail_data_types)].copy()
+
+        r_df = r_df[['FilePath', 'FileName', 'MasterType', 'ColumnName', 'FormatCnt', 'Format', 'FormatMin', 'FormatMax', 
+                     'FormatMedian', 'FormatValue', 'Format(%)', 'UniqueCnt']].copy().rename(columns={
+            'FilePath': 'MasterFilePath',
+            'FileName': 'MasterFile',
+            'MasterType': 'ReferenceMasterType',
+            'ColumnName': 'MasterColumn',
+            'FormatCnt': 'MasterFormatCnt',
+            'Format': 'Format',
+            'FormatMin': 'MasterMin',
+            'FormatMax': 'MasterMax',
+            'FormatMedian': 'MasterMedian',
+            'FormatValue': 'MasterValue', 
+            'Format(%)': 'Master(%)',
+            'UniqueCnt': 'MasterUniqueCnt',
+            # 'CompareLength': 'MasterCompareLength',
+        })
+
+        result_df = pd.merge(s_df, r_df, on=['Format'], how='left')
+        result_df = result_df[result_df['MasterFile'].notna()]
+        result_df = result_df.drop_duplicates(['FilePath','FileName','ColumnName','MasterFile','MasterColumn'])
+
+        # --- 숫자형 컬럼 일괄 변환 ---
+        num_cols = [
+            'FormatCnt','FormatValue','UniqueCnt','CompareLength',
+            'MasterFormatCnt','MasterValue','MasterUniqueCnt'
+        ]
+        for c in num_cols:
+            if c in result_df.columns:
+                result_df[c] = pd.to_numeric(result_df[c], errors='coerce')
+
+                # 결측 기본값 (비교 안전용)
+        result_df['FormatCnt']        = result_df['FormatCnt'].fillna(0)
+        result_df['FormatValue']      = result_df['FormatValue'].fillna(0)
+        result_df['UniqueCnt']        = result_df['UniqueCnt'].fillna(0)
+        result_df['MasterFormatCnt']  = result_df['MasterFormatCnt'].fillna(0)
+        result_df['MasterValue']      = result_df['MasterValue'].fillna(0)
+        result_df['MasterUniqueCnt']  = result_df['MasterUniqueCnt'].fillna(0)
+
+        # --- MasterCompareLength 계산 (MasterColumn 끝자리가 숫자면 사용, 아니면 "0") ---
+        mcol_str = result_df['MasterColumn'].astype(str)
+        last_char = mcol_str.str[-1].fillna('')
+        result_df['MasterCompareLength'] = np.where(last_char.str.isdigit(), last_char, '0')
+
+        # --- 플래그 계산(벡터화) ---
+        # 0) 포맷 중앙값이 마스터 범위 안에 있는가
+        flag0 = result_df['FormatMedian'].ge(result_df['MasterMin']) & result_df['FormatMedian'].le(result_df['MasterMax'])
+
+        # 1) 포맷 길이가 1 초과인가 (문자열 길이 기준)
+        flag1 = result_df['Format'].astype(str).str.len().gt(1)
+
+        # 2) 소스 포맷 카운트가 마스터 기준값보다 작은가 (작아야 1)
+        flag2 = result_df['FormatCnt'].lt(result_df['MasterValue'])
+
+        # 3) 과도한 포맷 카운트(=마스터 1.5배 이상 & 5 이상)인데 MasterCompareLength가 0이면 탈락
+        flag3 = ~((result_df['FormatCnt'] >= result_df['MasterFormatCnt']*1.5) & (result_df['FormatCnt'] >= 5) & (result_df['MasterCompareLength'] == '0') )
+ 
+        flag4 = pd.Series(True, index=result_df.index)  # 4) 항상 1 (유지)
+ 
+        flag5 = result_df['UniqueCnt'].ge(10)  # 5) 유니크가 10 미만이면 탈락
+
+        flag6 = result_df['FormatValue'].ge(10)  # 6) 포맷값이 10 미만이면 탈락
+
+        # 7) 소스 유니크가 마스터보다 크면서 MasterCompareLength가 0이면 탈락
+        flag7 = ~( (result_df['UniqueCnt'] > result_df['MasterUniqueCnt']) & (result_df['MasterCompareLength'] == '0') )
+
+        # 8) FilePath = MasterFilePath 이고 FileName = MasterFile 이고 ColumnName = MasterColumn 이면 탈락
+        flag8 = ~( (result_df['FilePath'] == result_df['MasterFilePath']) & (result_df['FileName'] == result_df['MasterFile']) & (result_df['ColumnName'] == result_df['MasterColumn']) )
+
+        # 최종 플래그
+        result_df['Match_Flag']  = flag0.astype(int)
+        result_df['Match_Flag1'] = flag1.astype(int)
+        result_df['Match_Flag2'] = flag2.astype(int)
+        result_df['Match_Flag3'] = flag3.astype(int)
+        result_df['Match_Flag4'] = flag4.astype(int)
+        result_df['Match_Flag5'] = flag5.astype(int)
+        result_df['Match_Flag6'] = flag6.astype(int)
+        # result_df['Match_Flag7'] = flag7.astype(int)
+        result_df['Match_Flag7'] = 1
+        result_df['Match_Flag8'] = flag8.astype(int)
+        result_df['Final_Flag'] = (
+            result_df['Match_Flag']  *
+            result_df['Match_Flag2'] *
+            result_df['Match_Flag3'] *
+            result_df['Match_Flag4'] *
+            result_df['Match_Flag5'] *
+            result_df['Match_Flag6'] *
+            result_df['Match_Flag7'] *
+            result_df['Match_Flag8']
+        )
+
+        return result_df
+
+    except Exception as e:
+        print(f"조합 처리 중 오류 발생: {e}")
+        raise
+#--------------[ 클래스 선언 ]--------------
+# --- [1. 경로 및 설정 관리 클래스] ---
+class DQConfig:
+    ROOT_PATH = Path(__file__).resolve().parents[2]
+    YAML_RELATIVE_PATH = 'DataSense/util/DS_Master.yaml'
+    # CONTRACT_RELATIVE_PATH = 'DataSense/util/DQ_Contract.yaml'
+
+    @staticmethod
+    def get_path(rel_path):
+        """EXE 빌드 환경과 일반 파이썬 환경 모두 대응"""
+        if hasattr(sys, '_MEIPASS'):
+            return os.path.join(sys._MEIPASS, rel_path)
+        return os.path.join(DQConfig.ROOT_PATH, rel_path)
+
+# sys.path 추가 (내부 모듈 참조용)
+if str(DQConfig.ROOT_PATH) not in sys.path:
+    sys.path.insert(0, str(DQConfig.ROOT_PATH))
+
+try:
+    from DataSense.util.io import Load_Yaml_File
+    # from DataSense.util.dq_format import Expand_Format, Combine_Format
+    from DataSense.util.dq_validate import (
+        init_reference_globals,
+        validate_date, validate_yearmonth, validate_latitude, validate_longitude,
+        validate_YYMMDD, validate_year, validate_tel, validate_cellphone,
+        validate_url, validate_email, validate_kor_name, validate_address,
+        validate_country_code, validate_gender, validate_gender_en, validate_car_number,
+        validate_time, validate_timestamp,
+    )
+
+except ImportError as e:
+    print(f"❌ 필수 모듈 로드 실패: {e}")
+    sys.exit(1)
+
+class Initializing_Main_Class:
+    def __init__(self, main_config):
+        self.logger = self._setup_logger()
+        self.config = main_config
+        
+    def _setup_logger(self):
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        return logging.getLogger(__name__)
+
+    def process_files_mapping(self):
+        try:
+            # 1. 파일 로드 (유지보수 용이하게 경로 관리)
+            output_dir = Path(self.config['ROOT_PATH']) / self.config['directories']['output']
+            meta_dir = Path(self.config['ROOT_PATH']) / "DataSense" / "DS_Meta"
+            
+            f_format_path = output_dir / "FileFormat.csv"
+            r_datatype_path = output_dir / "RuleDataType.csv"
+            m_meta_path = meta_dir / "Master_Meta.xlsx"
+
+            # 데이터 로드 시 에러 방지 (str 연산 오류 방지를 위해 모든 컬럼을 str로 읽거나 처리)
+            df_ff = pd.read_csv(f_format_path, encoding='utf-8-sig', dtype=str).fillna('')
+            df_rt = pd.read_csv(r_datatype_path, encoding='utf-8-sig', dtype=str).fillna('')
+            df_mm = pd.read_excel(m_meta_path, dtype=str).fillna('')
+
+            self.logger.info("모든 기본 파일 로드 완료")
+
+            # 2.  'str' 연산 부분 수정 (Vectorized 연산 사용)  예: 특정 컬럼에만 str 연산 적용
+            for df in [df_ff, df_rt, df_mm]:
+                for col in df.columns:
+                    # 데이터프레임 자체가 아닌, 개별 시리즈(컬럼)에 str.strip() 적용
+                    df[col] = df[col].astype(str).str.strip()
+
+            # 3. 코드 관계 분석 메인 로직 
+            result_df = self.execute_relationship_analysis(df_ff, df_rt, df_mm)
+            
+            final_path = output_dir / "Code_Relationship_Result.csv"
+            result_df.to_csv(final_path, index=False, encoding='utf-8-sig')
+            self.logger.info(f"분석 완료 및 저장: {final_path}")
+            
+            return True
+
+        except Exception as e:
+            self.logger.error(f"분석 중 오류 발생: {e}")
+            self.logger.error(traceback.format_exc())
+            return False
+
+    def execute_relationship_analysis(self, df_ff, df_rt, df_mm) -> pd.DataFrame:
+        """
+        df_ff: 파일 형식 매핑 결과
+        df_rt: 룰 매핑 결과
+        df_mm: 마스터 매핑 결과
+        """
+        # 1) Reference
+        reference_df = self.reference_mapping(df_ff)
+        if DEBUG_MODE and reference_df is not None and not reference_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_3rd_ref_mapping.csv')
+            reference_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"reference mapping : {p} 저장")
+
+        # 2) Rule
+        rule_df = self.rule_mapping(df_ff, df_rt)
+        if DEBUG_MODE and rule_df is not None and not rule_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_4th_rule_mapping.csv')
+            rule_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"rule mapping : {p} 저장")
+
+        # 3) Numeric stats
+        numeric_df = self.numeric_column_statistics(df_ff)
+        if DEBUG_MODE and numeric_df is not None and not numeric_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILENUMERIC + '.csv')
+            numeric_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"numeric stats : {p} 저장")
+
+        # 4) Internal
+        internal_df = self.internal_mapping(df_ff) # "데이터가 생긴 모양(Pattern)이 같은 것들끼리만" 그룹핑하여 비교 대상을 확 줄여버립니다.
+        if DEBUG_MODE and internal_df is not None and not internal_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_7th_int_mapping.csv')
+            internal_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"internal mapping : {p} 저장")
+
+        # # 4) Internal New () N X N 조합을 만든 뒤 하나씩 검사하는 방법 (속도가 더 느림) 
+        # internal_df_new = self.internal_mapping_new(df_ff)
+        # if DEBUG_MODE and internal_df_new is not None and not internal_df_new.empty:
+        #     p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_7th_int_mapping_new.csv')
+        #     internal_df_new.to_csv(p, index=False, encoding='utf-8-sig')
+        #     self.logger.info(f"internal mapping_new : {p} 저장")
+
+        # 5) concat + pivot + final
+        concat_df = self.mapping_concat(reference_df, internal_df, rule_df)
+        if DEBUG_MODE and concat_df is not None and not concat_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_8th_concat.csv')
+            concat_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"concat_df : {p} 저장")
+
+        pivoted_df = self.mapping_pivot(internal_df) 
+        if DEBUG_MODE and pivoted_df is not None and not pivoted_df.empty:
+            p = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_9th_pivoted.csv')
+            pivoted_df.to_csv(p, index=False, encoding='utf-8-sig')
+            self.logger.info(f"pivoted_df : {p} 저장")
+
+        final_df = self.final_mapping(df_ff, pivoted_df, reference_df, rule_df) # 새로운 방식 
+        if DEBUG_MODE and final_df is not None and not final_df.empty:
+            final_path = os.path.join(self.config['ROOT_PATH'], self.config['directories']['output'], OUTPUT_FILE_NAME + '_final.csv')
+            final_df.to_csv(final_path, index=False, encoding='utf-8-sig')
+            self.logger.info(f"최종 : {final_path} 저장")
+           
+        return final_df
+
+# ---------------------------------------------------------
+# 2. 메인 클래스 내 확장 메서드 
+# ---------------------------------------------------------
+    def internal_mapping_new(self, fileformat_df: pd.DataFrame, sample_size: int = 10000):
+        self.logger.info(f"🚀 초고속 Internal Mapping 시작 (샘플링: {sample_size}건)")
+        
+        # 1. 유니크 셋 사전 추출 (I/O 최소화)
+        unique_sets = {}
+        target_cols = fileformat_df.to_dict('records')
+        
+        self.logger.info(f"대상 컬럼 {len(target_cols)}개에 대한 데이터 로딩 및 샘플링 시작...")
+        for col_meta in target_cols:
+            fpath = col_meta['FilePath']
+            cname = col_meta['ColumnName']
+            
+            try:
+                # 필요한 컬럼만, 지정된 샘플만큼 읽기
+                df_tmp = pd.read_csv(fpath, usecols=[cname], dtype=str, encoding='utf-8-sig', low_memory=False)
+                if len(df_tmp) > sample_size:
+                    series = df_tmp[cname].sample(n=sample_size, random_state=42)
+                else:
+                    series = df_tmp[cname]
+                
+                # 클렌징 후 Set 저장
+                cleaned_set = set(series.dropna().str.strip().unique())
+                unique_sets[(fpath, cname)] = cleaned_set
+            except Exception:
+                unique_sets[(fpath, cname)] = set()
+
+        # 2. Pruning (가지치기) 기반 태스크 생성
+        self.logger.info("메타데이터 기반 Pruning(가지치기) 수행 중...")
+        tasks = []
+        for a, b in combinations(target_cols, 2):
+            # [조건 1] 같은 파일의 같은 컬럼은 제외
+            if a['FilePath'] == b['FilePath'] and a['ColumnName'] == b['ColumnName']:
+                continue
+            
+            # # [조건 2] 데이터 타입이 다르면 연산 가치 없음 (Pruning)
+            # if a.get('DetailDataType') != b.get('DetailDataType'):
+            #     continue
+            
+            # [조건 3] 값 범위(Min/Max)가 전혀 겹치지 않으면 스킵 (Pruning)
+            a_min, a_max = str(a.get('FormatMin_1', '')), str(a.get('FormatMax_1', ''))
+            b_min, b_max = str(b.get('FormatMin_1', '')), str(b.get('FormatMax_1', ''))
+            
+            if a_min and a_max and b_min and b_max:
+                if a_max < b_min or a_min > b_max:
+                    continue # 범위가 겹치지 않으므로 스킵
+
+            # 비교 대상 리스트 추가
+            set_a = unique_sets.get((a['FilePath'], a['ColumnName']), set())
+            set_b = unique_sets.get((b['FilePath'], b['ColumnName']), set())
+            
+            if set_a and set_b:
+                tasks.append((a, b, set_a, set_b))
+
+        self.logger.info(f"최종 비교 대상 조합: {len(tasks)}개 (병렬 처리 시작)")
+
+        # 3. 병렬 처리 실행
+        with Pool(processes=cpu_count()) as pool:
+            results = pool.map(compare_columns_worker, tasks)
+
+        # 4. 결과 정리
+        final_results = [r for r in results if r is not None]
+        self.logger.info(f"분석 완료! 유효 매핑 결과: {len(final_results)}건")
+        
+        return pd.DataFrame(final_results)
+
+# ------------------ (2) Reference 값 비교 (new) ------------------
+    def mapping_check_old(self, mapping_df: pd.DataFrame, sample: int = 10_000) -> pd.DataFrame:
         """Reference/Internal 매핑 비교 수행 + 필수 컬럼 보장"""
+        
         def _clean_values(series: pd.Series, length_limit=0) -> pd.Series:
             s = (series.dropna().astype(str).str.strip()
                  .replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA})).dropna()
@@ -229,53 +606,60 @@ class Initializing_Main_Class:
             except Exception:
                 return default
 
-        mapping_df = mapping_df.copy()
-        rows: List[Dict[str, Any]] = []
+        # ✅ 1. 캐시 저장소 초기화 (루프 밖)
+        master_val_cache = {}
         src_cache, master_cache = {}, {}
+        rows: List[Dict[str, Any]] = []
+
+        mapping_df = mapping_df.copy()
 
         for _, r in mapping_df.sort_values(by='FilePath').iterrows():
+            # ✅ 2. 루프 내부에서 변수 정의
             fpath = str(r['FilePath']).strip()
             fname = str(r['FileName']).strip()
             col   = str(r['ColumnName']).strip()
             mtype = str(r['MasterType']).strip()
             mpath = str(r['MasterFilePath']).strip()
-            mfile = str(r.get('MasterFile', "")).strip()   # 안전 처리
+            mfile = str(r.get('MasterFile', "")).strip()
             rtype = str(r['ReferenceMasterType']).strip()
             mcol  = str(r['MasterColumn']).strip()
 
             comp_len_src = _to_int(r.get('CompareLength', 0), 0)
             comp_len_mst = _to_int(r.get('MasterCompareLength', 0), 0)
 
+            # --- 파일 로드 로직 (생략 방지용 유지) ---
             if fpath not in src_cache:
                 try:
-                    src_cache[fpath] = _clean_headers(
-                        pd.read_csv(fpath, encoding='utf-8-sig', low_memory=False, dtype=str)
-                    )
-                except Exception as e:
-                    print(f"[❌ 파일 읽기 오류] {fpath} → {e}")
-                    continue
+                    src_cache[fpath] = _clean_headers(pd.read_csv(fpath, encoding='utf-8-sig', low_memory=False, dtype=str))
+                except Exception: continue
             if mpath not in master_cache:
                 try:
-                    master_cache[mpath] = _clean_headers(
-                        pd.read_csv(mpath, encoding='utf-8-sig', low_memory=False, dtype=str)
-                    )
-                except Exception as e:
-                    print(f"[❌ 마스터 읽기 오류] {mpath} → {e}")
-                    continue
+                    master_cache[mpath] = _clean_headers(pd.read_csv(mpath, encoding='utf-8-sig', low_memory=False, dtype=str))
+                except Exception: continue
 
             df = src_cache[fpath]
             md = master_cache[mpath]
+
             if (col not in df.columns) or (mcol not in md.columns):
-                print(f"[경고] 컬럼 없음: {fname} / {col} / {mpath} / {mcol}")
                 continue
 
+            # ✅ 3. 마스터 값 추출 및 캐싱 (변수가 모두 정의된 루프 안에서 수행)
+            # 마스터 컬럼과 적용할 길이 제한을 키로 사용
+            m_key = (mpath, mcol, comp_len_mst or comp_len_src)
+            if m_key not in master_val_cache:
+                # 마스터 데이터셋(md)에서 해당 컬럼(mcol)을 가져와 클렌징 후 캐시에 저장
+                master_val_cache[m_key] = _clean_values(md[mcol], m_key[2])
+            
+            m_vals = master_val_cache[m_key]
+
+            # --- 소스 데이터 샘플링 및 비교 ---
             s_series = df[col]
             if len(s_series) > sample:
                 s_series = s_series.sample(sample, random_state=42)
 
             s_vals = _clean_values(s_series, comp_len_src or comp_len_mst)
-            m_vals = _clean_values(md[mcol], comp_len_mst or comp_len_src)
 
+            # 비교 수행
             compare_count = s_vals[s_vals.isin(m_vals)].count()
             total_count   = s_vals.count()
             match_rate    = round(compare_count / total_count * 100, 2) if total_count > 0 else 0.0
@@ -288,94 +672,216 @@ class Initializing_Main_Class:
             })
 
         out = pd.DataFrame(rows)
+        return out
+    
+    def mapping_check(self, mapping_df: pd.DataFrame, sample: int = 10000) -> pd.DataFrame:
+        """기존 패턴 매핑 방식을 유지하되, 데이터 정제 과정을 캐싱하여 속도 최적화"""
+        
+        # --- 내부 유틸리티: 값을 한 번만 정제해서 저장 ---
+        cleaned_cache = {} # (fpath, col, limit) -> cleaned_series_set
 
-        # 🔹 필수 컬럼 보장
-        required_cols = [
-            "FilePath","FileName","ColumnName","MasterType",
-            "MasterFilePath","MasterFile","ReferenceMasterType","MasterColumn",
-            "CompareLength","CompareCount","SourceCount","MatchRate(%)"
-        ]
-        for c in required_cols:
-            if c not in out.columns:
-                if "Count" in c or "Rate" in c:
-                    out[c] = 0
-                else:
-                    out[c] = ""
+        def get_cleaned_values(fpath, col, df_source, limit):
+            key = (fpath, col, limit)
+            if key not in cleaned_cache:
+                # 1. 샘플링 및 정제 (최초 1회만 수행)
+                s = df_source[col].dropna().astype(str).str.strip()
+                s = s.replace({'': pd.NA, 'nan': pd.NA, 'None': pd.NA}).dropna()
+                
+                if len(s) > sample:
+                    s = s.sample(sample, random_state=42)
+                
+                if limit > 0:
+                    s = s.str[:int(limit)]
+                
+                # 교집합 연산을 위해 set으로 변환하여 캐싱
+                cleaned_cache[key] = set(s.unique())
+            return cleaned_cache[key]
 
-        if out.empty:
-            return pd.DataFrame(columns=required_cols)
+        # --------------------------------------------------
+        mapping_df = mapping_df.copy()
+        rows = []
+        src_cache = {} # 파일 객체 캐시
 
-        return out.drop_duplicates().reset_index(drop=True)[required_cols]
-    # ------------------ (2) 피벗(Left-compact) ------------------
+        # FilePath 순으로 정렬하여 파일 로드 횟수 최소화
+        for _, r in mapping_df.sort_values(by=['FilePath', 'MasterFilePath']).iterrows():
+            fpath, col = str(r['FilePath']), str(r['ColumnName'])
+            mpath, mcol = str(r['MasterFilePath']), str(r['MasterColumn'])
+            
+            # 파일 로드 (캐시 활용)
+            for path in [fpath, mpath]:
+                if path not in src_cache:
+                    try:
+                        src_cache[path] = _clean_headers(pd.read_csv(path, dtype=str, encoding='utf-8-sig', low_memory=False))
+                    except: continue
+
+            if fpath not in src_cache or mpath not in src_cache: continue
+            
+            df, md = src_cache[fpath], src_cache[mpath]
+            if col not in df.columns or mcol not in md.columns: continue
+
+            # 비교 길이 설정
+            comp_len = int(r.get('CompareLength', 0) or r.get('MasterCompareLength', 0))
+
+            # ✅ 핵심: 이미 정제된 데이터셋을 가져옴 (중복 연산 0)
+            s_vals_set = get_cleaned_values(fpath, col, df, comp_len)
+            m_vals_set = get_cleaned_values(mpath, mcol, md, comp_len)
+
+            # ✅ 고속 Set 교집합 연산
+            intersection = s_vals_set.intersection(m_vals_set)
+            compare_count = len(intersection)
+            total_count = len(s_vals_set)
+            match_rate = round(compare_count / total_count * 100, 2) if total_count > 0 else 0.0
+
+            if match_rate >= MATCH_RATE_THRESHOLD:
+                rows.append({
+                    "FilePath": fpath, "FileName": r['FileName'], "ColumnName": col, 
+                    "MasterType": r['MasterType'], "MasterFilePath": mpath, "MasterFile": r.get('MasterFile',''),
+                    "ReferenceMasterType": r['ReferenceMasterType'], "MasterColumn": mcol,
+                    "CompareLength": comp_len, "CompareCount": compare_count, 
+                    "SourceCount": total_count, "MatchRate(%)": match_rate
+                })
+
+        return pd.DataFrame(rows)
+    # # ------------------ (2) 피벗(Left-compact) ------------------
+    # def mapping_pivot_old(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
+    #                   top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
+    #     """Left-compact pivot: 상위 top_k 후보를 CodeFilePath/CodeFile/CodeType/CodeColumn/Matched로 전개"""
+    #     if df_merged is None or df_merged.empty:
+    #         cols = ["FilePath","FileName","ColumnName","MasterType"]
+    #         for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+    #             cols += [f"{b}_{i}" for i in range(1, top_k+1)]
+    #         return pd.DataFrame(columns=cols)
+
+    #     df = df_merged.copy()
+    #     # normalize numeric columns
+    #     for numc in ("Matched","Matched(%)"):
+    #         if numc in df.columns:
+    #             df[numc] = pd.to_numeric(df[numc], errors='coerce').fillna(0)
+
+    #     # keep only candidate rows that exceed thresholds
+    #     mask = (df["Matched"].fillna(0) > 0) & (df["Matched(%)"].fillna(-1) > valid_threshold)
+    #     df = df.loc[mask].copy()
+    #     if df.empty:
+    #         cols = ["FilePath","FileName","ColumnName","MasterType"]
+    #         for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+    #             cols += [f"{b}_{i}" for i in range(1, top_k+1)]
+    #         return pd.DataFrame(columns=cols)
+
+    #     sort_keys = ["FilePath","FileName","ColumnName","MasterType","Matched(%)","Matched"]
+    #     df = df.sort_values(sort_keys, ascending=[True,True,True,True,False,False], kind="mergesort").reset_index(drop=True)
+
+    #     grp_keys = ["FilePath","FileName","ColumnName","MasterType"]
+    #     df = df.assign(rank=df.groupby(grp_keys).cumcount() + 1)
+    #     df = df.loc[df["rank"] <= top_k].copy()
+
+    #     wide = (
+    #         df.pivot_table(
+    #             index=grp_keys,
+    #             columns="rank",
+    #             values=["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"],
+    #             aggfunc="first"
+    #         )
+    #     )
+    #     # Normalize column names to previous naming (CodeFile / CodeColumn)
+    #     # pivot produced e.g. ('CodeFilePath', 1)
+    #     wide.columns = [f"{col[0]}_{int(col[1])}" for col in wide.columns]
+    #     wide = wide.reset_index().copy()
+
+    #     # Left-compact each block of parallel columns
+    #     def _left_compact_block(block: pd.DataFrame) -> pd.DataFrame:
+    #         arr = block.to_numpy(object)
+    #         for r in range(arr.shape[0]):
+    #             vals = [x for x in arr[r].tolist() if not (pd.isna(x) or str(x).strip() == "")]
+    #             vals += [""] * (arr.shape[1] - len(vals))
+    #             arr[r, :] = vals
+    #         return pd.DataFrame(arr, columns=block.columns, index=block.index)
+
+    #     # perform left-compact for groups
+    #     for base in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
+    #         cols = [c for c in wide.columns if c.startswith(base + "_")]
+    #         if cols:
+    #             block = _left_compact_block(wide[cols].copy())
+    #             wide[cols] = block
+
+    #     # fillna -> empty string for object columns
+    #     obj_cols = wide.select_dtypes(include="object").columns.tolist()
+    #     if obj_cols:
+    #         wide[obj_cols] = wide[obj_cols].fillna("")
+
+    #     return wide
+
+    # 2025. 12. 24 Qliker - 피벗(Left-compact) 수정
     def mapping_pivot(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
-                      top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
-        """Left-compact pivot: 상위 top_k 후보를 CodeFilePath/CodeFile/CodeType/CodeColumn/Matched로 전개"""
+                         top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
+        """Top-K 후보를 가로로 전개하는 개선된 피벗 로직"""
+        
         if df_merged is None or df_merged.empty:
-            cols = ["FilePath","FileName","ColumnName","MasterType"]
-            for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
-                cols += [f"{b}_{i}" for i in range(1, top_k+1)]
-            return pd.DataFrame(columns=cols)
+            return self._make_empty_pivot_df(top_k)
 
-        df = df_merged.copy()
-        # normalize numeric columns
-        for numc in ("Matched","Matched(%)"):
+        # 1. 컬럼명 정리
+        rename_map = {
+            'MasterFilePath':'CodeFilePath', 'MasterFile':'CodeFile',
+            'ReferenceMasterType':'CodeType', 'MasterColumn':'CodeColumn',
+            'CompareCount':'Matched', 'MatchRate(%)':'Matched(%)'
+        }
+        df = df_merged.rename(columns=rename_map).copy()
+
+        # 2. 숫자형 변환 및 필터링
+        for numc in ["Matched", "Matched(%)"]:
             if numc in df.columns:
                 df[numc] = pd.to_numeric(df[numc], errors='coerce').fillna(0)
 
-        # keep only candidate rows that exceed thresholds
-        mask = (df["Matched"].fillna(0) > 0) & (df["Matched(%)"].fillna(-1) > valid_threshold)
+        mask = (df["Matched"] > 0) & (df["Matched(%)"] >= valid_threshold)
         df = df.loc[mask].copy()
+        
         if df.empty:
-            cols = ["FilePath","FileName","ColumnName","MasterType"]
-            for b in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
-                cols += [f"{b}_{i}" for i in range(1, top_k+1)]
-            return pd.DataFrame(columns=cols)
+            return self._make_empty_pivot_df(top_k)
 
-        sort_keys = ["FilePath","FileName","ColumnName","MasterType","Matched(%)","Matched"]
-        df = df.sort_values(sort_keys, ascending=[True,True,True,True,False,False], kind="mergesort").reset_index(drop=True)
+        # 3. 정렬 및 랭킹 부여 (Top-K 추출)
+        grp_keys = ["FilePath", "FileName", "ColumnName", "MasterType"]
+        sort_keys = grp_keys + ["Matched(%)", "Matched"]
+        
+        df = df.sort_values(sort_keys, ascending=[True]*4 + [False]*2, kind="mergesort")
+        df['rank'] = df.groupby(grp_keys).cumcount() + 1
+        df = df.loc[df["rank"] <= top_k]
 
-        grp_keys = ["FilePath","FileName","ColumnName","MasterType"]
-        df = df.assign(rank=df.groupby(grp_keys).cumcount() + 1)
-        df = df.loc[df["rank"] <= top_k].copy()
-
-        wide = (
-            df.pivot_table(
-                index=grp_keys,
-                columns="rank",
-                values=["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"],
-                aggfunc="first"
-            )
+        # 4. Pivot Table 생성
+        value_vars = ["CodeFilePath", "CodeFile", "CodeType", "CodeColumn", "Matched", "Matched(%)"]
+        wide = df.pivot_table(
+            index=grp_keys,
+            columns="rank",
+            values=value_vars,
+            aggfunc="first"
         )
-        # Normalize column names to previous naming (CodeFile / CodeColumn)
-        # pivot produced e.g. ('CodeFilePath', 1)
-        wide.columns = [f"{col[0]}_{int(col[1])}" for col in wide.columns]
-        wide = wide.reset_index().copy()
 
-        # Left-compact each block of parallel columns
-        def _left_compact_block(block: pd.DataFrame) -> pd.DataFrame:
-            arr = block.to_numpy(object)
-            for r in range(arr.shape[0]):
-                vals = [x for x in arr[r].tolist() if not (pd.isna(x) or str(x).strip() == "")]
-                vals += [""] * (arr.shape[1] - len(vals))
-                arr[r, :] = vals
-            return pd.DataFrame(arr, columns=block.columns, index=block.index)
+        # 5. 컬럼명 평탄화 (Multi-index -> Single-index) 예: ('CodeFile', 1) -> 'CodeFile_1'
+        wide.columns = [f"{c[0]}_{int(c[1])}" for c in wide.columns]
+        wide = wide.reset_index()
 
-        # perform left-compact for groups
-        for base in ["CodeFilePath","CodeFile","CodeType","CodeColumn","Matched","Matched(%)"]:
-            cols = [c for c in wide.columns if c.startswith(base + "_")]
-            if cols:
-                block = _left_compact_block(wide[cols].copy())
-                wide[cols] = block
+        # 6. 컬럼 순서 정렬 (CodeFile_1, Matched_1, CodeFile_2, Matched_2... 순서로 정렬하고 싶을 때)
+        ordered_cols = grp_keys.copy()
+        for i in range(1, top_k + 1):
+            for base in value_vars:
+                col_name = f"{base}_{i}"
+                if col_name in wide.columns:
+                    ordered_cols.append(col_name)
+                else:
+                    wide[col_name] = "" if "Matched" not in base else 0
+                    ordered_cols.append(col_name)
 
-        # fillna -> empty string for object columns
-        obj_cols = wide.select_dtypes(include="object").columns.tolist()
-        if obj_cols:
-            wide[obj_cols] = wide[obj_cols].fillna("")
+        return wide[ordered_cols].fillna("")
 
-        return wide
+    def _make_empty_pivot_df(self, top_k):
+        """빈 결과 데이터프레임 생성 유틸리티"""
+        cols = ["FilePath", "FileName", "ColumnName", "MasterType"]
+        bases = ["CodeFilePath", "CodeFile", "CodeType", "CodeColumn", "Matched", "Matched(%)"]
+        for i in range(1, top_k + 1):
+            for b in bases:
+                cols.append(f"{b}_{i}")
+        return pd.DataFrame(columns=cols)
 
     # ------------------ (2) 피벗(Left-compact) ------------------
-    def mapping_pivot_new(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
+    def mapping_pivot_old(self, df_merged: pd.DataFrame, valid_threshold: float = 10.0,
                       top_k: int = 3, drop_old_pivot_cols: bool = True) -> pd.DataFrame:
         """Left-compact pivot: 상위 top_k 후보를 CodeFilePath/CodeFile/CodeType/CodeColumn/Matched로 전개"""
         df_merged = df_merged.rename(columns={
@@ -429,7 +935,6 @@ class Initializing_Main_Class:
             )
         )
         # Normalize column names to previous naming (CodeFile / CodeColumn)
-        # pivot produced e.g. ('CodeFilePath', 1)
         wide.columns = [f"{col[0]}_{int(col[1])}" for col in wide.columns]
         wide = wide.reset_index().copy()
 
@@ -673,7 +1178,6 @@ class Initializing_Main_Class:
     # ------------------ (5) Reference / Internal / Concat ------------------
     def reference_mapping(self, fileformat_df: pd.DataFrame) -> pd.DataFrame:
         self.logger.info("Reference Code Mapping 시작")
-        output_dir = self.directories_config.output_dir
 
         expand_df = Expand_Format(fileformat_df)
         expand_df['Format(%)'] = pd.to_numeric(expand_df.get('Format(%)', 0), errors='coerce').fillna(0)
@@ -692,22 +1196,18 @@ class Initializing_Main_Class:
 
     def internal_mapping(self, fileformat_df: pd.DataFrame) -> pd.DataFrame:
         self.logger.info("Internal Code Mapping 시작")
-        output_dir = self.directories_config.output_dir
 
         expand_df = Expand_Format(fileformat_df)
         expand_df['Format(%)'] = pd.to_numeric(expand_df.get('Format(%)', 0), errors='coerce').fillna(0)
         expand_df = expand_df.loc[expand_df['Format(%)'] > 10].copy()
         source_df = expand_df.loc[expand_df['MasterType'] != 'Reference'].copy()
         combine_df = Combine_Format(source_df, source_df) # Match 된 레코드 중 조건을 충족하는 레코드만 선택
-
         combine_df = combine_df[combine_df.get('Final_Flag', 0) == 1].copy()
         if combine_df.empty:
             return pd.DataFrame()
         mapping_df = self.mapping_check(combine_df)
         mapping_df = mapping_df[mapping_df['MatchRate(%)'] > MATCH_RATE_THRESHOLD]
         mapping_df = mapping_df.sort_values(by=['FilePath','ColumnName','MatchRate(%)'], ascending=[True,True,False])
-        # 'FilePath','ColumnName' 기준으로 그룹화하여 각 그룹에서 MatchRate(%) 상위 5개만 선택
-        # mapping_df = mapping_df.groupby(['FilePath', 'ColumnName'], as_index=False).head(3)
         return mapping_df
 
     def mapping_concat(self, reference_df: pd.DataFrame, internal_df: pd.DataFrame, rule_df: pd.DataFrame) -> pd.DataFrame:
@@ -745,73 +1245,14 @@ class Initializing_Main_Class:
                                           ascending=[True,True,True,True,False])
         return concat_df
 
-    # def final_mapping_old(self, fileformat_df: pd.DataFrame, pivoted_df: pd.DataFrame) -> pd.DataFrame:
-    #     """fileformat_df와 ruldatatype(preset)과 pivoted_df를 합쳐 최종 산출"""
-    #     self.logger.info("최종 매핑 파일을 생성합니다.")
-    #     df_rule = self.loaded_data.get('ruldatatype', pd.DataFrame()).copy()
-    #     if df_rule.empty:
-    #         self.logger.debug("ruldatatype 비어있음 -> 룰 반영 스킵")
-    #     rule_required_cols = ["FilePath","FileName","ColumnName","MasterType", "Rule","MatchedScoreList"]
-    #     # safe: fill missing rule cols if necessary
-    #     for c in rule_required_cols:
-    #         if c not in df_rule.columns:
-    #             df_rule[c] = ""
-
-    #     df_rule = df_rule[rule_required_cols].copy()
-    #     # pivoted_df may be empty -> create empty with expected columns
-    #     pivot_cols = [
-    #         'FilePath','FileName','ColumnName','MasterType',
-    #         'CodeColumn_1','CodeFile_1','CodeFilePath_1','CodeType_1','Matched_1','Matched(%)_1',
-    #         'CodeColumn_2','CodeFile_2','CodeFilePath_2','CodeType_2','Matched_2','Matched(%)_2'
-    #     ]
-    #     if pivoted_df is None or pivoted_df.empty:
-    #         pivoted_df = pd.DataFrame(columns=pivot_cols)
-    #     else:
-    #         # ensure all pivot cols exist
-    #         for c in pivot_cols:
-    #             if c not in pivoted_df.columns:
-    #                 pivoted_df[c] = ""
-
-    #     # merge
-    #     df = pd.merge(fileformat_df, df_rule, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_rule"))
-    #     df = pd.merge(df, pivoted_df, on=['FilePath','FileName','ColumnName','MasterType'], how='left', suffixes=("","_pivot"))
-
-    #     # 룰 매핑 반영: CodeColumn_1 비어있고 Rule이 있으면 반영
-    #     df['Rule'] = df.get('Rule', "").fillna("").astype(str).str.strip()
-    #     df['CodeColumn_1'] = df.get('CodeColumn_1', "").fillna("").astype(str)
-    #     mask = (df['CodeColumn_1'].str.strip() == "") & (df['Rule'] != "")
-    #     if mask.any():
-    #         df.loc[mask, 'CodeColumn_1'] = df.loc[mask, 'Rule']
-    #         df.loc[mask, 'CodeType_1'] = 'Rule'
-    #         df.loc[mask, 'CodeFile_1'] = 'Rule'
-    #         df.loc[mask, 'CodeFilePath_1'] = 'Rule'
-    #         # ValueCnt might not exist -> safe
-    #         if 'ValueCnt' in df.columns:
-    #             df.loc[mask, 'Matched_1'] = pd.to_numeric(df.loc[mask, 'ValueCnt'], errors='coerce').fillna(0).astype(int)
-    #         else:
-    #             df.loc[mask, 'Matched_1'] = 0
-    #         df.loc[mask, 'Matched(%)_1'] = 100
-    #         df.loc[mask, 'CodeCheck'] = 'Y'
-
-    #     # PK -> FK mapping (if PK column present in fileformat_df)
-    #     if 'PK' in fileformat_df.columns:
-    #         pk_numeric = pd.to_numeric(fileformat_df['PK'], errors='coerce').fillna(0).astype(int)
-    #         mask_pk = pk_numeric == 1
-    #         tmp_df = fileformat_df.loc[mask_pk, ['FilePath','ColumnName']].copy()
-    #         tmp_df = tmp_df.rename(columns={'FilePath':'CodeFilePath_1','ColumnName':'CodeColumn_1'})
-    #         tmp_df['FK'] = 'FK'
-    #         df = pd.merge(df, tmp_df, on=['CodeFilePath_1','CodeColumn_1'], how='left')
-
-    #     return df
-
     # 2025-11-26 새로운 방식으로 변경함 
-    def final_mapping(self, fileformat_df: pd.DataFrame, pivoted_df: pd.DataFrame, reference_df: pd.DataFrame, rule_df: pd.DataFrame) -> pd.DataFrame:
+    def final_mapping(self, fileformat_df, pivoted_df, reference_df, rule_df) -> pd.DataFrame:
         """fileformat_df와 ruldatatype(preset)과 pivoted_df를 합쳐 최종 산출"""
         #---------------------------------------------------------
         #  rule_df 읽어옴. 
          #---------------------------------------------------------
         self.logger.info("최종 매핑 파일을 생성합니다.")
-        df_rule = self.loaded_data.get('ruldatatype', pd.DataFrame()).copy()
+        df_rule = rule_df.copy()
         if df_rule.empty:
             self.logger.debug("ruldatatype 비어있음 -> 룰 반영 스킵")
         rule_required_cols = ["FilePath","FileName","ColumnName","MasterType", "Rule","MatchedScoreList"]
@@ -893,85 +1334,26 @@ class Initializing_Main_Class:
 
         return df
 
-    # ------------------ (6) 파이프라인 ------------------
-    def process_files_mapping(self) -> bool:
-        output_dir = self.directories_config.output_dir
-        fileformat_df = self.loaded_data.get('fileformat', pd.DataFrame()).copy()
-        ruldatatype_df = self.loaded_data.get('ruldatatype', pd.DataFrame()).copy()
-
-        # 1) Reference
-        reference_df = self.reference_mapping(fileformat_df)
-        if DEBUG_MODE and reference_df is not None and not reference_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_3rd_ref_mapping.csv')
-            reference_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"reference mapping : {p} 저장")
-
-        # 2) Rule
-        rule_df = self.rule_mapping(fileformat_df, ruldatatype_df)
-        if DEBUG_MODE and rule_df is not None and not rule_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_4th_rule_mapping.csv')
-            rule_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"rule mapping : {p} 저장")
-
-        # 3) Numeric stats
-        numeric_df = self.numeric_column_statistics(fileformat_df)
-        if DEBUG_MODE and numeric_df is not None and not numeric_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILENUMERIC + '.csv')
-            numeric_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"numeric stats : {p} 저장")
-
-        # 4) Internal
-        internal_df = self.internal_mapping(fileformat_df)
-
-        # if DEBUG_MODE and internal_df is not None and not internal_df.empty:
-        #     p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_7th_int_combine.csv')
-        #     internal_df.to_csv(p, index=False, encoding='utf-8-sig')
-        #     self.logger.info(f"internal combine mapping : {p} 저장")
-
-        if DEBUG_MODE and internal_df is not None and not internal_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_7th_int_mapping.csv')
-            internal_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"internal mapping : {p} 저장")
-
-        # 5) concat + pivot + final
-        # concat_df 는 사용하지 않음 (2025-11-26 기준)
-        concat_df = self.mapping_concat(reference_df, internal_df, rule_df)
-        if DEBUG_MODE and concat_df is not None and not concat_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_8th_concat.csv')
-            concat_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"concat_df : {p} 저장")
-
-        # pivoted_df = self.mapping_pivot(concat_df)
-        pivoted_df = self.mapping_pivot_new(internal_df) # concat_df 대신 internal_df 사용하여 피벗 생성
-        if DEBUG_MODE and pivoted_df is not None and not pivoted_df.empty:
-            p = os.path.join(output_dir, OUTPUT_FILE_NAME + '_9th_pivoted.csv')
-            pivoted_df.to_csv(p, index=False, encoding='utf-8-sig')
-            self.logger.info(f"pivoted_df : {p} 저장")
-
-        # final_df = self.final_mapping(fileformat_df, pivoted_df) # 기존 방식 
-        final_df = self.final_mapping(fileformat_df, pivoted_df, reference_df, rule_df) # 새로운 방식 
-        final_path = os.path.join(output_dir, OUTPUT_FILE_NAME + '.csv')
-        try:
-            final_df.to_csv(final_path, index=False, encoding='utf-8-sig')
-            self.logger.info(f"최종 : {final_path} 저장")
-            return True
-        except Exception as e:
-            self.logger.error(f"최종 파일 저장 실패: {e}")
-            return False
-
-# ---------------------- main ----------------------
-def main():
-    start = time.time()
-    try:
-        processor = Initializing_Main_Class()
-        ok = processor.process_files_mapping()
-        print("Success : Reference/Internal/Rule Mapping 완료" if ok else "Fail : 처리 실패")
-        print("="*50)
-        print(f"총 처리 시간: {time.time()-start:.2f}초")
-        print("="*50)
-    except Exception as e:
-        print(f"Master Mapping 프로그램 실행 실패: {e}")
-        sys.exit(1)
-
+# 메인 실행부
 if __name__ == "__main__":
-    main()
+    import time
+    start_time = time.time()
+    main_config = Load_Yaml_File(DQConfig.get_path(DQConfig.YAML_RELATIVE_PATH))
+    analyzer = Initializing_Main_Class(main_config)
+    analyzer.process_files_mapping()
+
+    print("="*50)
+    print(f"총 처리 시간: {time.time()-start_time:.2f}초")
+    print("="*50)
+
+
+# 다음은 성능향상을 위하여 적용한 기법들 입니다.  
+# 📊 성능 최적화 요약 (43s → 17.9s)최적화 단계적용 기술효과
+# 1단계: 필터링set 기반 검색 및 중복 copy() 
+# 제거초기 데이터 로딩 및 메모리 점유율 감소
+# 2단계: 병합(Merge)필요한 컬럼만 선택하여 조인
+# 조인 연산 시 발생하는 오버헤드 최소화
+# 3단계: 연산(Flag)between, & 논리 연산자 활용
+# CPU 수준의 비트 연산으로 계산 속도 극대화
+# 4단계: 문자열 처리
+# np.where와 벡터화된 .str 접근문자열 루프 처리 비용 절감

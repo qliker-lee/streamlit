@@ -11,14 +11,13 @@ import os
 import sys
 import time
 import logging
-import unicodedata
+
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List, Set
 
 import pandas as pd
-
 # -------------------------------------------------------------------
 # 기본 경로
 # -------------------------------------------------------------------
@@ -29,6 +28,23 @@ if str(ROOT_PATH) not in sys.path:
 YAML_PATH = ROOT_PATH / "DataSense" / "util" / "DS_Master.yaml"
 
 from DataSense.util.io import Load_Yaml_File
+# from DataSense.util.io import clean_headers, normalize_str
+
+# ================================================================
+# 도우미 함수 (DataSense.util.io 에서 가져옴)
+# ================================================================
+def normalize_str(s: str) -> str:
+    """일반적인 문자열 정규화"""
+    import unicodedata  # 한글 자모 결합 정규화를 위해 임포트
+    s = unicodedata.normalize("NFC", str(s))
+    s = s.replace("\u3000", " ")
+    return " ".join(s.split())
+
+def clean_headers(df: pd.DataFrame) -> pd.DataFrame:
+    """CSV 또는 XLSX 파일의 컬럼 헤더 정리"""
+    new = df.copy()
+    new.columns = [str(c).replace("\ufeff", "").strip() for c in new.columns]
+    return new
 
 # ================================================================
 # 설정용 데이터클래스
@@ -43,24 +59,6 @@ class DirectoriesConfig:
 @dataclass
 class FilesConfig:
     codemapping: Path
-
-
-# ================================================================
-# 도우미 함수
-# ================================================================
-def normalize_str(s: str) -> str:
-    """일반적인 문자열 정규화"""
-    s = unicodedata.normalize("NFC", str(s))
-    s = s.replace("\u3000", " ")
-    return " ".join(s.split())
-
-
-def clean_headers(df: pd.DataFrame) -> pd.DataFrame:
-    """CSV 또는 XLSX 파일의 컬럼 헤더 정리"""
-    new = df.copy()
-    new.columns = [str(c).replace("\ufeff", "").strip() for c in new.columns]
-    return new
-
 
 # ================================================================
 # 초기화 클래스
@@ -81,7 +79,7 @@ class Initializing_Main_Class:
 
         self.config = Load_Yaml_File(str(yaml_path))
 
-        if "ROOT_PATH" not in self.config:
+        if "ROOT_PATH" not in self.config:   # YAML 파일에 ROOT_PATH가 없으면 자동으로 설정
             self.config["ROOT_PATH"] = str(ROOT_PATH)
 
         self.directories_config = self._setup_directories()
@@ -786,8 +784,9 @@ def main():
     try:
         processor = Initializing_Main_Class()
         processor.run_pipeline()
-        print("✅ Code Recursive Mapping 완료")
+        print("-"*50)
         print(f"총 처리 시간: {time.time() - start:.2f}초")
+        print("-"*50)
     except Exception as e:
         print(f"❌ 오류 발생: {e}")
         sys.exit(1)
