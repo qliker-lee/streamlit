@@ -28,7 +28,18 @@ MAPPING_CSV_PATH = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
 # 디렉토리가 없으면 생성
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+# -------------------------------------------------
+# Value Chain & System Diagram Color Code
+# -------------------------------------------------
+PRIMARY_FILLCOLOR = '#E3F2FD'
+PRIMARY_COLOR =     '#1E88E5'
+SUPPORT_FILLCOLOR = '#FFF9C4'
+SUPPORT_COLOR =     '#FBC02D'
 
+SYSTEM_FILLCOLOR =  '#E8F5E9'
+SYSTEM_COLOR =      '#43A047'
+FILE_FILLCOLOR =    '#F3E5F5'
+FILE_COLOR =        '#9C27B0'
 # ============================================================================
 # 공통 유틸리티 함수
 # ============================================================================
@@ -97,9 +108,9 @@ def create_valuechain_diagram(df, industry):
     graph = Digraph(name=f"ValueChain_{industry}", format='png', engine='dot')
     
     # rankdir='LR': 왼쪽에서 오른쪽으로 흐름
-    # nodesep: 상하 노드 간격 (좁게 설정하여 두 그룹을 붙임)
+    # nodesep: 상하 노드 간격 (좁게 설정하여 두 그룹을 붙임 : Defalut : 1.5)
     # ranksep: 좌우 노드 간격 (활동 간의 거리)
-    graph.attr(rankdir='LR', size='20,20', nodesep='0.5', ranksep='0.6')
+    graph.attr(rankdir='LR', size='20,20', nodesep='1.5', ranksep='0.6')
     
     # 폰트 설정
     font_name = 'Malgun Gothic' if platform.system() == 'Windows' else 'NanumGothic'
@@ -124,7 +135,7 @@ def create_valuechain_diagram(df, industry):
         if i < len(primary_activities):
             row = primary_activities.iloc[i]
             p_label = f"{row['Activity']}\\n({row['Activity_Kor']})"
-            graph.node(p_id, label=p_label, fillcolor='#E3F2FD', color='#1E88E5')
+            graph.node(p_id, label=p_label, fillcolor=PRIMARY_FILLCOLOR, color=PRIMARY_COLOR)
         else:
             graph.node(p_id, label='', style='invis')
         primary_node_ids.append(p_id)
@@ -134,7 +145,7 @@ def create_valuechain_diagram(df, industry):
         if i < len(support_activities):
             row = support_activities.iloc[i]
             s_label = f"{row['Activity']}\\n({row['Activity_Kor']})"
-            graph.node(s_id, label=s_label, fillcolor='#FFF9C4', color='#FBC02D')
+            graph.node(s_id, label=s_label, fillcolor=SUPPORT_FILLCOLOR, color=SUPPORT_COLOR)
         else:
             graph.node(s_id, label='', style='invis')
         support_node_ids.append(s_id)
@@ -154,12 +165,12 @@ def create_valuechain_diagram(df, industry):
         # Primary 흐름 (실선 화살표)
         if i < len(primary_activities) - 1:
             graph.edge(primary_node_ids[i], primary_node_ids[i+1], 
-                       style='bold', color='#1E88E5', arrowhead='vee')
+                       style='bold', color=PRIMARY_COLOR, arrowhead='vee')
         
         # Support 흐름 (점선 화살표)
         if i < len(support_activities) - 1:
             graph.edge(support_node_ids[i], support_node_ids[i+1], 
-                       style='dashed', color='#FBC02D', arrowhead='vee')
+                       style='dashed', color=SUPPORT_COLOR, arrowhead='vee')
 
     return graph
 
@@ -184,8 +195,8 @@ def create_system_architecture_diagram(industry, mode="Summary"):
     dot = Digraph(name=f"SysArch_{mode}_{industry}", format='png', engine='dot')
     
     # 상세 모드일 때는 노드 내부 텍스트가 길어지므로 간격을 조정합니다.
-    rank_sep = '1.5' if mode == "Summary" else '2.5'
-    dot.attr(rankdir='TB', size='40,30', nodesep='0.5', ranksep=rank_sep)
+    rank_sep = '3.5' if mode == "Summary" else '2.5'
+    dot.attr(rankdir='TB', size='40,30', nodesep='0.3', ranksep=rank_sep)
     
     font_name = 'Malgun Gothic' if platform.system() == 'Windows' else 'NanumGothic'
 
@@ -199,13 +210,13 @@ def create_system_architecture_diagram(industry, mode="Summary"):
             label = f"{display_name}\\n({row['Activity']})"
             
             if row.get('Activity_Type') == 'Primary':
-                f_color, b_color = '#E3F2FD', '#1E88E5'
+                f_color, b_color = PRIMARY_FILLCOLOR, PRIMARY_COLOR
             else:
-                f_color, b_color = '#FFF9C4', '#FBC02D'
+                f_color, b_color = SUPPORT_FILLCOLOR, SUPPORT_COLOR
             
             s.node(act_id, label=label, shape='box', style='filled,rounded', 
                    fillcolor=f_color, color=b_color, fontname=font_name, 
-                   width='2.2', height='0.8', penwidth='2')
+                   width='2.2', height='1.1', penwidth='2')
             activity_node_ids.append(act_id)
 
     for i in range(len(activity_node_ids) - 1):
@@ -228,8 +239,8 @@ def create_system_architecture_diagram(industry, mode="Summary"):
                 if mode == "Summary":
                     # 요약 모드: 기존 컴포넌트 형태
                     ss.node(node_id, label=f"{sys_kor}\\n({sys_id})", shape='component', 
-                           style='filled', fillcolor='#E8F5E9', color='#43A047', 
-                           fontname=font_name, width='2.0', height='0.7')
+                           style='filled', fillcolor=SYSTEM_FILLCOLOR, color=SYSTEM_COLOR, 
+                           fontname=font_name, width='2.0', height='1.1')
                 else:
                     # 상세 모드: 시스템명 아래에 파일 목록을 줄바꿈하여 포함
                     files = industry_mapping[industry_mapping["System"] == sys_id]["FileName"].dropna().unique()
@@ -239,7 +250,7 @@ def create_system_architecture_diagram(industry, mode="Summary"):
                     detail_label = f"{{ {sys_kor} ({sys_id}) | {file_list_str} }}"
                     
                     ss.node(node_id, label=detail_label, shape='record', # record 쉐이프 사용
-                           style='filled', fillcolor='#F1F8E9', color='#2E7D32', 
+                           style='filled', fillcolor=SYSTEM_FILLCOLOR, color=SYSTEM_COLOR, 
                            fontname=font_name, penwidth='1.5')
                 
                 system_node_ids[sys_id] = node_id
@@ -249,7 +260,7 @@ def create_system_architecture_diagram(industry, mode="Summary"):
     for _, row in unique_links.iterrows():
         if f"act_{row['Activity']}" in activity_node_ids and row['System'] in system_node_ids:
             dot.edge(f"act_{row['Activity']}", system_node_ids[row['System']], 
-                     color='#9E9E9E', arrowhead='vee', penwidth='1.5')
+                     color=SYSTEM_COLOR, arrowhead='vee', penwidth='2.5')
 
     return dot
 
@@ -290,9 +301,9 @@ def create_valuechain_file_diagram(industry):
             label = f"{display_name}\\n({row['Activity']})"
             
             if row.get('Activity_Type') == 'Primary':
-                f_color, b_color = '#E3F2FD', '#1E88E5'
+                f_color, b_color = PRIMARY_FILLCOLOR, PRIMARY_COLOR
             else:
-                f_color, b_color = '#FFF9C4', '#FBC02D'
+                f_color, b_color = SUPPORT_FILLCOLOR, SUPPORT_COLOR
             
             s.node(act_id, label=label, shape='box', style='filled,rounded', 
                    fillcolor=f_color, color=b_color, fontname=font_name, 
@@ -325,7 +336,7 @@ def create_valuechain_file_diagram(industry):
                 # 각 Activity별 File 박스 노드 생성
                 file_box_id = f"filebox_{activity}"
                 fs.node(file_box_id, label=detail_label, shape='record',
-                       style='filled', fillcolor='#F3E5F5', color='#9C27B0',
+                       style='filled', fillcolor=FILE_FILLCOLOR, color=FILE_COLOR,
                        fontname=font_name, penwidth='1.5')
                 
                 file_box_node_ids[activity] = file_box_id
@@ -361,7 +372,7 @@ def value_chain_tab(df, selected_industry):
     
     # Cloud 환경 체크
     if is_cloud_env():
-        show_sample_image("sample_ValueChain.png", f"Value Chain Diagram: {selected_industry} (Sample)")
+        show_sample_image("Sample_ValueChain.png", f"Value Chain Diagram: {selected_industry} (Sample)")
         return
     
     # Diagram 생성
@@ -472,9 +483,9 @@ def system_architecture_tab(selected_industry, mode="Summary"):
     # Cloud 환경 체크
     if is_cloud_env():
         if mode == "Summary":
-            show_sample_image("sample_SysArch_Summary.png", f"System Architecture (Summary): {selected_industry} (Sample)")
+            show_sample_image("Sample_SysArch_Summary.png", f"System Architecture (Summary): {selected_industry} (Sample)")
         else:
-            show_sample_image("sample_SysArch_Detailed.png", f"System Architecture (Detail): {selected_industry} (Sample)")
+            show_sample_image("Sample_SysArch_Detailed.png", f"System Architecture (Detail): {selected_industry} (Sample)")
         return
     
     try:
@@ -545,7 +556,7 @@ def valuechain_file_tab(selected_industry):
     
     # Cloud 환경 체크
     if is_cloud_env():
-        show_sample_image("sample_ValueChain_File.png", f"Value Chain & File Diagram: {selected_industry} (Sample)")
+        show_sample_image("Sample_ValueChain_File.png", f"Value Chain & File Diagram: {selected_industry} (Sample)")
         return
     
     try:
