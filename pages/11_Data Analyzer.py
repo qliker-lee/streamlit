@@ -2,10 +2,6 @@
 """
 2025.12.20  Qliker 
 📊 Data Analyzer (통합)
-- Data Quality Analyzer: 모든 파일의 각 컬럼들에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
-- Data Type & Rule Analyzer: Data Quality Analyzer 결과를 기반으로 각 컬럼에 대한 Rule 프로파일링 수행
-- Code Relationship Analyzer: Data Quality Analyzer 결과를 기반으로 모든 파일의 컬럼들에 대한 관계도 작성
-Class-based Version (Tab Integration)
 """
 # -------------------------------------------------------------------
 # 1. 경로 설정 (Streamlit warnings import 전에 필요)
@@ -19,7 +15,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 # -------------------------------------------------------------------
-# 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
+# 2. 컴파일 발생하는 Streamlit 경고 메시지 억제 설정 (Streamlit import 전에 호출)
 # -------------------------------------------------------------------
 from DataSense.util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
@@ -42,13 +38,12 @@ import yaml
 # 기본 앱 정보
 # -------------------------------------------------------------------
 APP_NAME = "Data Analyzer (Data Profile)"
-APP_DESC = "##### 데이터 품질 분석, 데이터 타입 및 룰 분석, 데이터 관계도 분석을 위한 기초 작업입니다."
+APP_DESC = "##### 데이터 품질 분석 및 데이터 관계도 분석을 위한 작업입니다."
 APP_DESC2 = """
-- Data Quality Analyzer: 모든 데이터에 대한 프로파일링을 수행하여 품질분석을 위한 통계를 생성
-- Data Type & Rule Analyzer: 모든 데이터의 데이터 타입 및 사전 정의된 Rule 기반 프로파일링 수행
-- Data Relationship Analyzer: 데이터 간의 관계도를 작성
+- 데이터 프로파일링을 수행하여 데이터 분석을 위한 다양한 통계 정보를 생성하고 (Data Quality Analyzer)
+- 데이터 타입 및 사전 정의된 Rule을 적용하며 (Data Type & Rule Analyzer)
+- 데이터 간의 논리적 관계도 정보를 생성합니다. (Data Relationship Analyzer)
 """
-
 
 from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 
@@ -127,6 +122,98 @@ def normalize_dataframe_for_display(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
+def display_statistics_info():
+    """통계 내역에 포함된 정보들"""
+    st.markdown("###### 통계 내역에 포함된 정보들은 다음과 같습니다.")
+    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
+    
+    with col1:
+        st.markdown("##### 속성 정보")
+        st.write("데이터 타입")
+        st.write("오라클 타입")
+        st.write("룰 기반 타입")
+    
+    with col2:
+        st.markdown("##### Value 정보")
+        st.write("Primary Key 여부")
+        st.write("데이터 값의 열 개수")
+        st.write("Uniqueness 비율")
+        st.write("Null 비율")
+        st.write("최소/최대/평균/중앙 값")
+    
+    with col3:
+        st.markdown("##### Length 정보")
+        st.write("Length 종류")
+        st.write("Length 최소")
+        st.write("Length 최대")
+        st.write("Length 다빈도")
+        st.write("Length 평균/중앙값")
+    
+    with col4:
+        st.markdown("##### Value 구성")
+        st.write("영문, 한글, 숫자 등 패턴 구성")
+        st.write("패턴의 종류 수")
+        st.write("다빈도 패턴 구성")
+        st.write("다빈도 패턴 및 비율")
+        # st.write("2nd/3rd 패턴 및 비율")
+    
+    with col5:
+        st.markdown("##### Value Top 10")
+        st.write("Top 10 값")
+        st.write("Top 10 비율")
+    
+    with col6:
+        st.markdown("##### 문자 통계")
+        st.write("영문 대소문자 열 수")
+        st.write("한글 포함 열 수")
+        st.write("숫자 포함 열 수")
+        st.write("특수문자 열 수")
+        st.write("혼합 문자 열 수")
+
+def display_data_quality_results(df: pd.DataFrame):
+    """Data Quality Analyzer 분석 결과 표시"""
+   
+    if df is None:
+        st.warning(f"⚠️ Data Quality Analyzer 분석 결과 파일을 찾을 수 없습니다.")
+        return
+    st.markdown("##### Data Quality Analyzer 분석 결과입니다.")
+    # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
+    df = normalize_dataframe_for_display(df)
+    
+    df = df.drop(columns=['FilePath'])
+    st.dataframe(df, width='stretch', height=550, hide_index=True)
+
+def display_data_type_rule_results(df: pd.DataFrame):
+    """Data Type & Rule Analyzer 분석 결과 표시"""
+    required_columns = [
+            "FileName", "MasterType", "ColumnName", "DataType", "OracleType",
+            "Rule", "RuleType", "MatchedRule", "MatchedScoreList", 
+            "MatchScoreAvg", "MatchScoreMax"
+        ]
+    if df is None:
+        st.warning(f"⚠️ Data Type & Rule Analyzer 분석 결과 파일을 찾을 수 없습니다.")
+        return
+    st.markdown("##### Data Type & Rule Analyzer 분석 결과입니다.")
+    # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
+    df = normalize_dataframe_for_display(df)
+    
+    # 필수 컬럼 필터링
+    available_columns = [col for col in required_columns if col in df.columns]
+    if available_columns:
+        df = df[available_columns]
+    
+    st.dataframe(df, width='stretch', height=600, hide_index=True)
+
+def display_code_relationship_results(df: pd.DataFrame):
+    """Code Relationship Analyzer 분석 결과 표시"""
+    if df is None:
+        st.warning(f"⚠️ Code Relationship Analyzer 분석 결과 파일을 찾을 수 없습니다.")
+        return
+    st.markdown("##### Code Relationship Analyzer 분석 결과입니다.")
+    # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
+    df = normalize_dataframe_for_display(df)
+    st.dataframe(df, width='stretch', height=600, hide_index=True)
+
 # -------------------------------------------------------------------
 # FILE LOADER
 # -------------------------------------------------------------------
@@ -139,6 +226,7 @@ class FileConfig:
     analyzer_script_quality: str
     analyzer_script_rule: str
     analyzer_script_relationship: str
+    analyzer_script_erd_mapping: str
 
 class FileLoader:
     """파일 로딩을 위한 클래스"""
@@ -164,7 +252,8 @@ class FileLoader:
             codemapping_output=_full_path(files.get('codemapping_output', 'DataSense/DS_Output/CodeMapping.csv')),
             analyzer_script_quality=_full_path(files.get('analyzer_script_quality', 'DataSense/util/DS_11_MasterCodeFormat.py')),
             analyzer_script_rule=_full_path(files.get('analyzer_script_rule', 'DataSense/util/DS_12_MasterRuleDataType.py')),
-            analyzer_script_relationship=_full_path(files.get('analyzer_script_relationship', 'DataSense/util/DS_13_Code Relationship Analyzer.py'))
+            analyzer_script_relationship=_full_path(files.get('analyzer_script_relationship', 'DataSense/util/DS_13_Code Relationship Analyzer.py')),
+            analyzer_script_erd_mapping=_full_path(files.get('analyzer_script_erd_mapping', 'DataSense/util/DS_14_ERD Mapping.py'))
         )
     
     def load_file(self, file_path: str, file_name: str) -> Optional[pd.DataFrame]:
@@ -196,56 +285,6 @@ class DataQualityAnalyzer:
         self.loader = loader
         self.script_path = Path(loader.files_config.analyzer_script_quality)
         self.output_path = Path(loader.files_config.fileformat_output)
-        self.password = yaml_config.get("DataSense_Password", "tkfkdgo")
-    
-    def display_statistics_info(self):
-        """통계 상세 내역 정보 표시"""
-        st.divider()
-        st.markdown("###### 통계 상세 내역은 다음과 같은 내용들이 포함되어 있습니다.")
-        col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-        
-        with col1:
-            st.markdown("##### 속성 정보")
-            st.write("데이터 타입")
-            st.write("오라클 타입")
-            st.write("룰 기반 타입")
-        
-        with col2:
-            st.markdown("##### Value 정보")
-            st.write("Primary Key 여부")
-            st.write("데이터 값의 열 개수")
-            st.write("Uniqueness 비율")
-            st.write("Null 비율")
-            st.write("최소/최대/평균/중앙 값")
-        
-        with col3:
-            st.markdown("##### Length 정보")
-            st.write("Length 종류")
-            st.write("Length 최소")
-            st.write("Length 최대")
-            st.write("Length 다빈도")
-            st.write("Length 평균/중앙값")
-        
-        with col4:
-            st.markdown("##### Value 구성")
-            st.write("영문, 한글, 숫자 등 패턴 구성")
-            st.write("패턴의 종류 수")
-            st.write("다빈도 패턴 구성")
-            st.write("다빈도 패턴 및 비율")
-            st.write("2nd/3rd 패턴 및 비율")
-        
-        with col5:
-            st.markdown("##### Value Top 10")
-            st.write("Top 10 값")
-            st.write("Top 10 비율")
-        
-        with col6:
-            st.markdown("##### 문자 통계")
-            st.write("영문 대소문자 열 수")
-            st.write("한글 포함 열 수")
-            st.write("숫자 포함 열 수")
-            st.write("특수문자 열 수")
-            st.write("혼합 문자 열 수")
     
     def run_analyzer(self) -> bool:
         """Data Quality Analyzer 스크립트 실행"""
@@ -258,27 +297,12 @@ class DataQualityAnalyzer:
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=300)
+            st.text_area("📜 실행 로그", result.stdout, height=200)
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=300)
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
             return False
-    
-    def display_results(self):
-        """분석 결과 표시"""
-        df = self.loader.load_file(self.loader.files_config.fileformat_output, "FileFormat")
-        
-        if df is None:
-            st.warning(f"⚠️ 결과 파일을 찾을 수 없습니다: {self.output_path}")
-            st.info("📝 Data Quality Analyzer를 실행하여 결과를 생성하세요.")
-            return
-        
-        # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
-        df = normalize_dataframe_for_display(df)
-        
-        df = df.drop(columns=['FilePath'])
-        st.dataframe(df, width='stretch', height=550, hide_index=True)
 # -------------------------------------------------------------------
 # DATA TYPE & RULE ANALYZER
 # -------------------------------------------------------------------
@@ -289,13 +313,6 @@ class DataTypeRuleAnalyzer:
         self.yaml_config = yaml_config
         self.loader = loader
         self.script_path = Path(loader.files_config.analyzer_script_rule)
-        self.output_path = Path(loader.files_config.ruledatatype_output)
-        self.password = yaml_config.get("DataSense_Password", "tkfkdgo")
-        self.required_columns = [
-            "FileName", "MasterType", "ColumnName", "DataType", "OracleType",
-            "Rule", "RuleType", "MatchedRule", "MatchedScoreList", 
-            "MatchScoreAvg", "MatchScoreMax"
-        ]
     
     def run_analyzer(self) -> bool:
         """Data Type & Rule Analyzer 스크립트 실행"""
@@ -308,34 +325,12 @@ class DataTypeRuleAnalyzer:
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=300)
+            st.text_area("📜 실행 로그", result.stdout, height=200)
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=300)
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
             return False
-    
-    def display_results(self):
-        """분석 결과 표시"""
-        df = self.loader.load_file(self.loader.files_config.ruledatatype_output, "RuleDataType")
-        
-        if df is None:
-            st.warning(f"⚠️ 결과 파일을 찾을 수 없습니다: {self.output_path}")
-            st.info("📝 Data Type & Rule Analyzer를 실행하여 결과를 생성하세요.")
-            return
-        
-        # 필수 컬럼 필터링
-        available_columns = [col for col in self.required_columns if col in df.columns]
-        if available_columns:
-            df = df[available_columns]
-        
-        # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
-        df = normalize_dataframe_for_display(df)
-        
-        # df = df.drop(columns=['FilePath'])
-
-        st.dataframe(df, width='stretch', height=600, hide_index=True)
-    
 # -------------------------------------------------------------------
 # CODE RELATIONSHIP ANALYZER
 # -------------------------------------------------------------------
@@ -346,8 +341,7 @@ class CodeRelationshipAnalyzer:
         self.yaml_config = yaml_config
         self.loader = loader
         self.script_path = Path(loader.files_config.analyzer_script_relationship)
-        self.output_path = Path(loader.files_config.codemapping_output)
-        self.password = yaml_config.get("DataSense_Password", "tkfkdgo")
+        self.script_erd_path = Path(loader.files_config.analyzer_script_erd_mapping)
     
     def run_analyzer(self) -> bool:
         """Code Relationship Analyzer 스크립트 실행"""
@@ -356,33 +350,17 @@ class CodeRelationshipAnalyzer:
             return False
         
         cmd = [sys.executable, str(self.script_path)]
+        cmd_erd = [sys.executable, str(self.script_erd_path)]
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=300)
+            st.text_area("📜 실행 로그", result.stdout, height=200)
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=300)
-            return False
-    
-    def display_results(self):
-        """분석 결과 표시"""
-        df = self.loader.load_file(self.loader.files_config.codemapping_output, "CodeMapping")
-        
-        if df is None:
-            st.warning(f"⚠️ 결과 파일을 찾을 수 없습니다: {self.output_path}")
-            st.info("📝 Code Relationship Analyzer를 실행하여 결과를 생성하세요.")
-            return
-        
-        # DataFrame 정규화 (None 값 처리 및 Arrow 호환성)
-        df = normalize_dataframe_for_display(df)
-        
-        df = df.drop(columns=['FilePath'])
-
-        st.dataframe(df, width='stretch', height=600, hide_index=True)
-    
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
+            return False  
 # -------------------------------------------------------------------
 # MAIN APP
 # -------------------------------------------------------------------
@@ -405,7 +383,7 @@ class DataAnalyzerApp:
             self.quality_analyzer = DataQualityAnalyzer(self.yaml_config, self.loader)
             self.rule_analyzer = DataTypeRuleAnalyzer(self.yaml_config, self.loader)
             self.relationship_analyzer = CodeRelationshipAnalyzer(self.yaml_config, self.loader)
-            self.password = self.yaml_config.get("DataSense_Password", "tkfkdgo")
+            self.password = self.yaml_config.get("DataSense_Password", "") # tkfkdgo
             return True
         except Exception as e:
             st.error(f"초기화 오류: {e}")
@@ -417,6 +395,8 @@ class DataAnalyzerApp:
         st.markdown(APP_DESC)
         st.markdown(APP_DESC2)
         
+        display_statistics_info()
+
         st.divider()
         col1, col2 = st.columns([1, 2])
         with col1:
@@ -431,7 +411,7 @@ class DataAnalyzerApp:
 
         with col2:
             st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다. (약 10분 이상 소요)")
-            if st.button("🔍 통합 분석(Quality/Rule/Relationship) 실행", key="btn_integrated_analyzer"):
+            if st.button("🔍 Data Analyzer 실행", key="btn_integrated_analyzer"):
                 if not password_input:
                     st.error("❌ 패스워드를 입력하세요.")
                 elif password_input != self.password:
@@ -469,6 +449,34 @@ class DataAnalyzerApp:
                                 st.error("❌ 2단계(Rule) 분석 중 오류가 발생했습니다.")
                         else:
                             st.error("❌ 1단계(Quality) 분석 중 오류가 발생했습니다.")
+        #----------------------------------------------------
+        # Data Analyzer 분석 결과 표시
+        #----------------------------------------------------
+        st.divider()
+        st.info("아래 데이터는 이전에 처리된 결과입니다. ")
+        tab1, tab2, tab3 = st.tabs(["Data Quality Analyzer", "Data Type & Rule Analyzer", "Code Relationship Analyzer"])
+        with tab1:
+            df = self.loader.load_file(self.loader.files_config.fileformat_output, "FileFormat")
+            if df is not None:  
+                display_data_quality_results(df)
+            else:
+                st.info("Data Quality Analyzer 분석 결과가 없습니다.")
+        with tab2:
+            df = self.loader.load_file(self.loader.files_config.ruledatatype_output, "RuleDataType")
+            if df is not None:  
+                st.info("아래 데이터는 이전에 처리된 결과입니다. ")
+                display_data_type_rule_results(df)
+            else:
+                st.info("Data Type & Rule Analyzer 분석 결과가 없습니다.")
+        with tab3:
+            df = self.loader.load_file(self.loader.files_config.codemapping_output, "CodeMapping")
+            if df is not None:  
+                st.info("아래 데이터는 이전에 처리된 결과입니다. ")
+                display_code_relationship_results(df)
+            else:
+                st.info("Code Relationship Analyzer 분석 결과가 없습니다.")
+
+        st.info("##### Data Quality Information 앱에서 상세 분석을 수행할 수 있습니다.")
 # -------------------------------------------------------------------
 # MAIN
 # -------------------------------------------------------------------
