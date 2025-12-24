@@ -447,7 +447,7 @@ class Initializing_Main_Class:
             # 3. 코드 관계 분석 메인 로직 
             result_df = self.execute_relationship_analysis(df_ff, df_rt, df_mm)
             
-            final_path = output_dir / "Code_Relationship_Result.csv"
+            final_path = output_dir / "CodeMapping.csv"
             result_df.to_csv(final_path, index=False, encoding='utf-8-sig')
             self.logger.info(f"분석 완료 및 저장: {final_path}")
             
