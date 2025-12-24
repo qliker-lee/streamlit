@@ -177,7 +177,7 @@ def DataType_Analysis(config, source_dir_list):
             print(f"No files found in {source_path}")
             continue
 
-        print(f"\n {source_config['type']} 코드 분석 중... (총 {len(files)}개 파일)")
+        # print(f"\n {source_config['type']} 코드 분석 중... (총 {len(files)}개 파일)")
         for file in files:
             try:
                 datatype = create_datatype_df(file, source_config["type"], file.suffix)
