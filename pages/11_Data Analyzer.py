@@ -62,7 +62,7 @@ def _fallback_load_yaml_datasense() -> Dict[str, Any]:
             "ruledatatype_output": "DataSense/DS_Output/RuleDataType.csv",
             "codemapping_output": "DataSense/DS_Output/CodeMapping.csv",
         },
-        "DataSense_Password": "tkfkdgo",  # 기본 패스워드
+        "DataSense_Password": "qlalfqjsgh",  # 기본 비밀번호
     }
     path = Path(guessed_root) / "DataSense" / "util" / "DS_Master.yaml"
     if path.exists():
@@ -401,21 +401,21 @@ class DataAnalyzerApp:
         col1, col2 = st.columns([1, 2])
         with col1:
             password_input = None
-            with st.expander("🔐 실행 패스워드 입력", expanded=True):
+            with st.expander("🔐 실행 비밀번호 입력", expanded=True):
                 password_input = st.text_input(
-                    "패스워드를 입력하세요",
+                    "비밀번호를 입력하세요",
                     type="password",
                     key="data_analyzer_password_input",
-                    help="Data Analyzer 실행을 위한 패스워드가 필요합니다."
+                    help="Data Analyzer 실행을 위한 비밀번호가 필요합니다."
                 )
 
         with col2:
             st.markdown("###### 전체 파일의 수 및 크기에 따라 시간이 많이 소요될 수 있습니다. (약 10분 이상 소요)")
             if st.button("🔍 Data Analyzer 실행", key="btn_integrated_analyzer"):
                 if not password_input:
-                    st.error("❌ 패스워드를 입력하세요.")
+                    st.error("❌ 비밀번호를 입력하세요.")
                 elif password_input != self.password:
-                    st.error("❌ 패스워드가 올바르지 않습니다.")
+                    st.error("❌ 비밀번호가 올바르지 않습니다.")
                 else:
                     # 통합 분석 프로세스 시작
                     with st.spinner("전체 데이터 분석 프로세스를 진행 중입니다..."):
