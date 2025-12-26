@@ -145,29 +145,35 @@ def main():
     # ---------------------------------------------------------
     # 3. System 섹션 (막대 차트 + 독립 정보)
     # ---------------------------------------------------------
-    st.header(f"💻 System Analysis: {selected_industry}")
+    st.header(f"💻 System Analysis")
     all_systems = sorted(df_ind['System'].unique())
     
-    sys_col1, sys_col2 = st.columns([1.5, 2.5])
+    sys_col1, sys_col2 = st.columns([3, 3])
     
     with sys_col1:
-        selected_sys = st.selectbox("System을 선택하세요", all_systems, key="sel_sys")
-        
-        # 막대 차트 생성
-        sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
-        fig_sys = px.bar(sys_counts, x='System', y='FileName', 
-                         title="System별 파일 수 (너비 확장)", 
-                         color='System', height=400)
-        
-        # [수정] 막대 너비 확장을 위해 bargap 조정 (0.2는 막대가 80%를 차지함을 의미)
-        fig_sys.update_layout(bargap=0.2, showlegend=False)
-        st.plotly_chart(fig_sys, width="stretch")
+        sys_tab1, sys_tab2 = st.tabs(["System별 파일 분포(파이 차트)", "System별 파일 수(막대 차트)"])
+        with sys_tab1:
+            # 파이 차트 생성
+            sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
+            fig_sys = px.pie(sys_counts, names='System', values='FileName', 
+                            title=f"System별 파일 분포",
+                            hole=0.4, # 도넛 형태
+                            color_discrete_sequence=px.colors.qualitative.Pastel)
+            fig_sys.update_traces(textposition='inside', textinfo='percent+label')
+            st.plotly_chart(fig_sys, width="stretch")
+        with sys_tab2:
+            # 막대 차트 생성 (System별 파일 수)
+            sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
+            fig_sys = px.bar(sys_counts, x='System', y='FileName', 
+                            title=f"System별 파일 수",
+                            color='System', height=400)
+            st.plotly_chart(fig_sys, width="stretch")
 
     with sys_col2:
-        st.subheader(f"📋 '{selected_sys}' 소속 파일 정보")
+        selected_sys = st.selectbox("System을 선택하세요", all_systems, key="sel_sys")
         sys_files = df_ind[df_ind['System'] == selected_sys]['FileName'].unique()
         sys_summary = get_file_summary(sys_files, df_mapping)
-        st.dataframe(sys_summary, width="stretch", height=600, hide_index=True)
+        st.dataframe(sys_summary, width="stretch", height=400, hide_index=True)
 
 
     # ---------------------------------------------------------
@@ -187,9 +193,32 @@ def main():
             
             # 메트릭 표시
             m1, m2, m3, m4 = st.columns(4)
-            m1.metric("총 레코드", f"{int(detail_df['TotalRecords'].iloc[0]):,}")
-            m2.metric("평균 Null(%)", f"{detail_df['Null_pct'].mean():.1f}%")
-            m3.metric("중복(%)", f"{detail_df['Duplicate_pct'].mean():.1f}%")
+            
+            # 총 레코드 수 (여러 컬럼명 시도)
+            total_records = "N/A"
+            if 'TotalRecords' in detail_df.columns:
+                total_records = f"{int(detail_df['TotalRecords'].iloc[0]):,}"
+            elif 'RecordCnt' in detail_df.columns:
+                total_records = f"{int(detail_df['RecordCnt'].iloc[0]):,}"
+            elif 'ValueCnt' in detail_df.columns:
+                # ValueCnt의 최대값 사용 (일반적으로 파일의 총 레코드 수와 유사)
+                total_records = f"{int(detail_df['ValueCnt'].max()):,}"
+            m1.metric("총 레코드", total_records)
+            
+            # Null(%) 평균
+            null_pct = "N/A"
+            if 'Null_pct' in detail_df.columns:
+                null_pct = f"{detail_df['Null_pct'].mean():.1f}%"
+            elif 'Null(%)' in detail_df.columns:
+                null_pct = f"{detail_df['Null(%)'].mean():.1f}%"
+            m2.metric("평균 Null(%)", null_pct)
+            
+            # 중복(%) 평균
+            dup_pct = "N/A"
+            if 'Duplicate_pct' in detail_df.columns:
+                dup_pct = f"{detail_df['Duplicate_pct'].mean():.1f}%"
+            m3.metric("중복(%)", dup_pct)
+            
             m4.metric("컬럼 수", len(detail_df))
 
             # 테이블 표시
