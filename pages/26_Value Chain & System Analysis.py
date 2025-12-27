@@ -394,7 +394,23 @@ def file_detail_analysis(df_ind, df_mapping):
             # Sampling Row 수
             sampling_row = "N/A"
             if 'SampleRows' in detail_df.columns:
-                sampling_row = f"{int(detail_df['SampleRows'].iloc[0]):,}"
+                try:
+                    # 숫자로 변환 시도 (NaN 처리 포함)
+                    sample_rows_series = pd.to_numeric(detail_df['SampleRows'], errors='coerce')
+                    # NaN이 아닌 첫 번째 값 사용
+                    valid_value = sample_rows_series.dropna()
+                    if not valid_value.empty:
+                        sampling_row = f"{int(valid_value.iloc[0]):,}"
+                    # 모든 행이 NaN인 경우, 첫 번째 행의 원본 값 확인
+                    elif not detail_df['SampleRows'].empty:
+                        first_val = detail_df['SampleRows'].iloc[0]
+                        if pd.notna(first_val) and str(first_val).strip() != '':
+                            try:
+                                sampling_row = f"{int(float(str(first_val))):,}"
+                            except (ValueError, TypeError):
+                                pass
+                except Exception:
+                    pass
 
             # Null(%) > 0% 인 컬럼 수
             null_0_cnt = "N/A"
