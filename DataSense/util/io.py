@@ -33,12 +33,58 @@ def read_csv_any(path: str) -> pd.DataFrame:
             continue
     raise FileNotFoundError(path)
 
-def _clean_headers(df: pd.DataFrame) -> pd.DataFrame:
+def clean_headers(df: pd.DataFrame) -> pd.DataFrame:
     """헤더 정리"""
     out = df.copy()
     out.columns = [str(c).replace('\ufeff', '').strip() for c in out.columns]
     return out
 
+    #str(c): 컬럼명이 숫자로 되어 있는 경우를 대비해 모두 문자열로 변환합니다.
+    # .replace("\ufeff", ""): BOM(Byte Order Mark) 제거.
+    # 윈도우 메모장이나 엑셀에서 'UTF-8(BOM)' 형식으로 저장된 CSV를 읽으면 첫 번째 컬럼명 앞에 
+    # 눈에 보이지 않는 \ufeff 문자가 붙어 df['ID']로 호출해도 찾지 못하는 경우가 생기는데, 이를 완벽히 방지합니다.
+    # .strip(): 앞뒤 공백 제거.
+    # " 이름 " 처럼 공백이 포함된 헤더를 "이름"으로 정리합니다.
+
+# ================================================================
+# 도우미 함수
+# ================================================================
+def normalize_str(s: str) -> str:
+    """일반적인 문자열 정규화"""
+    import unicodedata  # 한글 자모 결합 정규화를 위해 임포트
+    s = unicodedata.normalize("NFC", str(s))
+    s = s.replace("\u3000", " ")
+    return " ".join(s.split())
+
+    # 🔍 함수 설명
+    # 1. 한글 자모 결합 정규화 (NFC)
+    # s = unicodedata.normalize("NFC", str(s))
+    # 현상: Mac에서 작성한 파일명이나 텍스트를 Windows에서 보면 'ㄱㅏ'처럼 자모가 분리되어 보이는 현상(NFD 방식)이 있습니다. 
+    # 혹은 눈에는 똑같이 '가'로 보이지만 컴퓨터는 서로 다른 문자로 인식하는 경우가 발생합니다.
+    # 해결: NFC(Normalization Form Canonical Composition) 방식은 분리된 자음과 모음을 하나의 완성된 글자로 합쳐줍니다.
+    # 효과: 데이터 그룹화(groupby)나 조인(merge)을 할 때, **"눈에는 같아 보이는데 데이터상으로는 다르게 처리되는 에러"**를 완벽히 방지합니다.
+
+    # 2. 전각 공백 처리 (\u3000)
+    # s = s.replace("\u3000", " ")
+    # 현상: 일본어나 한국어 입력기 사용 중 실수로 들어가는 **전각 공백(Ideographic Space)**은 일반적인 공백( )과 다르게 인식됩니다.
+    # 해결: 이를 표준 반각 공백으로 변환하여 데이터 형식을 통일합니다.
+
+    # 3. 중복 공백 제거 및 트리밍 (split & join)
+    # return " ".join(s.split())
+    # 작동 원리:
+    # s.split()은 문자열 사이의 모든 공백(탭, 줄바꿈, 여러 개의 연속된 스페이스)을 기준으로 단어를 나눕니다.
+    # " ".join(...)은 나눠진 단어들을 딱 하나의 공백으로만 연결합니다.
+    # 효과: 문자열 앞뒤의 불필요한 공백을 제거(Trim)함과 동시에, 문자열 중간에 실수로 들어간 이중 공백을 단일 공백으로 깔끔하게 정리합니다.
+
+    # 💡 왜 DataSense(DQ)에 이 기능이 필수적인가요?
+    # 데이터 품질 분석(Data Quality Analysis)에서 문자열 정규화는 '데이터 클렌징'의 핵심입니다.
+    # 중복 제거의 정확도: " 삼성전자"와 "삼성 전자"를 동일한 업체로 인식하게 해줍니다.
+    # 패턴 분석의 일관성: 이전에 만드신 Get_String_Pattern 함수가 작동하기 전에 이 함수를 먼저 거치면, 훨씬 정확한 문자열 패턴을 추출할 수 있습니다.
+    # 검색 성능: 데이터베이스에 적재하기 전 이 과정을 거치면 검색 엔진이나 인덱스가 훨씬 효율적으로 작동합니다.
+
+    # ✅ 참고 사항
+    # 이 함수를 사용하려면 파일 상단에 반드시 아래 임포트 문이 포함되어야 합니다.
+    # import unicodedata    
 #------------------------------------------------------------------
 # YAML 파일 로드 함수
 def Load_Yaml_File(config_path: str | None = None):

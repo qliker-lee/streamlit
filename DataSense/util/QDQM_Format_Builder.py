@@ -8,9 +8,10 @@ from typing import List
 from multiprocessing import Pool, cpu_count
 import logging
 
-from .io import Load_Yaml_File
-# from .io import Directory_Recreate
-from .io import Backup_File
+# io 모듈은 Python 내장 모듈과 충돌할 수 있으므로 절대 경로로 import
+from DataSense.util.io import Load_Yaml_File
+# from DataSense.util.io import Directory_Recreate
+from DataSense.util.io import Backup_File
 
 
 from .dq_validate import (
