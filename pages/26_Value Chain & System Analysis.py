@@ -52,7 +52,7 @@ MAPPING_FILE = OUTPUT_DIR / "CodeMapping.csv"
 # -------------------------------------------------
 # 4. 데이터 로드
 # ------------------------------------------------- 
-@st.cache_data
+# @st.cache_data
 def load_data(file_path):
     """파일을 로드합니다. 파일이 없으면 None을 반환합니다."""
     if not os.path.exists(file_path):
@@ -307,29 +307,58 @@ def Display_MasterFormat_Detail(ff_df):
 
         with tab1:
             st.markdown("###### 모든 컬럼들의 데이터 값 정보를 제공합니다.")
-            # render_table(ff_df, 'Data Value Info', VIEW_COLUMNS['Value Info'])
-            df = ff_df[VIEW_COLUMNS['Value Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['Value Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab2:
             st.markdown("###### 모든 컬럼들의 데이터 타입 정보를 제공합니다.")
-            df = ff_df[VIEW_COLUMNS['Value Type Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['Value Type Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab3:
             st.markdown("###### 모든 컬럼들의 빈도수 상위 10개를 제공합니다.")
-            df = ff_df[VIEW_COLUMNS['Top10 Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['Top10 Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab4:
             st.markdown("###### 모든 컬럼들의 길이 정보를 제공합니다.")
-            df = ff_df[VIEW_COLUMNS['Length Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['Length Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab5:
             st.markdown("###### 모든 컬럼들의 구성하는 문자 정보를 제공합니다.")
-            df = ff_df[VIEW_COLUMNS['Character Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['Character Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab6:
             st.markdown("###### 모든 컬럼들의 Data Quality Score 정보를 제공합니다. (기업의 상황에 따라 기준이 다를 수 있습니다. 컨설팅 후 확정합니다.)")
-            df = ff_df[VIEW_COLUMNS['DQ Score Info']].reset_index(drop=True)
-            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            # 존재하는 컬럼만 선택
+            available_cols = [col for col in VIEW_COLUMNS['DQ Score Info'] if col in ff_df.columns]
+            if available_cols:
+                df = ff_df[available_cols].reset_index(drop=True)
+                st.dataframe(data=df, width=1400, height=600, hide_index=True)
+            else:
+                st.warning("표시할 컬럼이 없습니다.")
         with tab7:
             st.markdown("###### 모든 컬럼들의 통계 정보를 제공합니다.")
             df = ff_df.reset_index(drop=True)
