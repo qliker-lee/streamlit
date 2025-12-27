@@ -43,6 +43,16 @@ FILE_STATS_PATH = OUTPUT_DIR / "FileStats.csv"
 FILE_FORMAT_PATH = OUTPUT_DIR / "FileFormat.csv"
 MAPPING_CSV_PATH = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
 
+# -------------------------------------------------
+# 3. Streamlit 페이지 설정
+# -------------------------------------------------
+APP_NAME = "🏭 Value Chain & System Definition"
+APP_DESC = "#### Value Chain & System을 입력, 수정, 삭제하고 파일을 매핑하는 통합 도구입니다."
+from DataSense.util.Files_FunctionV20 import set_page_config
+# from DataSense.util.Display import display_kpi_metrics
+
+set_page_config(APP_NAME)
+
 # 디렉토리가 없으면 생성
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -150,7 +160,7 @@ def save_valuechain_data(df):
 
 def value_chain_tab(target_industry):
     """Value Chain Activity Management Tab"""
-    st.markdown("### 📊 Value Chain Activity Management")
+    st.markdown("### 📊 Value Chain Activity Definition")
     
     # 데이터 로드
     df = load_valuechain_data()
@@ -287,7 +297,7 @@ def save_system_data(df):
 
 def system_tab(target_industry):
     """System 관리 탭"""
-    st.markdown("### 🏭 System 관리")
+    st.markdown("### 🏭 System Definition")
     
     # 데이터 로드
     df = load_system_data()
@@ -437,7 +447,7 @@ def load_data_validation():
 
 def mapping_file_tab(target_industry):
     """File Mapping Management Tab"""
-    st.markdown("### 🔗 Value Chain & System to File Mapping Management")
+    st.markdown("### 🔗 Value Chain & System 에 파일을 매핑합니다.")
     st.markdown("##### 파일별로 연관된 Value Chain의 Activity와 System을 매핑합니다.")
     
     # 데이터 로드
@@ -553,8 +563,9 @@ def mapping_file_tab(target_industry):
 # 6. 메인 UI 함수
 # -------------------------------------------------------------------
 def main():
-    st.title("🏭 Value Chain & System Management")
-    st.markdown("##### This is a unified tool to manage Value Chain, System Definition and File Mapping by Industry.")
+    st.title(APP_NAME)
+    st.markdown(APP_DESC)
+    # st.markdown("##### This is a unified tool to manage Value Chain, System Definition and File Mapping by Industry.")
     
     show_sample_image("Sample_ValueChain_Licened.jfif", "Value Chain Image")
     # --- [Section 1: Industry Selection and Management] ---
@@ -589,7 +600,7 @@ def main():
         return
     
     # st.subheader(f"📍 대상 산업: {target_industry}")
-    st.info("📌 **Please perform the following tabs in sequence.**")
+    st.info("📌 **다음 탭을 순차적으로 수행하세요.**")
     
     # --- [섹션 2: 메인 탭] ---
     tab_vc, tab_sys, tab_mapping = st.tabs(["📊 Value Chain Definition", "🏭 System Definition", "🔗 Map Value Chain & System to File"])

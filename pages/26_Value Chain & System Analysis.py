@@ -17,6 +17,8 @@ if str(PROJECT_ROOT) not in sys.path:
 # -------------------------------------------------------------------
 from DataSense.util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
+
+from DataSense.util.Display import create_metric_card # KPI 메트릭 표시 함수
 # -------------------------------------------------------------------
 # 3. 필수 라이브러리 import
 # -------------------------------------------------------------------
@@ -42,7 +44,9 @@ set_page_config(APP_NAME)
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BASE_PATH = PROJECT_ROOT / "DataSense"
 OUTPUT_DIR = BASE_PATH / "DS_Output"
-VC_FILE = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
+VC_FILE = OUTPUT_DIR / "DS_ValueChain.csv"
+SYS_FILE = OUTPUT_DIR / "DS_System.csv"
+VC_SYS_FILE = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
 MAPPING_FILE = OUTPUT_DIR / "CodeMapping.csv"
 
 # -------------------------------------------------
@@ -50,9 +54,14 @@ MAPPING_FILE = OUTPUT_DIR / "CodeMapping.csv"
 # ------------------------------------------------- 
 @st.cache_data
 def load_data(file_path):
-    if os.path.exists(file_path):
+    """파일을 로드합니다. 파일이 없으면 None을 반환합니다."""
+    if not os.path.exists(file_path):
+        return None
+    try:
         return pd.read_csv(file_path)
-    return None
+    except Exception as e:
+        st.error(f"파일 로드 실패: {file_path}, 오류: {str(e)}")
+        return None
 
 def get_file_summary(file_names, df_mapping):
     """선택된 파일 리스트에 대해 FileName, ColumnCnt, PK List를 추출"""
@@ -80,58 +89,120 @@ def get_file_summary(file_names, df_mapping):
     
     return pd.DataFrame(summary)
 
-def main():
-    st.title(APP_NAME)
-    st.markdown(APP_DESC)
-
+def load_data_validation():
+    """ 필요한 파일을 로드하고 전처리합니다. """
+    # 파일 존재 여부 먼저 확인
+    missing_files = []
+    if not os.path.exists(VC_FILE):
+        missing_files.append(f"VC_FILE: {VC_FILE}")
+    if not os.path.exists(SYS_FILE):
+        missing_files.append(f"SYS_FILE: {SYS_FILE}")
+    if not os.path.exists(VC_SYS_FILE):
+        missing_files.append(f"VC_SYS_FILE: {VC_SYS_FILE}")
+    if not os.path.exists(MAPPING_FILE):
+        missing_files.append(f"MAPPING_FILE: {MAPPING_FILE}")
+    
+    if missing_files:
+        st.error("다음 파일들을 찾을 수 없습니다:")
+        for file_info in missing_files:
+            st.error(f"  - {file_info}")
+        return None, None
+    
+    # 파일 로드
     df_vc = load_data(VC_FILE)
-    df_mapping = load_data(load_mapping_path := MAPPING_FILE)
+    df_sys = load_data(SYS_FILE)
+    df_vc_sys = load_data(VC_SYS_FILE)
+    df_mapping = load_data(MAPPING_FILE)
 
+    # 로드 결과 확인
+    failed_files = []
     if df_vc is None:
-        st.error(f"데이터 파일을 찾을 수 없습니다: {VC_FILE}")
-        return
-
-    # --- [전처리] Unknown 제외 ---
-    df_vc = df_vc.dropna(subset=['Activity', 'System'])
-    df_vc = df_vc[(df_vc['Activity'] != 'Unknown') & (df_vc['System'] != 'Unknown')]
-
-    # 1. Industry 선택 (대시보드 공통 필터)
-    st.header("🏢 1. Industry Selection")
-    industries = sorted(df_vc['Industry'].unique())
-    selected_industry = st.selectbox("분석할 산업군을 선택하세요", industries)
+        failed_files.append(f"VC_FILE: {VC_FILE}")
+    if df_sys is None:
+        failed_files.append(f"SYS_FILE: {SYS_FILE}")
+    if df_vc_sys is None:
+        failed_files.append(f"VC_SYS_FILE: {VC_SYS_FILE}")
+    if df_mapping is None:
+        failed_files.append(f"MAPPING_FILE: {MAPPING_FILE}")
     
-    # 해당 산업군 데이터 (Activity와 System 섹션의 독립적 소스)
-    df_ind = df_vc[df_vc['Industry'] == selected_industry]
-    st.divider()
+    if failed_files:
+        st.error("다음 파일들을 로드할 수 없습니다:")
+        for file_info in failed_files:
+            st.error(f"  - {file_info}")
+        return None, None, None, None
 
-    # ---------------------------------------------------------
-    # 2. Activity 섹션 (파이 차트 + 독립 정보)
-    # ---------------------------------------------------------
+    df_vc_sys = pd.merge(df_vc_sys, df_vc, on=['Industry', 'Activity'], how='left')
+    df_vc_sys = pd.merge(df_vc_sys, df_sys, on=['Industry', 'System'], how='left')
+    df_vc_sys = df_vc_sys.dropna(subset=['Activity', 'System'])
+    df_vc_sys = df_vc_sys[(df_vc_sys['Activity'] != 'Unknown') & (df_vc_sys['System'] != 'Unknown')]
+    df_vc_sys = df_vc_sys.sort_values(['Activity_Seq', 'System_Seq'], ascending=True)
+
+    return df_vc, df_sys, df_vc_sys, df_mapping
+
+def select_industry(df_vc, df_sys, df_vc_sys):
+    
+    col_sel1, col_sel2, col_sel3 = st.columns([1, 1, 1])
+    with col_sel1:
+        st.header("🏢 Industry Selection")
+
+    with col_sel2:
+        industries = sorted(df_vc_sys['Industry'].unique())
+        selected_industry = st.selectbox("분석할 산업군을 선택하세요", industries)
+        df_ind = df_vc_sys[df_vc_sys['Industry'] == selected_industry]
+        df_sys = df_sys[df_sys['Industry'] == selected_industry]
+        df_vc = df_vc[df_vc['Industry'] == selected_industry]
+
+    if df_ind is not None:
+        summary = {
+            "Activity #": len(df_vc['Activity'].unique()),
+            "System #": len(df_sys['System'].unique()),
+            "File #": len(df_ind['FileName'].unique())
+        }
+
+        # 각 메트릭에 대한 색상 정의
+        metric_colors = {
+            "Activity #": "#1f77b4",
+            "System #": "#2ca02c", 
+            "File #": "#ff7f0e"
+        }
+        cols = st.columns(len(summary))
+        for col, (key, value) in zip(cols, summary.items()):
+            color = metric_colors.get(key, "#0072B2") # 기본 색상
+            col.markdown(create_metric_card(value, key, color), unsafe_allow_html=True)
+        return selected_industry, df_ind
+
+def activity_analysis(df_ind, df_mapping, all_activities):
     st.header(f"⚙️ Activity Analysis")
-    all_activities = sorted(df_ind['Activity'].unique())
-    
+    # Activity_Seq 순으로 정렬
+    act_counts = df_ind.groupby('Activity')['FileName'].count().reset_index()
+    # Activity_Seq를 가져와서 merge하여 정렬
+    activity_seq = df_ind[['Activity', 'Activity_Seq']].drop_duplicates()
+    act_counts = act_counts.merge(activity_seq, on='Activity', how='left')
+    act_counts = act_counts.sort_values('Activity_Seq', ascending=True)
+
     act_col1, act_col2 = st.columns([3, 3])
-    
     with act_col1:
-        act_tab1, act_tab2 = st.tabs(["Activity별 파일 분포(파이 차트)", "Activity별 파일 수(막대 차트)"])
+        act_tab1, act_tab2, act_tab3 = st.tabs(["Activity별 파일 분포(파이 차트)", 
+        "Activity별 파일 수(막대 차트)", "Activity별 파일 수(테이블)"])
         with act_tab1:  
-            # 파이 차트 생성 (도넛 형태)
-            act_counts = df_ind.groupby('Activity')['FileName'].count().reset_index()
+            # # 파이 차트 생성 (도넛 형태) 
             fig_act = px.pie(act_counts, names='Activity', values='FileName', 
                             title=f"Activity별 파일 분포",
                             hole=0.4, # 도넛 형태
-                            color_discrete_sequence=px.colors.qualitative.Pastel)
-            fig_act.update_traces(textposition='inside', textinfo='percent+label')
+                            color_discrete_sequence=px.colors.qualitative.Pastel,
+                            category_orders={'Activity': act_counts['Activity'].tolist()})
+            fig_act.update_traces(textposition='inside', textinfo='percent+label', sort=False)
             st.plotly_chart(fig_act, width="stretch")
 
         with act_tab2:
-            # 막대 차트 생성 (Activity별 파일 수)
-            act_counts = df_ind.groupby('Activity')['FileName'].count().reset_index()
+            # 막대 차트 생성 (Activity별 파일 수) 
             fig_act = px.bar(act_counts, x='Activity', y='FileName', 
                             title=f"Activity별 파일 수",
                             color='Activity', height=400)
             fig_act.update_layout(bargap=0.2, showlegend=False)
             st.plotly_chart(fig_act, width="stretch")
+        with act_tab3:
+            st.dataframe(act_counts, width="stretch", height=400, hide_index=True)
 
     with act_col2:
         selected_act = st.selectbox("Activity를 선택하세요", all_activities, key="sel_act")
@@ -142,19 +213,23 @@ def main():
 
     st.divider()
 
-    # ---------------------------------------------------------
-    # 3. System 섹션 (막대 차트 + 독립 정보)
-    # ---------------------------------------------------------
+
+def system_analysis(df_ind, df_mapping, all_systems):
     st.header(f"💻 System Analysis")
-    all_systems = sorted(df_ind['System'].unique())
     
+    # System_Seq 순으로 정렬
+    sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
+    # System_Seq를 가져와서 merge하여 정렬
+    system_seq = df_ind[['System', 'System_Seq']].drop_duplicates()
+    sys_counts = sys_counts.merge(system_seq, on='System', how='left')
+    sys_counts = sys_counts.sort_values('System_Seq', ascending=True)
     sys_col1, sys_col2 = st.columns([3, 3])
     
     with sys_col1:
-        sys_tab1, sys_tab2 = st.tabs(["System별 파일 분포(파이 차트)", "System별 파일 수(막대 차트)"])
+        sys_tab1, sys_tab2, sys_tab3 = st.tabs(["System별 파일 분포(파이 차트)", 
+                    "System별 파일 수(막대 차트)", "System별 파일 수(테이블)"])
         with sys_tab1:
             # 파이 차트 생성
-            sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
             fig_sys = px.pie(sys_counts, names='System', values='FileName', 
                             title=f"System별 파일 분포",
                             hole=0.4, # 도넛 형태
@@ -163,11 +238,12 @@ def main():
             st.plotly_chart(fig_sys, width="stretch")
         with sys_tab2:
             # 막대 차트 생성 (System별 파일 수)
-            sys_counts = df_ind.groupby('System')['FileName'].count().reset_index()
             fig_sys = px.bar(sys_counts, x='System', y='FileName', 
                             title=f"System별 파일 수",
                             color='System', height=400)
             st.plotly_chart(fig_sys, width="stretch")
+        with sys_tab3:
+            st.dataframe(sys_counts, width="stretch", height=400, hide_index=True)
 
     with sys_col2:
         selected_sys = st.selectbox("System을 선택하세요", all_systems, key="sel_sys")
@@ -175,22 +251,105 @@ def main():
         sys_summary = get_file_summary(sys_files, df_mapping)
         st.dataframe(sys_summary, width="stretch", height=400, hide_index=True)
 
+#-----------------------------------------------------------------------------------------
+def Display_MasterFormat_Detail(ff_df):
+    """Master Format Detail 화면 출력"""
 
-    # ---------------------------------------------------------
-    # STEP 4: 파일 선택 및 상세 속성 (CodeMapping)
-    # ---------------------------------------------------------
-    st.markdown("---")
-    st.markdown(f"### 📑 STEP 4: [{selected_sys}] 내 파일 상세 정보")
+    # 각 뷰별 컬럼 정의
+    VIEW_COLUMNS = {
+        "Value Info": [
+            'FileName', 'ColumnName', 'OracleType', 'PK', 'ValueCnt',
+            'Null(%)', 'UniqueCnt', 'Unique(%)',
+            'MinString', 'MaxString', 'ModeString', # 'MedianString', 'ModeCnt', 'Mode(%)'
+        ],
+        "Value Type Info": [
+            'FileName', 'ColumnName', 'ValueCnt', 'FormatCnt',
+            'Format', 'Format(%)', 'FormatMin', 'FormatMax', 'FormatMode', 'FormatMedian',
+            'Format2nd', 'Format2nd(%)', 'Format2ndMin', 'Format2ndMax', 'Format2ndMode', 'Format2ndMedian',
+            'Format3rd', 'Format3rd(%)'
+        ],
+
+        "Top10 Info": [
+            'FileName', 'ColumnName', 'ValueCnt', 'ModeString', 'ModeCnt', 'Mode(%)',
+            'Top10', 'Top10(%)'
+        ],
+        "Length Info": [
+            'FileName', 'ColumnName', 'OracleType', 'PK', 'DetailDataType',
+            'LenCnt', 'LenMin', 'LenMax', 'LenAvg', 'LenMode',
+            'RecordCnt', 'SampleRows', 'ValueCnt', 'NullCnt', 'Null(%)',
+            'UniqueCnt', 'Unique(%)'
+        ],
+        "Character Info": [
+            'FileName', 'ColumnName', 'ValueCnt', 'HasBrokenKor', 'HasSpecial', 'HasUnicode', 'HasChinese', 
+            'HasTab', 'HasCr', 'HasLf', 'HasJapanese', 'HasBlank', 'HasDash', 'HasDot', 'HasAt', 'HasAlpha',
+            'HasKor', 'HasNum', 'HasBracket', 'HasMinus', 'HasOnlyAlpha', 'HasOnlyNum',
+            'HasOnlyKor', 'HasOnlyAlphanum',
+            'FirstChrKor', 'FirstChrNum', 'FirstChrAlpha', 'FirstChrSpecial'
+        ],
+        "DQ Score Info": [
+            'FileName', 'ColumnName', 'ValueCnt', 'Null_pct', 'TypeMixed_pct', 'LengthVol_pct', 'Duplicate_pct',
+            'DQ_Score', 'DQ_Issues', 'Issue_Count'
+        ]
+    }
+
+    # ---------------------------
+    st.markdown("### Data Quality Information")
+    st.markdown("###### 아래의 탭에서 상세 정보를 확인할 수 있습니다.")
+
+    if ff_df.empty:
+        st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
+        return False
+
+    if ff_df is not None and not ff_df.empty:
+        tabs = ['Value Info', 'Value Type Info', 'Top10 Info', 'Length Info', 
+            'Character Info', 'DQ Score Info', 'Total Statistics']
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(tabs)
+
+        with tab1:
+            st.markdown("###### 모든 컬럼들의 데이터 값 정보를 제공합니다.")
+            # render_table(ff_df, 'Data Value Info', VIEW_COLUMNS['Value Info'])
+            df = ff_df[VIEW_COLUMNS['Value Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab2:
+            st.markdown("###### 모든 컬럼들의 데이터 타입 정보를 제공합니다.")
+            df = ff_df[VIEW_COLUMNS['Value Type Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab3:
+            st.markdown("###### 모든 컬럼들의 빈도수 상위 10개를 제공합니다.")
+            df = ff_df[VIEW_COLUMNS['Top10 Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab4:
+            st.markdown("###### 모든 컬럼들의 길이 정보를 제공합니다.")
+            df = ff_df[VIEW_COLUMNS['Length Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab5:
+            st.markdown("###### 모든 컬럼들의 구성하는 문자 정보를 제공합니다.")
+            df = ff_df[VIEW_COLUMNS['Character Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab6:
+            st.markdown("###### 모든 컬럼들의 Data Quality Score 정보를 제공합니다. (기업의 상황에 따라 기준이 다를 수 있습니다. 컨설팅 후 확정합니다.)")
+            df = ff_df[VIEW_COLUMNS['DQ Score Info']].reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600, hide_index=True)
+        with tab7:
+            st.markdown("###### 모든 컬럼들의 통계 정보를 제공합니다.")
+            df = ff_df.reset_index(drop=True)
+            st.dataframe(data=df, width=1400, height=600,hide_index=True)
+    else:
+        st.warning("Data Quality 분석 파일을 로드할 수 없습니다.")
+        return False
+    return True    
+
+def file_detail_analysis(df_ind, df_mapping):
+    st.divider()
+    st.markdown(f"### 📑 파일 상세 정보")
     
-    final_files = sorted(sys_files)
+    final_files = sorted(df_ind['FileName'].unique())
     selected_file = st.selectbox("조회할 파일을 최종 선택하세요", final_files)
 
     if selected_file and df_mapping is not None:
         detail_df = df_mapping[df_mapping['FileName'] == selected_file]
         
         if not detail_df.empty:
-            st.success(f"✅ '{selected_file}' 상세 속성 조회 결과")
-            
             # 메트릭 표시
             m1, m2, m3, m4 = st.columns(4)
             
@@ -201,36 +360,101 @@ def main():
             elif 'RecordCnt' in detail_df.columns:
                 total_records = f"{int(detail_df['RecordCnt'].iloc[0]):,}"
             elif 'ValueCnt' in detail_df.columns:
-                # ValueCnt의 최대값 사용 (일반적으로 파일의 총 레코드 수와 유사)
                 total_records = f"{int(detail_df['ValueCnt'].max()):,}"
-            m1.metric("총 레코드", total_records)
             
-            # Null(%) 평균
-            null_pct = "N/A"
-            if 'Null_pct' in detail_df.columns:
-                null_pct = f"{detail_df['Null_pct'].mean():.1f}%"
-            elif 'Null(%)' in detail_df.columns:
-                null_pct = f"{detail_df['Null(%)'].mean():.1f}%"
-            m2.metric("평균 Null(%)", null_pct)
-            
-            # 중복(%) 평균
-            dup_pct = "N/A"
-            if 'Duplicate_pct' in detail_df.columns:
-                dup_pct = f"{detail_df['Duplicate_pct'].mean():.1f}%"
-            m3.metric("중복(%)", dup_pct)
-            
-            m4.metric("컬럼 수", len(detail_df))
+            # Sampling Row 수
+            sampling_row = "N/A"
+            if 'SampleRows' in detail_df.columns:
+                sampling_row = f"{int(detail_df['SampleRows'].iloc[0]):,}"
 
-            # 테이블 표시
-            st.dataframe(detail_df, width="stretch", height=600, hide_index=True)
+            # Null(%) > 0% 인 컬럼 수
+            null_0_cnt = "N/A"
+            if 'Null(%)' in detail_df.columns:
+                try:
+                    null_pct_series = pd.to_numeric(detail_df['Null(%)'], errors='coerce')
+                    null_0_cnt = f"{len(detail_df[null_pct_series > 0])}"
+                except Exception:
+                    pass
+
+            # Null(%) == 100% 인 컬럼 수
+            null_100_cnt = "N/A"
+            if 'Null(%)' in detail_df.columns:
+                try:
+                    null_pct_series = pd.to_numeric(detail_df['Null(%)'], errors='coerce')
+                    null_100_cnt = f"{len(detail_df[null_pct_series == 100])}"
+                except Exception:
+                    pass
+
+            # Unique(%) == 100% 인 컬럼 수
+            unique_100_cnt = "N/A"
+            if 'Unique(%)' in detail_df.columns:
+                try:
+                    unique_pct_series = pd.to_numeric(detail_df['Unique(%)'], errors='coerce')
+                    unique_100_cnt = f"{len(detail_df[unique_pct_series == 100])}"
+                except Exception:
+                    pass
+            
+
+            # 메트릭 표시
+            summary = {
+                "Total Records": total_records,
+                "Column #": len(detail_df),
+                "Sampling #": sampling_row,
+                "Has Null": null_0_cnt,
+                "Has All Null": null_100_cnt,
+                "Unique Columns": unique_100_cnt,
+            }
+
+            metric_colors = {
+                "Total Records": "#1f77b4",      # 파란색 (정보성)
+                "Column #": "#2ca02c",           # 초록색 (긍정적)
+                "Sampling #": "#9467bd",         # 보라색 (정보성)
+                "Has Null": "#ffbb78",           # 연한 주황색 (경고)
+                "Has All Null": "#d62728",       # 빨간색 (위험)
+                "Unique Columns": "#17becf",     # 청록색 (긍정적)
+            }
+
+            cols = st.columns(len(summary))
+            for col, (key, value) in zip(cols, summary.items()):
+                color = metric_colors.get(key, "#0072B2") # 기본 색상
+                col.markdown(create_metric_card(value, key, color), unsafe_allow_html=True)
+
+            result = Display_MasterFormat_Detail(detail_df)
+
         else:
             st.warning("상세 매핑 데이터가 없습니다.")
     else:
         st.warning("System 파일이 없습니다.")
 
+def main():
+    st.title(APP_NAME)
+    st.markdown(APP_DESC)
+
+    # 데이터 로드 & 전처리
+    df_vc, df_sys, df_vc_sys, df_mapping = load_data_validation()
+    
+    if df_vc is None or df_sys is None or df_vc_sys is None or df_mapping is None:
+        st.error(f"데이터 파일을 찾을 수 없습니다: {VC_FILE}, {SYS_FILE}, {VC_SYS_FILE}, {MAPPING_FILE}")
+        return
+
+    selected_industry, df_ind = select_industry(df_vc, df_sys, df_vc_sys)
+
+    all_activities = sorted(df_ind['Activity'].unique())
+    all_systems = sorted(df_ind['System'].unique())
+
+    # 2. Activity 섹션 (파이 차트 + 독립 정보)
+    activity_analysis(df_ind, df_mapping, all_activities)
+
+    # 3. System 섹션 (파이 차트 + 독립 정보)
+    system_analysis(df_ind, df_mapping, all_systems)
+
+    # 4. 파일 상세 정보 출력
+    file_detail_analysis(df_ind, df_mapping)
+
     # 드릴다운: 특정 컬럼의 Format 분포 등을 더 보고 싶을 때를 위한 확장
     with st.expander("Raw Data (CodeMapping) 전체 보기", expanded=False):
         st.dataframe(df_mapping, width="stretch", height=600, hide_index=True)
-    st.markdown("---")
+    st.divider()
+
 if __name__ == "__main__":
     main()
