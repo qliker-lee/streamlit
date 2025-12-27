@@ -384,12 +384,21 @@ def file_detail_analysis(df_ind, df_mapping):
             
             # 총 레코드 수 (여러 컬럼명 시도)
             total_records = "N/A"
-            if 'TotalRecords' in detail_df.columns:
-                total_records = f"{int(detail_df['TotalRecords'].iloc[0]):,}"
-            elif 'RecordCnt' in detail_df.columns:
-                total_records = f"{int(detail_df['RecordCnt'].iloc[0]):,}"
-            elif 'ValueCnt' in detail_df.columns:
-                total_records = f"{int(detail_df['ValueCnt'].max()):,}"
+            try:
+                if 'TotalRecords' in detail_df.columns:
+                    val = detail_df['TotalRecords'].iloc[0]
+                    if pd.notna(val):
+                        total_records = f"{int(val):,}"
+                elif 'RecordCnt' in detail_df.columns:
+                    val = detail_df['RecordCnt'].iloc[0]
+                    if pd.notna(val):
+                        total_records = f"{int(val):,}"
+                elif 'ValueCnt' in detail_df.columns:
+                    val = detail_df['ValueCnt'].max()
+                    if pd.notna(val):
+                        total_records = f"{int(val):,}"
+            except (ValueError, TypeError, IndexError, KeyError):
+                pass
             
             # Sampling Row 수
             sampling_row = "N/A"
