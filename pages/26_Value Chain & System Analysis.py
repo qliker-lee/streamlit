@@ -141,7 +141,7 @@ def load_data_validation():
 
 def select_industry(df_vc, df_sys, df_vc_sys):
     
-    col_sel1, col_sel2, col_sel3 = st.columns([1, 1, 1])
+    col_sel1, col_sel2 = st.columns([1, 1])
     with col_sel1:
         st.header("🏢 Industry Selection")
 
@@ -457,4 +457,5 @@ def main():
     st.divider()
 
 if __name__ == "__main__":
+
     main()
