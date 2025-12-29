@@ -136,7 +136,7 @@ def download_solution_pdf():
             st.download_button(
                 label="📄 Data Sense 소개자료 다운로드 (PDF)",
                 data=pdf_bytes,
-                file_name="Data Sense 소개서_01.pdf",
+                file_name="DataSense_Solution_Overview.pdf",
                 mime="application/pdf",
                 type="primary"
             )
@@ -146,7 +146,7 @@ def download_solution_pdf():
             st.download_button(
                 label="📄 Data Sense 소개자료 다운로드 (PDF)",
                 data=pdf_bytes,
-                file_name="Data Sense 소개서_01.pdf",
+                file_name="DataSense_Solution_Overview.pdf",
                 mime="application/pdf",
                 type="primary"
             )
@@ -185,4 +185,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
