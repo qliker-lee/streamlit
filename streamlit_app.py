@@ -128,8 +128,8 @@ def intro_page():
 
 def download_solution_pdf():
     """소개자료를 다운로드 합니다."""
-    pdf_path = IMAGE_DIR /  "Data Sense 소개서_01.pdf"
-    pdf_path2 = IMAGE_DIR2 / "Data Sense 소개서_01.pdf"
+    pdf_path = IMAGE_DIR /  "DataSense_Solution_Overview.pdf"
+    pdf_path2 = IMAGE_DIR2 / "DataSense_Solution_Overview.pdf"
     if pdf_path.exists():
         with open(pdf_path, "rb") as pdf_file:
             pdf_bytes = pdf_file.read()
@@ -185,5 +185,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()
