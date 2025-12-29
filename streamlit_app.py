@@ -68,7 +68,8 @@ def main_page():
        
    
     # PDF 파일 경로
-    pdf_path = PROJECT_ROOT / "QDQM"/ "DataSense" / "DS_Output" / "images" / "Data Sense 소개서_01.pdf"
+    # Data_Sense.py가 QDQM 루트에 있으므로 PROJECT_ROOT는 QDQM 디렉토리
+    pdf_path = PROJECT_ROOT / "DataSense" / "DS_Output" / "images" / "Data Sense 소개서_01.pdf"
     
     # 파일이 존재하는 경우 다운로드 버튼 표시
     if pdf_path.exists():
@@ -308,7 +309,7 @@ def sidebar():
         <p style='font-size: 14px; color: #333; line-height: 1.6;'>
             Data has <span style='font-size: 14px; color: #cc3300; font-weight: bold;'> a value.</span><br>
             Data is<span style='font-size: 14px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
-            Data shapes <span style='color: #cc3300; font-weight: bold;'> our future.</span>
+            Data shapes <span style='font-size: 14px; color: #cc3300; font-weight: bold;'> our future.</span>
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -325,4 +326,3 @@ def main():
 
 if __name__ == "__main__":
     main() 
-
