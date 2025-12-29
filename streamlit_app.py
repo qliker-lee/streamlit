@@ -8,9 +8,12 @@ from pathlib import Path
 
 # 1. 경로 설정 및 환경 초기화
 CURRENT_DIR = Path(__file__).resolve()
-PROJECT_ROOT = CURRENT_DIR.parents[1]
+# streamlit_app.py가 QDQM 루트에 있으므로 parent를 사용
+PROJECT_ROOT = CURRENT_DIR.parent
+# 여러 가능한 경로 시도 (로컬/Cloud 환경 대응)
 IMAGE_DIR = PROJECT_ROOT / "DataSense" / "DS_Output" / "images"
-IMAGE_DIR2 = PROJECT_ROOT / "QDQM" / "DataSense" / "DS_Output" / "images" 
+IMAGE_DIR2 = PROJECT_ROOT.parent / "DataSense" / "DS_Output" / "images"
+IMAGE_DIR3 = PROJECT_ROOT / "QDQM" / "DataSense" / "DS_Output" / "images" 
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
@@ -128,30 +131,62 @@ def intro_page():
 
 def download_solution_pdf():
     """소개자료를 다운로드 합니다."""
-    pdf_path = IMAGE_DIR /  "DataSense_Solution_Overview.pdf"
-    pdf_path2 = IMAGE_DIR2 / "DataSense_Solution_Overview.pdf"
-    if pdf_path.exists():
-        with open(pdf_path, "rb") as pdf_file:
-            pdf_bytes = pdf_file.read()
-            st.download_button(
-                label="📄 Data Sense 소개자료 다운로드 (PDF)",
-                data=pdf_bytes,
-                file_name="DataSense_Solution_Overview.pdf",
-                mime="application/pdf",
-                type="primary"
-            )
-    elif pdf_path2.exists():
-        with open(pdf_path2, "rb") as pdf_file:
-            pdf_bytes = pdf_file.read()
-            st.download_button(
-                label="📄 Data Sense 소개자료 다운로드 (PDF)",
-                data=pdf_bytes,
-                file_name="DataSense_Solution_Overview.pdf",
-                mime="application/pdf",
-                type="primary"
-            )
+    # 여러 가능한 경로를 순차적으로 시도
+    pdf_paths = [
+        IMAGE_DIR / "DataSense_Solution_Overview.pdf",
+        IMAGE_DIR2 / "DataSense_Solution_Overview.pdf",
+        IMAGE_DIR3 / "DataSense_Solution_Overview.pdf",
+    ]
+    
+    pdf_found = None
+    for pdf_path in pdf_paths:
+        if pdf_path.exists():
+            pdf_found = pdf_path
+            break
+    
+    if pdf_found:
+        try:
+            with open(pdf_found, "rb") as pdf_file:
+                pdf_bytes = pdf_file.read()
+                st.download_button(
+                    label="📄 Data Sense 소개자료 다운로드 (PDF)",
+                    data=pdf_bytes,
+                    file_name="DataSense_Solution_Overview.pdf",
+                    mime="application/pdf",
+                    type="primary"
+                )
+        except Exception as e:
+            st.error(f"파일 읽기 오류: {e}")
+            st.warning(f"시도한 경로들:\n- {pdf_paths[0]}\n- {pdf_paths[1]}\n- {pdf_paths[2]}\n\nPROJECT_ROOT: {PROJECT_ROOT}")
     else:
-        st.warning(f"소개자료 파일을 찾을 수 없습니다: {pdf_path} 혹은 {pdf_path2} 폴더 : {PROJECT_ROOT}")
+        # 디버깅 정보 출력
+        st.warning(f"소개자료 파일을 찾을 수 없습니다.")
+        with st.expander("🔍 디버깅 정보 (경로 확인)"):
+            st.write(f"**PROJECT_ROOT:** `{PROJECT_ROOT}`")
+            st.write(f"**CURRENT_DIR:** `{CURRENT_DIR}`")
+            st.write(f"**시도한 경로들:**")
+            for i, pdf_path in enumerate(pdf_paths, 1):
+                exists = "✅ 존재" if pdf_path.exists() else "❌ 없음"
+                st.write(f"{i}. `{pdf_path}` - {exists}")
+            
+            # DataSense 디렉토리 존재 여부 확인
+            ds_dir = PROJECT_ROOT / "DataSense"
+            st.write(f"\n**DataSense 디렉토리:** `{ds_dir}` - {'✅ 존재' if ds_dir.exists() else '❌ 없음'}")
+            
+            # images 디렉토리 존재 여부 확인
+            if ds_dir.exists():
+                images_dir = ds_dir / "DS_Output" / "images"
+                st.write(f"**images 디렉토리:** `{images_dir}` - {'✅ 존재' if images_dir.exists() else '❌ 없음'}")
+                
+                # images 디렉토리의 파일 목록 출력
+                if images_dir.exists():
+                    try:
+                        files = list(images_dir.glob("*.pdf"))
+                        st.write(f"\n**PDF 파일 목록:**")
+                        for f in files:
+                            st.write(f"- `{f.name}`")
+                    except Exception as e:
+                        st.write(f"파일 목록 조회 오류: {e}")
 
 def main():
     # if "logged_in" not in st.session_state:
