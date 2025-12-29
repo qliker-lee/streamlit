@@ -142,7 +142,10 @@ def download_solution_pdf():
     for pdf_path in pdf_paths:
         if pdf_path.exists():
             pdf_found = pdf_path
+            st.write(f"소개자료 파일을 찾았습니다: {pdf_found}")
             break
+        else:
+            st.write(f"소개자료 파일을 찾을 수 없습니다: {pdf_path}")
     
     if pdf_found:
         try:
