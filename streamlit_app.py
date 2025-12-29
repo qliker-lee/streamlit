@@ -147,6 +147,19 @@ def download_solution_pdf():
             )
 
 
+def sidebar():
+    st.sidebar.markdown("""
+        <div style='background-color: #F0F8FF; padding: 10px; border-radius: 10px; margin: 10px;'>
+        <p style='font-size: 16px; color: #333; line-height: 1.6;'>
+            Data has <span style='color: #cc3300; font-weight: bold;'> a value.</span><br>
+            Data is<span style='font-size: 16px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
+            Data shapes <span style='font-size: 16px; color: #cc3300; font-weight: bold;'> our future.</span>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    st.sidebar.markdown("")
+    st.sidebar.markdown("<h4>qliker@kakao.com</h4>", unsafe_allow_html=True)
+
 def main():
     # if "logged_in" not in st.session_state:
     #     st.session_state["logged_in"] = False
@@ -163,6 +176,7 @@ def main():
     #         st.rerun()
             
     st.title("🏛️ DataSense 란?")
+    sidebar()
 
     intro_page()
     download_solution_pdf()
