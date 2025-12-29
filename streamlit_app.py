@@ -84,17 +84,20 @@ def intro_page():
     c1, c2, c3 = st.columns(3)
     
     with c1:
-        st.markdown('<div class="card"><p class="feature-header">🔍 Intelligent Data Profiling</p>'
+        st.markdown('<div class="card"><p class="feature-header">🔍 Intelligent Data Profiling & Statistics</p>'
                     '결측치, 형식 준수율, 유니크 값 비율 자동 산출<br>'
-                    '<b>유니코드, 미완성한글</b> 등 기술 결함 탐지</div>', unsafe_allow_html=True)
+                    '<b>유니코드, 미완성한글</b> 등 기술 결함 탐지<br>'
+                    '데이터 값에 대한 다양한 <b>통계 분석</b><br>'
+                    , unsafe_allow_html=True)
     with c2:
-        st.markdown('<div class="card"><p class="feature-header">⛓️ Logical Data Relationship Diagram</p>'
+        st.markdown('<div class="card"><p class="feature-header">⛓️ ERD & Logical Data Relationship Diagram</p>'
+                    '운영중인 시스템의 <b>ERD</b> 생성 및 확인<br>'
                     '데이터 값 기반의 논리적 다이어그램 작성<br>'
                     '<b>참조코드(Reference Code) 비교</b> 및 <b>논리적 연관관계</b> 탐지<br>'
                     , unsafe_allow_html=True)
     with c3:
         st.markdown('<div class="card"><p class="feature-header">🏗️ Business Value Chain & System Mapping</p>'
-                    '산업군별 Primary/Support Activity 정의<br>'
+                    '산업군별 Primary/Support Activity & 운영중인 System 정의 및 파일 매핑<br>'
                     '<b>Activity-to-System & File</b> 연결로 상위 데이터 아키텍쳐 정립</div>', unsafe_allow_html=True)
 
     # 3. 비포/애프터 시나리오 (Business Scenarios)
@@ -144,7 +147,7 @@ def download_solution_pdf():
                 type="primary"
             )
     else:
-        st.warning(f"소개자료 파일을 찾을 수 없습니다: {pdf_path}")
+        st.warning(f"소개자료 파일을 찾을 수 없습니다: {pdf_path} 혹은 {pdf_path2} 폴더 : {PROJECT_ROOT}")
 
 def main():
     # if "logged_in" not in st.session_state:
