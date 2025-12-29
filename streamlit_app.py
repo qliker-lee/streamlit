@@ -305,9 +305,9 @@ def sidebar():
     st.sidebar.header(SOLUTION_NAME)
     st.sidebar.markdown("""
         <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
-        <p style='font-size: 20px; color: #333; line-height: 1.6;'>
-            Data has <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> a value.</span><br>
-            Data is<span style='font-size: 20px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
+        <p style='font-size: 14px; color: #333; line-height: 1.6;'>
+            Data has <span style='font-size: 14px; color: #cc3300; font-weight: bold;'> a value.</span><br>
+            Data is<span style='font-size: 14px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
             Data shapes <span style='color: #cc3300; font-weight: bold;'> our future.</span>
         </p>
     </div>
@@ -325,3 +325,4 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
