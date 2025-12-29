@@ -11,7 +11,7 @@ CURRENT_DIR = Path(__file__).resolve()
 # streamlit_app.py가 QDQM 루트에 있으므로 parent를 사용
 PROJECT_ROOT = CURRENT_DIR.parent
 # 여러 가능한 경로 시도 (로컬/Cloud 환경 대응)
-IMAGE_DIR = PROJECT_ROOT / "DataSense" / "DS_Output" / "images"
+IMAGE_DIR = PROJECT_ROOT / "streamlit"/"DataSense" / "DS_Output" / "images"
 IMAGE_DIR2 = PROJECT_ROOT.parent / "DataSense" / "DS_Output" / "images"
 IMAGE_DIR3 = PROJECT_ROOT / "QDQM" / "DataSense" / "DS_Output" / "images" 
 
