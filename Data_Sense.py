@@ -1,8 +1,27 @@
 ###################################################
-# 2025. 07. 01.  Qliker
-# streamlit test app
+# 2025. 12. 27.  Qliker
+# 데이터 센스 솔루션 Main 
 ###################################################
+# -------------------------------------------------------------------
+# 1. 경로 설정 (Streamlit warnings import 전에 필요)
+# -------------------------------------------------------------------
+import sys
+from pathlib import Path
 
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+# -------------------------------------------------------------------
+# 2. 컴파일 발생하는 Streamlit 경고 메시지 억제 설정 (Streamlit import 전에 호출)
+# -------------------------------------------------------------------
+from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+setup_streamlit_warnings()
+
+# -------------------------------------------------------------------
+# 3. 필수 라이브러리 import
+# -------------------------------------------------------------------
 import streamlit as st
 import os
 from PIL import Image
@@ -21,26 +40,51 @@ st.set_page_config(
 def main_page():
     """메인 페이지"""
     st.title(SOLUTION_NAME)
-    st.subheader('(' + SOLUTION_KOR_NAME + ')')
     
     # 주요 기능 소개
     st.write("---")
-    st.subheader(SOLUTION_KOR_NAME + "? ")
+    st.subheader(SOLUTION_KOR_NAME + "는 ")
     st.markdown("""
     <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
         <p style='font-size: 22px; color: #333; line-height: 1.6;'>
-        * 기업의 마스터 데이터에 대한 
-<span style='font-size: 22px; color: #0033ff; font-weight: bold;'> 
-데이터 정합성 확보와 정제된 데이터 기반 구축을 </span> 위한 도구 입니다. 
+        <span style='font-size: 22px; color: #0033ff; font-weight: bold;'> 데이터 센스는 </span> 원천 데이터 프로파일링부터 비즈니스 가치 사슬(Value Chain)까지 연결하여 
+        <span style='font-size: 22px; color: #0033ff; font-weight: bold;'><br>데이터의 생성-흐름-품질</span>을 통합 관리하는 지능형 솔루션입니다.
+        <br><br>
+        핵심 철학은 <span style='font-size: 22px; color: #0033ff; font-weight: bold;'> "데이터는 비즈니스의 언어다." (Data as a Business Language) </span>
+        </p> 
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
+        <p style='font-size: 22px; color: #333; line-height: 1.6;'>
+        * 기업의 모든 데이터를  
+        <span style='font-size: 22px; color: #0033ff; font-weight: bold;'> 정합성 확보와 정제된 데이터 기반 구축을 </span> 위한 지능형 도구 입니다. 
 <br>
-<span style='font-size: 22px; color: #333; line-height: 1.6;'>
-* 이를 활용하여 귀사도
-<span style='font-size: 22px; color: #00cc33; font-weight: bold;'> 
-고품질의 데이터 활용 기반 및 AI 전환을 위한 기반 구축을 확보</span> 하게 됩니다. 
+<span style='font-size: 22px; color: #333; line-height: 1.6;'> * 이를 활용하여 모든 데이터를 
+<span style='font-size: 22px; color: #00cc33; font-weight: bold;'> 고품질의 데이터 활용 기반 및 AI 전환을 위한 기반 구축을 확보</span> 할 수 있습니다. 
 </span>
 <br>
     """, unsafe_allow_html=True)
        
+   
+    # PDF 파일 경로
+    # Data_Sense.py가 QDQM 루트에 있으므로 PROJECT_ROOT는 QDQM 디렉토리
+    pdf_path = PROJECT_ROOT / "DataSense" / "DS_Output" / "images" / "Data Sense 소개서_01.pdf"
+    
+    # 파일이 존재하는 경우 다운로드 버튼 표시
+    if pdf_path.exists():
+        with open(pdf_path, "rb") as pdf_file:
+            pdf_bytes = pdf_file.read()
+            st.download_button(
+                label="📄 Data Sense 소개자료 다운로드 (PDF)",
+                data=pdf_bytes,
+                file_name="Data Sense 소개서_01.pdf",
+                mime="application/pdf",
+                type="primary"
+            )
+    else:
+        st.warning(f"소개자료 파일을 찾을 수 없습니다: {pdf_path}")
+
 
     st.subheader("\n" + SOLUTION_KOR_NAME + "의 핵심 목표") 
     st.markdown("""
@@ -94,36 +138,6 @@ def main_page():
             - 타 테이블에서 코드의 참조 이력을 집계하여 코드 값 별로 사용 여부 검증 <br><br></span>
         """, unsafe_allow_html=True)
 
-    with tab3:
-        # st.subheader("\n" + SOLUTION_KOR_NAME + "의 수행 방법")
-        # col1, col2, col3 = st.columns([3, 3, 4])
-        
-        # with col1:
-        #     st.subheader("데이터 속성 분석")
-        #     st.markdown("""
-        #     - 모든 데이터에 대한 프로파일링
-        #     - 데이터 값의 타입 및 포맷 분석
-        #     - 고유성(Unique) 및 유효성 검증
-        #     - 특수문자 (유니코드, 미완성한글, 한자) 검증
-        #     """)
-            
-        # with col2:
-        #     st.subheader("데이터 통계 분석 및 참조 무결성 검증")
-        #     st.markdown("""
-        #     - 데이터 값에 대한 다양한 통계 분석을 통한 품질 측정
-        #     - 숫자 컬럼에 대한 통계 분석 및 이상치 탐지 
-        #     - 코드 값 비교에 의한 참조 무결성 검증 
-        #     - 데이터의 길이 검증 (최대, 최소, 정밀도 등)
-        #     """)
-
-        # with col3:
-        #     st.subheader("자동으로 매핑")
-        #     st.markdown("""
-        #     - 데이터 속성 분석 및 통계 분석을 활용한 자동 매핑
-        #     - Rule 규칙에 따라 자동 매핑
-        #     - 사용자가 코드 매핑 관계 및 SQL 쿼리를 지정하지 않음 
-        #     - 마스터 데이터와 코드간에 자동으로 릴레이션 생성하여 ERD 작성
-        #     """)
 
         st.subheader("\n" + SOLUTION_KOR_NAME + "의 수행 방법")
         
@@ -291,11 +305,11 @@ def sidebar():
     """사이드바"""
     st.sidebar.header(SOLUTION_NAME)
     st.sidebar.markdown("""
-    <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
-        <p style='font-size: 20px; color: #333; line-height: 1.6;'>
-            모든 데이터(Data)를 <span style='font-size: 20px; color: #0066cc; font-weight: bold;'> 쉽고(Easy)</span>, 
-            <span style='font-size: 20px; color: #cc3300; font-weight: bold;'> 빠르며(Fast)</span>, 
-            <span style='color: #006633; font-weight: bold;'> 정확하게(Accurate)</span> 분석합니다.
+        <div style='background-color: #F0F8FF; padding: 20px; border-radius: 10px; margin: 20px 0;'>
+        <p style='font-size: 14px; color: #333; line-height: 1.6;'>
+            Data has <span style='font-size: 14px; color: #cc3300; font-weight: bold;'> a value.</span><br>
+            Data is<span style='font-size: 14px; color: #cc3300; font-weight: bold;'> an asset.</span><br>
+            Data shapes <span style='font-size: 14px; color: #cc3300; font-weight: bold;'> our future.</span>
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -309,15 +323,6 @@ def main():
     sidebar()
     
     main_page()
-
-    # # URL 파라미터로 로그인 상태 확인
-    # logged_in = st.query_params.get("logged_in", False)
-    
-    # # 페이지 라우팅
-    # if not logged_in:
-    #     login_page()
-    # else:
-    #     main_page()
 
 if __name__ == "__main__":
     main() 
