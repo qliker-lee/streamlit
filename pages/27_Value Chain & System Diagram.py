@@ -18,10 +18,10 @@ if str(PROJECT_ROOT) not in sys.path:
 # -------------------------------------------------------------------
 # 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
 # -------------------------------------------------------------------
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
-from DataSense.util.Display import create_metric_card # KPI 메트릭 표시 함수
+from util.Display import create_metric_card # KPI 메트릭 표시 함수
 
 # -------------------------------------------------------------------
 # 3. 필수 라이브러리 import
@@ -45,14 +45,14 @@ SOLUTION_KOR_NAME = "Value Chain & System Diagram"
 APP_NAME = "Value Chain & System Diagram"
 APP_DESC = "###### Value Chain & System를 기반으로 Value Chain Diagram과 System Architecture Diagram을 생성합니다.  "
 
-from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
+from util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 set_page_config(APP_NAME)
 # -------------------------------------------------------------------
 # 4. 경로 설정
 # -------------------------------------------------------------------
 
-OUTPUT_DIR = Path("DataSense/DS_Output")
-IMAGE_DIR = OUTPUT_DIR / "images"
+OUTPUT_DIR = PROJECT_ROOT / "DS_Output"
+IMAGE_DIR = PROJECT_ROOT / "images"
 VC_FILE = OUTPUT_DIR / "DS_ValueChain.csv"
 SYS_FILE = OUTPUT_DIR / "DS_System.csv"
 VC_SYS_FILE = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
@@ -689,5 +689,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

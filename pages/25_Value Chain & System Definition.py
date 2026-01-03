@@ -15,7 +15,7 @@ PROJECT_ROOT = CURRENT_DIR.parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
 # -------------------------------------------------
@@ -36,7 +36,7 @@ logging.getLogger('streamlit.runtime.scriptrunner.script_run_context').setLevel(
 # -------------------------------------------------------------------
 # 1. 경로 및 상수 설정
 # -------------------------------------------------------------------
-OUTPUT_DIR = Path("DataSense/DS_Output")
+OUTPUT_DIR = PROJECT_ROOT / "DS_Output"
 VALUECHAIN_CSV_PATH = OUTPUT_DIR / "DS_ValueChain.csv"
 SYSTEM_CSV_PATH = OUTPUT_DIR / "DS_System.csv"
 FILE_STATS_PATH = OUTPUT_DIR / "FileStats.csv"
@@ -48,8 +48,7 @@ MAPPING_CSV_PATH = OUTPUT_DIR / "DS_ValueChain_System_File.csv"
 # -------------------------------------------------
 APP_NAME = "🏭 Value Chain & System Definition"
 APP_DESC = "#### Value Chain & System을 입력, 수정, 삭제하고 파일을 매핑하는 통합 도구입니다."
-from DataSense.util.Files_FunctionV20 import set_page_config
-# from DataSense.util.Display import display_kpi_metrics
+from util.Files_FunctionV20 import set_page_config
 
 set_page_config(APP_NAME)
 
@@ -546,7 +545,7 @@ def mapping_file_tab(target_industry):
     # 파일 상세 검색
     st.divider()
     st.subheader("🔍 파일 상세 검색 (No로 검색)")
-    file_no = st.number_input("FileNo", key=f"file_no_{target_industry}", min_value=1, format="%d")
+    file_no = st.number_input("No", key=f"file_no_{target_industry}", min_value=1, format="%d")
 
     format_cols = ["FileName", "ColumnName", "OracleType", "PK", "ValueCnt", "Null(%)", "Unique(%)", 
                    "FormatCnt", "Format", "Top10"]

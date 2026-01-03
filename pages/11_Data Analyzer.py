@@ -17,7 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
 # -------------------------------------------------------------------
 # 2. 컴파일 발생하는 Streamlit 경고 메시지 억제 설정 (Streamlit import 전에 호출)
 # -------------------------------------------------------------------
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
 # -------------------------------------------------------------------
@@ -45,7 +45,7 @@ APP_DESC2 = """
 - 데이터 간의 논리적 관계도 정보를 생성합니다. (Data Relationship Analyzer)
 """
 
-from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
+from util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 
 set_page_config(APP_NAME)
 
@@ -58,13 +58,13 @@ def _fallback_load_yaml_datasense() -> Dict[str, Any]:
     cfg = {
         "ROOT_PATH": guessed_root,
         "files": {
-            "fileformat_output": "DataSense/DS_Output/FileFormat.csv",
-            "ruledatatype_output": "DataSense/DS_Output/RuleDataType.csv",
-            "codemapping_output": "DataSense/DS_Output/CodeMapping.csv",
+            "fileformat_output": "DS_Output/FileFormat.csv",
+            "ruledatatype_output": "DS_Output/RuleDataType.csv",
+            "codemapping_output": "DS_Output/CodeMapping.csv",
         },
         "DataSense_Password": "qlalfqjsgh",  # 기본 비밀번호
     }
-    path = Path(guessed_root) / "DataSense" / "util" / "DS_Master.yaml"
+    path = Path(guessed_root) / "util" / "DS_00_Main_Config.yaml"
     if path.exists():
         try:
             with open(path, "r", encoding="utf-8") as f:
@@ -77,7 +77,7 @@ def _fallback_load_yaml_datasense() -> Dict[str, Any]:
     return cfg
 
 try:
-    from DataSense.util.Files_FunctionV20 import load_yaml_datasense  # type: ignore
+    from util.Files_FunctionV20 import load_yaml_datasense  # type: ignore
 except Exception:
     load_yaml_datasense = _fallback_load_yaml_datasense
 
@@ -226,14 +226,16 @@ class FileConfig:
     analyzer_script_quality: str
     analyzer_script_rule: str
     analyzer_script_relationship: str
-    analyzer_script_erd_mapping: str
+    # analyzer_script_erd_mapping: str
 
 class FileLoader:
     """파일 로딩을 위한 클래스"""
     
     def __init__(self, yaml_config: Dict[str, Any]):
         self.yaml_config = yaml_config
-        self.root_path = str(yaml_config.get("ROOT_PATH", str(PROJECT_ROOT)))
+        # 항상 PROJECT_ROOT를 사용 (YAML의 ROOT_PATH는 무시)
+        # Files_FunctionV20.py의 load_yaml_datasense()가 잘못된 ROOT_PATH를 설정할 수 있음
+        self.root_path = str(PROJECT_ROOT.resolve())
         self.files_config = self._setup_files_config()
     
     def _setup_files_config(self) -> FileConfig:
@@ -247,13 +249,13 @@ class FileLoader:
             return str(p.resolve())
         
         return FileConfig(
-            fileformat_output=_full_path(files.get('fileformat_output', 'DataSense/DS_Output/FileFormat.csv')),
-            ruledatatype_output=_full_path(files.get('ruledatatype_output', 'DataSense/DS_Output/RuleDataType.csv')),
-            codemapping_output=_full_path(files.get('codemapping_output', 'DataSense/DS_Output/CodeMapping.csv')),
-            analyzer_script_quality=_full_path(files.get('analyzer_script_quality', 'DataSense/util/DS_11_MasterCodeFormat.py')),
-            analyzer_script_rule=_full_path(files.get('analyzer_script_rule', 'DataSense/util/DS_12_MasterRuleDataType.py')),
-            analyzer_script_relationship=_full_path(files.get('analyzer_script_relationship', 'DataSense/util/DS_13_Code Relationship Analyzer.py')),
-            analyzer_script_erd_mapping=_full_path(files.get('analyzer_script_erd_mapping', 'DataSense/util/DS_14_ERD Mapping.py'))
+            fileformat_output=_full_path(files.get('fileformat_output', 'DS_Output/FileFormat.csv')),
+            ruledatatype_output=_full_path(files.get('ruledatatype_output', 'DS_Output/RuleDataType.csv')),
+            codemapping_output=_full_path(files.get('codemapping_output', 'DS_Output/CodeMapping.csv')),
+            analyzer_script_quality=_full_path(files.get('analyzer_script_quality', 'util/DS_11_MasterCodeFormat.py')),
+            analyzer_script_rule=_full_path(files.get('analyzer_script_rule', 'util/DS_12_MasterRuleDataType.py')),
+            analyzer_script_relationship=_full_path(files.get('analyzer_script_relationship', 'util/DS_13_Code Relationship Analyzer.py')),
+            # analyzer_script_erd_mapping=_full_path(files.get('analyzer_script_erd_mapping', 'util/DS_14_ERD Mapping.py'))
         )
     
     def load_file(self, file_path: str, file_name: str) -> Optional[pd.DataFrame]:
@@ -297,11 +299,11 @@ class DataQualityAnalyzer:
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=200)
+            st.text_area("📜 실행 로그", result.stdout, height=200, key="quality_analyzer_log")
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200, key="quality_analyzer_error")
             return False
 # -------------------------------------------------------------------
 # DATA TYPE & RULE ANALYZER
@@ -325,11 +327,11 @@ class DataTypeRuleAnalyzer:
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=200)
+            st.text_area("📜 실행 로그", result.stdout, height=200, key="rule_analyzer_log")
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200, key="rule_analyzer_error")
             return False
 # -------------------------------------------------------------------
 # CODE RELATIONSHIP ANALYZER
@@ -341,7 +343,7 @@ class CodeRelationshipAnalyzer:
         self.yaml_config = yaml_config
         self.loader = loader
         self.script_path = Path(loader.files_config.analyzer_script_relationship)
-        self.script_erd_path = Path(loader.files_config.analyzer_script_erd_mapping)
+        # self.script_erd_path = Path(loader.files_config.analyzer_script_erd_mapping)
     
     def run_analyzer(self) -> bool:
         """Code Relationship Analyzer 스크립트 실행"""
@@ -350,16 +352,16 @@ class CodeRelationshipAnalyzer:
             return False
         
         cmd = [sys.executable, str(self.script_path)]
-        cmd_erd = [sys.executable, str(self.script_erd_path)]
+        # cmd_erd = [sys.executable, str(self.script_erd_path)]
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             st.success("분석이 완료되었습니다 ✅")
-            st.text_area("📜 실행 로그", result.stdout, height=200)
+            st.text_area("📜 실행 로그", result.stdout, height=200, key="relationship_analyzer_log")
             return True
         except subprocess.CalledProcessError as e:
             st.error("❌ 실행 중 오류가 발생했습니다.")
-            st.text_area("⚠️ 오류 로그", e.stderr, height=200)
+            st.text_area("⚠️ 오류 로그", e.stderr, height=200, key="relationship_analyzer_error")
             return False  
 # -------------------------------------------------------------------
 # MAIN APP
@@ -453,7 +455,6 @@ class DataAnalyzerApp:
         # Data Analyzer 분석 결과 표시
         #----------------------------------------------------
         st.divider()
-        st.info("아래 데이터는 이전에 처리된 결과입니다. ")
         tab1, tab2, tab3 = st.tabs(["Data Quality Analyzer", "Data Type & Rule Analyzer", "Code Relationship Analyzer"])
         with tab1:
             df = self.loader.load_file(self.loader.files_config.fileformat_output, "FileFormat")

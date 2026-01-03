@@ -25,8 +25,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 # ✅ 기본 YAML 위치/파일명
-YAML_DIR_DEFAULT = PROJECT_ROOT / "DataSense" / "util"
-YAML_FILE_DEFAULT = "DS_Diretory_Config.yaml"
+YAML_DIR_DEFAULT = PROJECT_ROOT / "util"
+YAML_FILE_DEFAULT = "DS_00_Main_Config.yaml"
 
 # ▶ 환경변수로 오버라이드 (선택)
 YAML_DIR_ENV = os.environ.get("DS_YAML_DIR")
@@ -40,7 +40,7 @@ APP_VER = "2.4"
 # 외부 유틸(있으면 사용, 없으면 안전 폴백)
 # ------------------------------------------------------------
 try:
-    from DataSense.util.Files_FunctionV20 import set_page_config
+    from util.Files_FunctionV20 import set_page_config
 except Exception:
     def set_page_config(meta: Any):
         if isinstance(meta, dict):
@@ -74,20 +74,20 @@ def _safe_load_yaml(p: Path) -> Dict[str, Any]:
 
 def _auto_find_yaml() -> Optional[Path]:
     """
-    DS_Diretory_Config.yaml 자동 탐색
+    DS_00_Main_Config.yaml 자동 탐색
     - CWD
     - CWD/util
     - 프로젝트 상위 추정 경로들
-    - DataSense/util
+    - util
     """
     candidates = [
-        Path.cwd() / "DS_Diretory_Config.yaml",
-        Path.cwd() / "util" / "DS_Diretory_Config.yaml",
-        Path.cwd().parent / "DS_Diretory_Config.yaml",
-        Path.cwd().parent / "util" / "DS_Diretory_Config.yaml",
-        Path.cwd() / "DataSense" / "util" / "DS_Diretory_Config.yaml",
-        Path.cwd().parent / "DataSense" / "util" / "DS_Diretory_Config.yaml",
-        PROJECT_ROOT / "DataSense" / "util" / "DS_Diretory_Config.yaml",
+        Path.cwd() / "DS_00_Main_Config.yaml",
+        Path.cwd() / "util" / "DS_00_Main_Config.yaml",
+        Path.cwd().parent / "DS_00_Main_Config.yaml",
+        Path.cwd().parent / "util" / "DS_00_Main_Config.yaml",
+        Path.cwd() / "util" / "DS_00_Main_Config.yaml",
+        Path.cwd().parent / "util" / "DS_00_Main_Config.yaml",
+        PROJECT_ROOT / "util" / "DS_00_Main_Config.yaml",
     ]
     for p in candidates:
         if p.exists():
@@ -513,8 +513,16 @@ class ConfigEditorManager:
         # 1) 최상위 스칼라(문자/숫자/불리언) 간단 편집 (ROOT_PATH 포함)
         st.subheader("🔧 기본 항목")
         edited_scalars: Dict[str, Any] = {}
+        # DataSense_Password는 수정 금지 및 숨김 처리
+        hidden_keys = {"DataSense_Password"}
+        
         for k, v in data.items():
-            if k in {"directories", "source_directories", "source_prefixes"}:
+            # DataSense_Password는 표시하지 않고 원래 값 유지
+            if k in hidden_keys:
+                edited_scalars[k] = v  # 원래 값 유지
+                continue
+            # if k in {"directories", "source_directories", "source_prefixes"}: # old
+            if k in {"directories"}:
                 # 아래 전용 섹션에서 처리
                 edited_scalars[k] = v
                 continue
@@ -535,10 +543,10 @@ class ConfigEditorManager:
 
         # 2) 경로형 섹션: directories / source_directories
         data = self._directories_like_editor(data, "directories")
-        data = self._directories_like_editor(data, "source_directories")
+        # data = self._directories_like_editor(data, "source_directories")
 
         # 3) 단순 문자열 딕셔너리 섹션: source_prefixes
-        data = self._simple_dict_editor(data, "source_prefixes", title="source_prefixes (소스 접두사)")
+        # data = self._simple_dict_editor(data, "source_prefixes", title="source_prefixes (소스 접두사)")
 
         # 4) 고급(전체 YAML) 편집기 (선택)
         with st.expander("🧪 고급(전체 YAML) 편집기 열기", expanded=False):
@@ -737,7 +745,7 @@ class DirectoryInspector:
                 yaml_path_txt = st.text_input(
                     "YAML 경로 (미입력 시 자동 탐색 또는 Editor에서 로드된 파일 사용)",
                     value=str(_auto_find_yaml() or ""),
-                    placeholder="예) C:/projects/DataSense/util/DS_Diretory_Config.yaml"
+                    placeholder="예) C:/projects/myproject/QDQM/util/DS_00_Main_Config.yaml"
                 )
             with col2:
                 uploaded = st.file_uploader("또는 업로드", type=["yaml", "yml"])

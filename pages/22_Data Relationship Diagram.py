@@ -21,7 +21,7 @@ PROJECT_ROOT = CURRENT_DIR.parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
 # -------------------------------------------------
@@ -40,8 +40,8 @@ from PIL import Image
 # -------------------------------------------------
 # 3. Local imports
 # -------------------------------------------------
-from DataSense.util.Files_FunctionV20 import set_page_config
-from DataSense.util.Display import display_kpi_metrics
+from util.Files_FunctionV20 import set_page_config
+from util.Display import display_kpi_metrics
 
 # -------------------------------------------------
 # 4. App Config (절대 상수임. 변경하지 마세요)
@@ -50,10 +50,10 @@ APP_NAME = "Data Relationship Diagram"
 APP_TITLE = "🔗 데이터 관계 (Data Relationship Diagram)"
 APP_DESCRIPTION = "Data Value Mapping 기반 논리적 Data Relationship Diagram을 생성합니다."
 
-OUTPUT_DIR = PROJECT_ROOT / 'DataSense' / 'DS_Output'
+OUTPUT_DIR = PROJECT_ROOT / 'DS_Output'
 IMAGE_DIR = OUTPUT_DIR / 'images'
 IMAGE_FILE = "Datasense_DRD"
-MAPPING_FILE = "CodeMapping_relationship.csv"
+MAPPING_FILE = "CodeMapping_erd.csv"
 MAPPING_ORG_FILE = "CodeMapping.csv"
 
 MAX_RELATED_TABLE_COUNT = 100
@@ -717,7 +717,6 @@ def Display_File_Statistics(filestats_df):
     """ Master Statistics KPIs """
     df = filestats_df.copy()
     df = df[(df['MasterType'] != 'Common') & (df['MasterType'] != 'Reference') & (df['MasterType'] != 'Validation')]
-    
     total_files = len(df['FileName'].unique()) if 'FileName' in df.columns else 0
     total_records = df['RecordCnt'].sum() if 'RecordCnt' in df.columns else 0
     total_filesize = df['FileSize'].sum() if 'FileSize' in df.columns else 0
