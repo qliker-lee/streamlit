@@ -47,18 +47,18 @@ def load_yaml_datasense():
     """
     DataSense 설정 YAML 파일을 로드하고 프로젝트 루트 경로를 동적으로 설정합니다.
     """
-    # 1. 프로젝트 루트 경로 계산 (현재 파일 위치 기준 3단계 상위)
-    # 예: PROJECT_ROOT/DataSense/util/current_file.py -> PROJECT_ROOT
+    # 1. 프로젝트 루트 경로 계산 (현재 파일 위치 기준 1단계 상위)
+    # 예: QDQM/util/Files_FunctionV20.py -> QDQM
     try:
         current_file_path = Path(__file__).resolve()
-        project_root = current_file_path.parents[2] # 위치에 따라 parents[n] 조절 필요
+        project_root = current_file_path.parents[1]  # util의 부모 = QDQM
         
         # sys.path에 추가하여 모듈 참조 가능하게 설정
         if str(project_root) not in sys.path:
             sys.path.append(str(project_root))
             
         # 2. YAML 경로 설정
-        yaml_dir = project_root / "QDQM" / "util"
+        yaml_dir = project_root / "util"
         yaml_file_name = 'DS_00_Main_Config.yaml'
         file_path = yaml_dir / yaml_file_name
         
