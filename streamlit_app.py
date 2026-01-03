@@ -11,13 +11,13 @@ CURRENT_DIR = Path(__file__).resolve()
 # streamlit_app.py가 QDQM 루트에 있으므로 parent를 사용
 PROJECT_ROOT = CURRENT_DIR.parent
 # 여러 가능한 경로 시도 (로컬/Cloud 환경 대응)
-IMAGE_DIR = PROJECT_ROOT /"DataSense" / "DS_Output" / "images"
+IMAGE_DIR = PROJECT_ROOT / "images"
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
 # 페이지 기본 설정 (와이드 레이아웃 적용)
