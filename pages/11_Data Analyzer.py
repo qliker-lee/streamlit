@@ -233,8 +233,6 @@ class FileLoader:
     
     def __init__(self, yaml_config: Dict[str, Any]):
         self.yaml_config = yaml_config
-        # 항상 PROJECT_ROOT를 사용 (YAML의 ROOT_PATH는 무시)
-        # Files_FunctionV20.py의 load_yaml_datasense()가 잘못된 ROOT_PATH를 설정할 수 있음
         self.root_path = str(PROJECT_ROOT.resolve())
         self.files_config = self._setup_files_config()
     
