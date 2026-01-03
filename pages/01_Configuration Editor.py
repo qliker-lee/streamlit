@@ -1,8 +1,24 @@
 # streamlit 기반 YAML Config Editor + Directory Inspector
 # 2025.11.05  Qliker 
 # (full editor: directories / source_directories / source_prefixes + advanced + inspector)
+# -------------------------------------------------------------------
+# 1. 경로 설정 (Streamlit warnings import 전에 필요)
+# -------------------------------------------------------------------
+import sys
+from pathlib import Path
 
-from __future__ import annotations
+CURRENT_DIR = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_DIR.parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.append(str(PROJECT_ROOT))
+
+# -------------------------------------------------------------------
+# 2. 컴파일 발생하는 Streamlit 경고 메시지 억제 설정 (Streamlit import 전에 호출)
+# -------------------------------------------------------------------
+from util.streamlit_warnings import setup_streamlit_warnings
+setup_streamlit_warnings()
+
+# from __future__ import annotations
 import os
 import sys
 import shutil
@@ -404,7 +420,7 @@ class ConfigEditorManager:
                 })
             if rows:
                 prev_df = pd.DataFrame(rows)
-                st.dataframe(prev_df, hide_index=True, use_container_width=True)
+                st.dataframe(prev_df, hide_index=True, width='stretch')
 
             if rows and st.button("미존재 폴더 생성", key=f"btn_make_dirs_{section_key}"):
                 created, failed = [], []
@@ -836,7 +852,7 @@ class DirectoryInspector:
                 "section", "key", "path", "resolved_path", "exists", "is_dir",
                 "file_count", "dir_count", "total_size(human)"
             ]].sort_values(["section", "key"]),
-            use_container_width=True,
+            width='stretch',
             hide_index=True,
         )
 
@@ -856,7 +872,7 @@ class DirectoryInspector:
             else:
                 st.dataframe(
                     df_view.sort_values(["section", "key"]),
-                    use_container_width=True,
+                    width='stretch',
                     hide_index=True
                 )
 
