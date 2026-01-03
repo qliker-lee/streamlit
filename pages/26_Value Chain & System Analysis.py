@@ -15,10 +15,10 @@ if str(PROJECT_ROOT) not in sys.path:
 # -------------------------------------------------------------------
 # 2. Streamlit 경고 억제 설정 (Streamlit import 전에 호출)
 # -------------------------------------------------------------------
-from DataSense.util.streamlit_warnings import setup_streamlit_warnings
+from util.streamlit_warnings import setup_streamlit_warnings
 setup_streamlit_warnings()
 
-from DataSense.util.Display import create_metric_card # KPI 메트릭 표시 함수
+from util.Display import create_metric_card # KPI 메트릭 표시 함수
 # -------------------------------------------------------------------
 # 3. 필수 라이브러리 import
 # -------------------------------------------------------------------
@@ -34,7 +34,7 @@ SOLUTION_KOR_NAME = "Value Chain & System Analysis"
 APP_NAME = "Value Chain & System Analysis"
 APP_DESC = "###### Value Chain & System를 기반으로 각 파일들에 대한 통계 정보입니다.  "
 
-from DataSense.util.Files_FunctionV20 import load_yaml_datasense, set_page_config
+from util.Files_FunctionV20 import load_yaml_datasense, set_page_config
 set_page_config(APP_NAME)
 
 # -------------------------------------------------
@@ -42,7 +42,7 @@ set_page_config(APP_NAME)
 # ------------------------------------------------- 
 # 경로 설정 (Pathlib 활용)
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-BASE_PATH = PROJECT_ROOT / "DataSense"
+BASE_PATH = PROJECT_ROOT
 OUTPUT_DIR = BASE_PATH / "DS_Output"
 VC_FILE = OUTPUT_DIR / "DS_ValueChain.csv"
 SYS_FILE = OUTPUT_DIR / "DS_System.csv"
