@@ -37,6 +37,7 @@ logging.getLogger('streamlit.runtime.scriptrunner.script_run_context').setLevel(
 # 1. 경로 및 상수 설정
 # -------------------------------------------------------------------
 OUTPUT_DIR = PROJECT_ROOT / "DS_Output"
+IMAGE_DIR = PROJECT_ROOT / "images"
 VALUECHAIN_CSV_PATH = OUTPUT_DIR / "DS_ValueChain.csv"
 SYSTEM_CSV_PATH = OUTPUT_DIR / "DS_System.csv"
 FILE_STATS_PATH = OUTPUT_DIR / "FileStats.csv"
