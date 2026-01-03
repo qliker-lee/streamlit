@@ -72,7 +72,7 @@ SYSTEM_COLUMNS = [
 def show_sample_image(image_filename, caption):
     """Sample 이미지를 표시합니다."""
     try:
-        sample_path = PROJECT_ROOT / "DataSense/DS_Output/images" / image_filename
+        sample_path = IMAGE_DIR / image_filename
         if sample_path.exists():
             image = Image.open(sample_path)
             st.image(image, caption=caption, width=600)
