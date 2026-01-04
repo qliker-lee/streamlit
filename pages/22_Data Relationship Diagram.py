@@ -51,7 +51,7 @@ APP_TITLE = "🔗 데이터 관계 (Data Relationship Diagram)"
 APP_DESCRIPTION = "Data Value Mapping 기반 논리적 Data Relationship Diagram을 생성합니다."
 
 OUTPUT_DIR = PROJECT_ROOT / 'DS_Output'
-IMAGE_DIR = OUTPUT_DIR / 'images'
+IMAGE_DIR = PROJECT_ROOT / 'images'
 IMAGE_FILE = "Datasense_DRD"
 MAPPING_FILE = "CodeMapping_erd.csv"
 MAPPING_ORG_FILE = "CodeMapping.csv"
@@ -60,6 +60,31 @@ MAX_RELATED_TABLE_COUNT = 100
 
 set_page_config(APP_NAME)
 
+# -----------------------------------------------------------------------------------------
+# N-Level Related Tables (2026. 1. 4. 신규 추가)
+# -----------------------------------------------------------------------------------------
+def get_n_level_related_tables(it_df, start_table, level):
+    """중심 테이블로부터 N-Level까지 연결된 모든 테이블 탐색"""
+    visited = {start_table}
+    current_layer = {start_table}
+    
+    for _ in range(level):
+        next_layer = set()
+        for table in current_layer:
+            # Source가 해당 테이블인 경우의 Target들
+            forward = set(it_df[it_df['Source_File'] == table]['Target_File'].unique())
+            # Target이 해당 테이블인 경우의 Source들 (역방향 참조 포함)
+            backward = set(it_df[it_df['Target_File'] == table]['Source_File'].unique())
+            
+            next_layer.update(forward | backward)
+        
+        next_layer -= visited
+        if not next_layer:
+            break
+        visited.update(next_layer)
+        current_layer = next_layer
+        
+    return list(visited)
 # -------------------------------------------------
 # 5. Utility: Cloud / Local detection
 # -------------------------------------------------
@@ -81,13 +106,13 @@ def show_example_erd_images():
         tab1, tab2, tab3 = st.tabs(["예제 (단일 테이블 선택)", "예제 (여러 테이블 선택)", "예제 (복잡한 관계)"])
         with tab1:
             img1 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample01.png")
-            st.image(img1, caption="예제 (단일 테이블 선택)", width=480)
+            st.image(img1, caption="예제 (단일 테이블 선택)", width=1000)
         with tab2:
             img2 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample02.png")
-            st.image(img2, caption="예제 (여러 테이블 선택)", width=480)
+            st.image(img2, caption="예제 (여러 테이블 선택)", width=1000)
         with tab3:
             img3 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample03.png")
-            st.image(img3, caption="예제 (복잡한 관계)", width=480)
+            st.image(img3, caption="예제 (복잡한 관계)", width=1000)
     except Exception as e:
         st.error(f"예제 이미지 로드 실패: {e}")
 
@@ -1062,6 +1087,8 @@ def main():
                 erd_button = st.button("🔗 Data Relationship Diagram 생성", type="primary", width="stretch")
 
         if erd_button:
+
+            show_example_erd_images()   
             
             # ☁️ Cloud 환경 처리
             if is_cloud_env():
