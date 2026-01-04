@@ -53,8 +53,10 @@ APP_DESCRIPTION = "Data Value Mapping 기반 논리적 Data Relationship Diagram
 OUTPUT_DIR = PROJECT_ROOT / 'DS_Output'
 IMAGE_DIR = PROJECT_ROOT / 'images'
 IMAGE_FILE = "Datasense_DRD"
-MAPPING_FILE = "CodeMapping_erd.csv"
-MAPPING_ORG_FILE = "CodeMapping.csv"
+
+CODEMAPPING_ERD_FILE = "CodeMapping_erd.csv"
+CODEMAPPING_FILE = "CodeMapping.csv"
+FILESTATS_FILE = "FileStats.csv"
 
 MAX_RELATED_TABLE_COUNT = 100
 
@@ -147,32 +149,33 @@ def parse_relationship(relationship_str):
             continue
     return relationships
 
-def _extract_and_load_erd_data_impl(input_file_path: Path):
-    """원본 파일을 로드하고 관계를 추출하여 DataFrame으로 반환합니다."""
-    try:
-        df_raw = pd.read_csv(input_file_path, encoding='utf-8-sig') # CodeMapping_relationship.csv 로드
-    except Exception as e:
-        st.error(f"원본 파일 로드 중 오류 발생: {e}")
+def _extract_and_load_erd_data_impl(df: pd.DataFrame) -> tuple[dict, pd.DataFrame, pd.DataFrame]:
+    """df : CodeMapping_erd.csv 에서 PK, FK 추출 & Value Chain 의 System, Activity 통합"""
+    
+    # 입력 데이터 검증
+    if df is None or df.empty:
+        st.error("입력 DataFrame이 비어있습니다.")
         return None, None, None
-
-    required_columns = ['FileName', 'ColumnName', 'PK']
-    missing_columns = [col for col in required_columns if col not in df_raw.columns]
+    
+    required_columns = ['FileName', 'ColumnName']
+    missing_columns = [col for col in required_columns if col not in df.columns]
     if missing_columns:
         st.error(f"필수 컬럼이 누락되었습니다: {missing_columns}")
         return None, None, None
 
-    if 'Level_Relationship' not in df_raw.columns:
-        st.warning("⚠️ 'Level_Relationship' 컬럼이 없습니다. FK 관계를 추출할 수 없습니다.")
-        df_raw['Level_Relationship'] = ''
-
     # --- 2. ERD 정보 추출 메인 로직 ---
+    from collections import defaultdict
     tables_data = {}
-    df_raw = df_raw.fillna('')
+    df = df.fillna('')
 
     # 2.1. 모든 테이블 및 컬럼 정보 추출 (벡터화된 연산 사용)
-    df_raw['FileName'] = df_raw['FileName'].astype(str).str.strip()
-    df_raw['ColumnName'] = df_raw['ColumnName'].astype(str).str.strip()
-    df_valid = df_raw[(df_raw['FileName'] != '') & (df_raw['ColumnName'] != '')].copy()
+    df['FileName'] = df['FileName'].astype(str).str.strip()
+    df['ColumnName'] = df['ColumnName'].astype(str).str.strip()
+    df_valid = df[(df['FileName'] != '') & (df['ColumnName'] != '')].copy()
+    
+    if df_valid.empty:
+        st.error("유효한 FileName과 ColumnName이 없습니다.")
+        return None, None, None
     
     for file_name, group in df_valid.groupby('FileName'):
         if file_name not in tables_data:
@@ -185,7 +188,10 @@ def _extract_and_load_erd_data_impl(input_file_path: Path):
 
     # 2.2. 관계 정보 추출 및 FK 업데이트 (필터링된 데이터만 처리)
     all_relationships = []
-    df_with_rel = df_valid[df_valid.get('Level_Relationship', '').astype(str).str.strip() != ''].copy()
+    if 'Level_Relationship' in df_valid.columns:
+        df_with_rel = df_valid[df_valid['Level_Relationship'].astype(str).str.strip() != ''].copy()
+    else:
+        df_with_rel = pd.DataFrame()
     
     for _, row in df_with_rel.iterrows():
         rel_str = str(row.get('Level_Relationship', '')).strip()
@@ -213,48 +219,55 @@ def _extract_and_load_erd_data_impl(input_file_path: Path):
                 else:
                     tables_data[child_table][child_col]['Parent_Table'] = parent_table
 
-
-    # 2.3. 최종 통합 DataFrame 생성 (벡터화된 연산 사용)
-    df_raw['FileName'] = df_raw['FileName'].astype(str).str.strip()
-    df_raw['ColumnName'] = df_raw['ColumnName'].astype(str).str.strip()
-    df_raw = df_raw[(df_raw['FileName'] != '') & (df_raw['ColumnName'] != '')]
-    
     # Level_Depth 처리
-    if 'Level_Depth' in df_raw.columns:
-        df_raw['Level_Depth'] = pd.to_numeric(df_raw['Level_Depth'], errors='coerce').fillna(0).astype(int)
+    if 'Level_Depth' in df.columns:
+        df['Level_Depth'] = pd.to_numeric(df['Level_Depth'], errors='coerce').fillna(0).astype(int)
     else:
-        df_raw['Level_Depth'] = 0
+        df['Level_Depth'] = 0
     
     # FilePath 처리
-    if 'FilePath' in df_raw.columns:
-        df_raw['FilePath'] = df_raw['FilePath'].astype(str).str.strip()
+    if 'FilePath' in df.columns:
+        df['FilePath'] = df['FilePath'].astype(str).str.strip()
     else:
-        df_raw['FilePath'] = ''
+        df['FilePath'] = ''
     
     # Level_Relationship 처리
-    if 'Level_Relationship' in df_raw.columns:
-        df_raw['Level_Relationship'] = df_raw['Level_Relationship'].astype(str).str.strip()
+    if 'Level_Relationship' in df.columns:
+        df['Level_Relationship'] = df['Level_Relationship'].astype(str).str.strip()
     else:
-        df_raw['Level_Relationship'] = ''
+        df['Level_Relationship'] = ''
     
     # tables_data와 병합하여 PK/FK 정보 추가
+    # df_valid를 사용하여 유효한 데이터만 처리
     erd_data_list = []
-    for _, row in df_raw.iterrows():
-        file_name = row['FileName']
-        col_name = row['ColumnName']
+    for _, row in df_valid.iterrows():
+        file_name = str(row['FileName']).strip()
+        col_name = str(row['ColumnName']).strip()
+        
+        if not file_name or not col_name:
+            continue
+        
+        # tables_data에서 PK/FK 정보 가져오기
+        pk_value = 0
+        fk_value = 0
+        parent_table = ''
         
         if file_name in tables_data and col_name in tables_data[file_name]:
             info = tables_data[file_name][col_name]
-            erd_data_list.append({
-                'FileName': file_name,
-                'ColumnName': col_name,
-                'PK': 1 if info['PK'] == 'PK' else 0,
-                'FK': 1 if info['FK'] == 'FK' else 0,
-                'Parent_Table': str(info['Parent_Table']).strip(),
-                'Level_Relationship': row['Level_Relationship'],
-                'Level_Depth': int(row['Level_Depth']),
-                'FilePath': row['FilePath']
-            })
+            pk_value = 1 if info['PK'] == 'PK' else 0
+            fk_value = 1 if info['FK'] == 'FK' else 0
+            parent_table = str(info['Parent_Table']).strip()
+        
+        erd_data_list.append({
+            'FileName': file_name,
+            'ColumnName': col_name,
+            'PK': pk_value,
+            'FK': fk_value,
+            'Parent_Table': parent_table,
+            'Level_Relationship': str(row.get('Level_Relationship', '')).strip(),
+            'Level_Depth': int(row.get('Level_Depth', 0)),
+            'FilePath': str(row.get('FilePath', '')).strip()
+        })
     
     if not erd_data_list:
         st.error("ERD 데이터를 생성할 수 없습니다. 입력 파일의 데이터를 확인해주세요.")
@@ -788,55 +801,58 @@ def Display_File_Statistics(filestats_df):
 # -------------------------------------------------
 # 7. Data Load
 # -------------------------------------------------
-def load_data_mapping_new():
-    file_path = OUTPUT_DIR / MAPPING_FILE
-    if not file_path.exists():
-        st.error(f"{MAPPING_FILE} 파일이 없습니다")
-        return None, None
-    df = pd.read_csv(file_path, encoding='utf-8-sig')
-    pk_map = df[df['PK'] == 1].groupby('FileName')['ColumnName'].apply(list).to_dict()
-    return pk_map, df
-
-
-def load_data_mapping():
-    """     1st Step: 데이터 추출 및 로드    """
-    mapping_file_path = OUTPUT_DIR / MAPPING_FILE
-    
-    if not mapping_file_path.exists():
-        st.error(f"⚠️ 원본 파일 '{MAPPING_FILE}'을 찾을 수 없습니다.")
-        return None, None, None
-
-    # 1. 데이터 추출 및 로드
-    with st.spinner(f"'{MAPPING_FILE}' 파일에서 관계 정보 추출 중..."):
-        pk_map, fk_df, it_df = extract_and_load_erd_data(mapping_file_path)
-    
-    if pk_map is None or fk_df is None or it_df is None:
-        st.error("ERD 데이터를 생성할 수 없습니다. 입력 파일의 데이터를 확인해주세요.")
-        return None, None, None
-
-    return pk_map, fk_df, it_df
-
-def load_data_org():
-    """     1.1st Step: CodeMapping.csv 기반 데이터 추출 및 로드    """
+def load_data(filepath : Path) -> pd.DataFrame:
     try:
-        file_path = OUTPUT_DIR / MAPPING_ORG_FILE
-        df = pd.read_csv(file_path, encoding='utf-8-sig')
-        return df
-    except Exception as e:  
-        st.error(f"원본 파일 로드 중 오류 발생: {e}")
+        encoding_list = ['utf-8-sig', 'utf-8', 'cp949', 'euc-kr']
+
+        extension = filepath.suffix.lower()
+        if extension == '.csv':
+            for encoding in encoding_list:
+                try:
+                    df = pd.read_csv(filepath, encoding=encoding)
+                    return df
+                except Exception:
+                    continue
+            return None
+        elif extension == '.xlsx':
+            return pd.read_excel(filepath)
+        elif extension == '.pkl':
+            return pd.read_pickle(filepath)
+        else:
+            st.error(f"지원하지 않는 파일 형식 : {extension}")
+            return None
+    except Exception as e:
+        st.error(f"필수파일 : {filepath.name} 오류가 발생 : {e}")
         return None
 
-def load_data_filestats():
-    """     1.2nd Step: filestats.csv 기반 데이터 추출 및 로드    """
+def load_data_all_validation():
     try:
-        file_path = OUTPUT_DIR / "FileStats.csv"
-        df = pd.read_csv(file_path, encoding='utf-8-sig')
-    except Exception as e:  
-        st.error(f"원본 파일 로드 중 오류 발생: {e}")
-        return None
+        with st.spinner("Data Load & Validation & Summary 중..."):
+            data_files = [
+                OUTPUT_DIR / CODEMAPPING_ERD_FILE,
+                OUTPUT_DIR / CODEMAPPING_FILE,
+                OUTPUT_DIR / FILESTATS_FILE
+            ]
+            loaded_data = [load_data(file) for file in data_files]
+            for file, data in zip(data_files, loaded_data):
+                if data is None:
+                    st.error(f"필수파일 : {file.name} 오류")
+                    return None, None, None
 
-    return df
+            df_codemapping_erd = loaded_data[0]
+            df_codemapping = loaded_data[1]
+            df_filestats = loaded_data[2]
 
+            df_codemapping_erd = df_codemapping_erd[~df_codemapping_erd['MasterType'].isin(['Reference', 'Validation', 'Rule', 'Common'])]
+
+            return df_codemapping_erd, df_codemapping, df_filestats
+    except Exception as e:
+        st.error(f"Data Load & Validation & Summary 중 오류가 발생했습니다: {e}")
+        return None, None, None
+
+#---------------------------------------------------------------------------
+# 2nd Step: 테이블 선택
+#---------------------------------------------------------------------------
 def select_tables(it_df, it_org_df) -> list:
     """   2nd Step: 테이블 선택    """
     st.subheader("1. 테이블 선택")
@@ -1059,24 +1075,26 @@ def main():
     st.caption(APP_DESCRIPTION)
 
     try:
-        # 1. 데이터 추출 및 로드
-        pk_map, fk_df, it_df = load_data_mapping() # CodeMapping_relationship.csv 기반
+        with st.spinner("Data Load & Validation & Summary 중..."):
+            df_codemapping_erd, df_codemapping, df_filestats = load_data_all_validation() 
 
-        it_org_df = load_data_org() # CodeMapping.csv 기반
-        if it_org_df is None:
-            st.error("CodeMapping.csv 파일을 로드할 수 없습니다.")
-            return
-        filestats_df = load_data_filestats() # filestats.csv 기반
-       
-        if filestats_df is None:
-            st.error("FileStats.csv 파일을 로드할 수 없습니다.")
-            return
+            if df_codemapping_erd is None or df_codemapping is None or df_filestats is None:
+                st.error(f"데이터 로드 중 오류가 발생했습니다. ")
+                return
+
+            # 1. CodeMapping_erd.csv 에서 PK, FK 추출 & Value Chain 의 System, Activity 통합 
+            # it_df 는 CodeMapping.csv 기반 데이터에 Value Chain 의 System, Activity 통합 데이터가 포함된 데이터
+            pk_map, fk_df, it_df = _extract_and_load_erd_data_impl(df_codemapping_erd)
+            
+            if pk_map is None or fk_df is None or it_df is None:
+                st.error("PK, FK, IT 데이터를 생성할 수 없습니다.")
+                return
 
         # 1.1 KPI 표시
-        Display_File_Statistics(filestats_df)
+        Display_File_Statistics(df_filestats)
 
         # 2. 테이블 선택     
-        selected_tables = select_tables(it_df, it_org_df)
+        selected_tables = select_tables(it_df, df_codemapping)
         if selected_tables is None:
             return
 
@@ -1086,14 +1104,9 @@ def main():
         with col1:
                 erd_button = st.button("🔗 Data Relationship Diagram 생성", type="primary", width="stretch")
 
-        if erd_button:
-
-            show_example_erd_images()   
-            
-            # ☁️ Cloud 환경 처리
-            if is_cloud_env():
+        if erd_button:   # Data Relationship Diagram 생성 버튼 클릭 시
+            if is_cloud_env():  # ☁️ Cloud 환경 처리
                 show_example_erd_images()             
-           
             else:    # 🖥️ Local 환경: 실제 Data Relationship Diagram 생성
                 result_erd = generate_erd(selected_tables, pk_map, it_df)
 
