@@ -34,6 +34,7 @@ from collections import defaultdict
 import streamlit as st
 import pandas as pd
 import graphviz
+from graphviz import Digraph
 import streamlit.components.v1 as components
 from PIL import Image
 
@@ -42,6 +43,9 @@ from PIL import Image
 # -------------------------------------------------
 from util.Files_FunctionV20 import set_page_config
 from util.Display import display_kpi_metrics
+from util.ds_generate_ERD import show_example_erd_images
+# 23_Physical & Logical Diagram.py의 논리적 ERD 생성 함수를 직접 구현
+# (동적 import 문제를 피하기 위해 함수를 직접 복사)
 
 # -------------------------------------------------
 # 4. App Config (절대 상수임. 변경하지 마세요)
@@ -61,6 +65,218 @@ FILESTATS_FILE = "FileStats.csv"
 MAX_RELATED_TABLE_COUNT = 100
 
 set_page_config(APP_NAME)
+# -------------------------------------------------
+# 4. 논리적 관계 추출 함수
+# -------------------------------------------------
+def _extract_relationships_from_erd_logic_22(selected_files: list, all_tables: set, it_df: pd.DataFrame):
+    """
+    22_Data Relationship Diagram.py용 논리적 관계 추출 함수
+    Level_Relationship 또는 Level_Relationship_Internal을 사용
+    """
+    relationships_list = []
+    
+    # Level_Relationship_Internal 또는 Level_Relationship 컬럼 확인
+    rel_col = None
+    if 'Level_Relationship_Internal' in it_df.columns:
+        rel_col = 'Level_Relationship_Internal'
+    elif 'Level_Relationship' in it_df.columns:
+        rel_col = 'Level_Relationship'
+    else:
+        return relationships_list
+    
+    # selected_files가 None이거나 빈 리스트인 경우 전체 데이터 기준으로 처리
+    if selected_files is None:
+        selected_files = []
+    use_all_data = (len(selected_files) == 0)
+    
+    # 선택된 테이블의 컬럼 정보 수집
+    selected_table_columns = {}
+    if not use_all_data:
+        selected_df = it_df[it_df['FileName'].isin(selected_files)]
+        for table_name, group in selected_df.groupby('FileName'):
+            selected_table_columns[table_name] = set(group['ColumnName'].dropna().astype(str).str.strip())
+    
+    # 관계 컬럼이 있는 행만 필터링
+    df_with_rel = it_df[
+        (it_df[rel_col].notna()) & 
+        (it_df[rel_col].astype(str).str.strip() != '')
+    ].copy()
+    
+    # all_tables가 None이거나 빈 set인 경우 모든 테이블 허용
+    if all_tables is None:
+        all_tables = set()
+    use_all_tables = (len(all_tables) == 0)
+    
+    for _, row in df_with_rel.iterrows():
+        file_name = str(row['FileName']).strip()
+        col_name = str(row['ColumnName']).strip()
+        rel_str = str(row[rel_col]).strip()
+        
+        is_selected_column = False
+        if not use_all_data:
+            is_selected_column = (file_name in selected_files and 
+                                 col_name in selected_table_columns.get(file_name, set()))
+        
+        segments = rel_str.split(' -> ')
+        parsed_segments = []
+        for segment in segments:
+            segment = segment.strip()
+            if not segment:
+                continue
+            try:
+                file_part, col_part = segment.rsplit('.', 1)
+                parsed_segments.append((file_part.strip(), col_part.strip()))
+            except ValueError:
+                continue
+        
+        # 전체 데이터 모드이거나 선택된 컬럼/테이블이 포함된 경우
+        should_process = use_all_data or is_selected_column or any(seg_file in selected_files for seg_file, _ in parsed_segments)
+        
+        if should_process:
+            for i in range(len(parsed_segments) - 1):
+                from_file, from_col = parsed_segments[i]
+                to_file, to_col = parsed_segments[i+1]
+                
+                # all_tables 필터링 (전체 모드가 아닐 때만)
+                if not use_all_tables:
+                    if from_file not in all_tables or to_file not in all_tables:
+                        continue
+                
+                relationships_list.append((from_file, from_col, to_file, to_col))
+                
+                if is_selected_column and i == 0 and file_name != from_file:
+                    if use_all_tables or (file_name in all_tables and from_file in all_tables):
+                        relationships_list.append((file_name, col_name, from_file, from_col))
+    
+    return relationships_list
+
+def generate_logical_erd_image_22(selected_files: list, all_tables: set, pk_map: dict, it_df: pd.DataFrame, show_all_columns:bool):
+    """
+    22_Data Relationship Diagram.py용 논리적 ERD 이미지 생성 함수
+    23_Physical & Logical Diagram.py의 generate_logical_erd_image와 동일한 로직
+    """
+    # === 1. Graphviz 시각화 생성 ===
+    dot = Digraph(comment='Logical ERD', encoding='utf-8')
+    dot.attr(rankdir='LR', nodesep='0.5', ranksep='2.5', splines='polyline')
+    dot.attr('node', fontname='Malgun Gothic', fontsize='10', shape='none')
+    dot.attr('edge', fontname='Malgun Gothic', fontsize='8')
+    
+    # === 2. 논리적 관계 추출 ===
+    relationships_list = _extract_relationships_from_erd_logic_22(selected_files, all_tables, it_df)
+    
+    # 연결된 컬럼 수집
+    connected_columns = {}
+    for from_file, from_col, to_file, to_col in relationships_list:
+        if from_file not in connected_columns:
+            connected_columns[from_file] = set()
+        connected_columns[from_file].add(from_col)
+        
+        if to_file not in connected_columns:
+            connected_columns[to_file] = set()
+        connected_columns[to_file].add(to_col)
+    
+    # === 3. 각 테이블별로 표시할 컬럼 결정 ===
+    display_columns = {}
+    for table_name in all_tables:
+        is_selected = table_name in selected_files
+        pk_cols_ordered = pk_map.get(table_name, [])
+        pk_cols_set = set(pk_cols_ordered)
+        connected_cols = connected_columns.get(table_name, set())
+        
+        if show_all_columns and is_selected:
+            # 상세 모드 & 선택된 테이블: 모든 컬럼 표시
+            all_cols = it_df[it_df['FileName'] == table_name]['ColumnName'].unique().tolist()
+            all_cols_set = set(all_cols)
+            # PK 컬럼은 순서 유지
+            pk_to_display = [col for col in pk_cols_ordered if col in all_cols_set]
+            # 나머지 컬럼은 정렬
+            other_to_display = sorted(list(all_cols_set - pk_cols_set))
+            display_columns[table_name] = pk_to_display + other_to_display
+        else:
+            # 요약 모드 또는 선택되지 않은 테이블: 연결된 컬럼만 표시
+            pk_to_display = [col for col in pk_cols_ordered if col in connected_cols]
+            other_to_display = sorted(list(connected_cols - pk_cols_set))
+            display_columns[table_name] = pk_to_display + other_to_display
+
+    # === 4. 테이블 노드 생성 ===
+    def escape_html(text):
+        return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    
+    # FK 관계에 사용된 컬럼 추출
+    fk_columns = set()
+    for from_file, from_col, to_file, to_col in relationships_list:
+        fk_columns.add((from_file, from_col))
+        fk_columns.add((to_file, to_col))
+    
+    for table_name in sorted(all_tables):
+        pk_cols_ordered = pk_map.get(table_name, [])
+        pk_cols_set = set(pk_cols_ordered)
+        table_cols = display_columns.get(table_name, [])
+        
+        # selected_files에 table_name이 있으면 오렌지색 아니면 연한 파랑색
+        header_color = '#FFA500' if table_name in selected_files else '#BBDEFB'
+        font_color = 'black'
+        
+        label = f'<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" PORT="title">'
+        label += f'<TR><TD BGCOLOR="{header_color}"><FONT COLOR="{font_color}"><B>{escape_html(table_name)}</B></FONT></TD></TR>'
+        
+        pk_to_display = [col for col in table_cols if col in pk_cols_set]
+        other_to_display = [col for col in table_cols if col not in pk_cols_set]
+        
+        # PK 렌더링
+        for col in sorted(pk_to_display):
+            safe_col = escape_html(col)
+            label += f'<TR><TD ALIGN="LEFT" BGCOLOR="#E3F2FD" PORT="{safe_col}"><B>🔑 {safe_col}</B></TD></TR>'
+        
+        # 일반/FK 렌더링
+        for col in sorted(other_to_display):
+            safe_col = escape_html(col)
+            is_fk = (table_name, col) in fk_columns
+            prefix = "🔗 " if is_fk else "  "
+            label += f'<TR><TD ALIGN="LEFT" PORT="{safe_col}">{prefix}{safe_col}</TD></TR>'
+        
+        label += '</TABLE>>'
+        dot.node(table_name, label)
+
+    # === 5. 논리적 관계 Edge 추가 ===
+    edge_groups = {}
+    for from_file, from_col, to_file, to_col in relationships_list:
+        key = (from_file, to_file)
+        if key not in edge_groups:
+            edge_groups[key] = []
+        edge_groups[key].append((from_col, to_col))
+    
+    edge_count = 0
+    for (from_file, to_file), cols_list in edge_groups.items():
+        if from_file not in all_tables or to_file not in all_tables:
+            continue
+        
+        from_col, to_col = cols_list[0]
+        safe_from_col = escape_html(from_col)
+        safe_to_col = escape_html(to_col)
+        
+        dot.edge(f'{from_file}:{safe_from_col}', 
+                f'{to_file}:{safe_to_col}',
+                dir='both',
+                arrowhead='none',
+                arrowtail='crow',
+                color='#555555',
+                penwidth='1.0')
+        edge_count += 1
+    
+    # ERD 생성 정보 수집
+    erd_info = {
+        'relationships_list': relationships_list,
+        'all_tables': all_tables,
+        'pk_map': pk_map,
+        'connected_columns': connected_columns,
+        'display_columns': display_columns,
+        'show_all_columns': show_all_columns,
+        'selected_files': selected_files,
+        'mode': 'Logical'
+    }
+    
+    return dot, edge_count, erd_info
 
 # -----------------------------------------------------------------------------------------
 # N-Level Related Tables (2026. 1. 4. 신규 추가)
@@ -99,24 +315,24 @@ def is_cloud_env() -> bool:
 # -------------------------------------------------
 # 6. Example Data Relationship Diagram (Cloud)
 # -------------------------------------------------
-def show_example_erd_images():
-    st.info("""
-    **Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
-    실제 Data Relationship Diagram 대신 생성된 예제 이미지를 표시합니다.
-    """)
-    try:
-        tab1, tab2, tab3 = st.tabs(["예제 (단일 테이블 선택)", "예제 (여러 테이블 선택)", "예제 (복잡한 관계)"])
-        with tab1:
-            img1 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample01.png")
-            st.image(img1, caption="예제 (단일 테이블 선택)", width=1000)
-        with tab2:
-            img2 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample02.png")
-            st.image(img2, caption="예제 (여러 테이블 선택)", width=1000)
-        with tab3:
-            img3 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample03.png")
-            st.image(img3, caption="예제 (복잡한 관계)", width=1000)
-    except Exception as e:
-        st.error(f"예제 이미지 로드 실패: {e}")
+# def show_example_erd_images():
+#     st.info("""
+#     **Cloud 환경에서는 Graphviz 실행이 제한됩니다.**
+#     실제 Data Relationship Diagram 대신 생성된 예제 이미지를 표시합니다.
+#     """)
+#     try:
+#         tab1, tab2, tab3 = st.tabs(["예제 (단일 테이블 선택)", "예제 (여러 테이블 선택)", "예제 (복잡한 관계)"])
+#         with tab1:
+#             img1 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample01.png")
+#             st.image(img1, caption="예제 (단일 테이블 선택)", width=1000)
+#         with tab2:
+#             img2 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample02.png")
+#             st.image(img2, caption="예제 (여러 테이블 선택)", width=1000)
+#         with tab3:
+#             img3 = Image.open(IMAGE_DIR / f"{IMAGE_FILE}_sample03.png")
+#             st.image(img3, caption="예제 (복잡한 관계)", width=1000)
+#     except Exception as e:
+#         st.error(f"예제 이미지 로드 실패: {e}")
 
 #----------------------------------------------------------------------------
 # 5. 함수 정의
@@ -949,9 +1165,17 @@ def generate_erd(selected_tables, pk_map, it_df):
         return False
 
     try:
-        graph, erd_edge_count = generate_erd_graph(selected_tables, related_tables, pk_map, it_df)
+        # 논리적 ERD 생성 함수 사용 (22_Data Relationship Diagram.py에 직접 구현된 함수)
+        # related_tables를 set으로 변환하고 show_all_columns=False로 설정
+        dot, erd_edge_count, erd_info = generate_logical_erd_image_22(
+            selected_tables, 
+            set(related_tables), 
+            pk_map, 
+            it_df, 
+            show_all_columns=False
+        )
         
-        if graph is None:
+        if dot is None:
             st.error("❌ Data Relationship Diagram 그래프 객체를 생성할 수 없습니다.")
             return False
         
@@ -963,9 +1187,9 @@ def generate_erd(selected_tables, pk_map, it_df):
         png_success = False
         actual_png_filepath = None
         try:
-            graph.attr(dpi='300')
+            dot.attr(dpi='300')
             erd_path = png_filepath.with_suffix('')
-            graph.render(str(erd_path), format='png', cleanup=True)
+            dot.render(str(erd_path), format='png', cleanup=True)
             actual_png_filepath = IMAGE_DIR / f"{erd_path.name}.png"
             
             if actual_png_filepath.exists():
@@ -997,7 +1221,7 @@ def generate_erd(selected_tables, pk_map, it_df):
         # PNG 실패 시 SVG로 대체 시도
         try:
             st.info("🔄 SVG 형식으로 ERD를 표시합니다...")
-            svg_data = graph.pipe(format='svg').decode('utf-8')
+            svg_data = dot.pipe(format='svg').decode('utf-8')
             if svg_data and len(svg_data) > 0:
                 components.html(svg_data, height=800, scrolling=True)
                 st.success("✅ ERD가 SVG 형식으로 표시되었습니다.")
@@ -1105,10 +1329,13 @@ def main():
                 erd_button = st.button("🔗 Data Relationship Diagram 생성", type="primary", width="stretch")
 
         if erd_button:   # Data Relationship Diagram 생성 버튼 클릭 시
+            # show_example_erd_images()
             if is_cloud_env():  # ☁️ Cloud 환경 처리
                 show_example_erd_images()             
             else:    # 🖥️ Local 환경: 실제 Data Relationship Diagram 생성
                 result_erd = generate_erd(selected_tables, pk_map, it_df)
+
+                show_example_erd_images()
 
             display_erd_result(selected_tables, pk_map, it_df)
 
