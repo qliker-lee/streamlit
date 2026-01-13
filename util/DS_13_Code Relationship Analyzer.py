@@ -14,6 +14,7 @@ import traceback
 from typing import Dict, Any, Iterable, Optional, Sequence, List
 from multiprocessing import Pool, cpu_count, Manager
 from itertools import combinations
+from collections import defaultdict
 
 #---------------------------------------------------------------
 # Path & Directory 설정
@@ -54,7 +55,8 @@ FILEFORMAT_FILE = OUTPUT_DIR / 'FileFormat.csv'
 RULEDATATYPE_FILE = OUTPUT_DIR / 'RuleDataType.csv'
 MASTER_META_FILE = ROOT_PATH / 'DS_Meta' / 'Master_Meta.csv'
 CODEMAPPING_FILE = OUTPUT_DIR / 'CodeMapping.csv'
-CODEMAPPING_ERD_FILE = OUTPUT_DIR / 'CodeMapping_erd.csv'
+CODEMAPPING_ERD_FILE = OUTPUT_DIR / 'CodeMapping_erd.csv'  # 논리 ERD 매핑 결과 파일 이름
+EXCLUSIVE_FILE = OUTPUT_DIR / "ERD_exclusive.csv"   # ERD 작성에서 제외할 컬럼 정의 
 
 MATCH_RATE_THRESHOLD = 20 # 매핑 결과 중 MatchRate(%) 20% 이상인 레코드만 선택 (기본값: 20%)
 
@@ -439,6 +441,9 @@ class Initializing_Main_Class:
             p = os.path.join(OUTPUT_DIR, OUTPUT_FILE_NAME + '_10th_erd.csv')
             erd_df.to_csv(p, index=False, encoding='utf-8-sig')
             print(f"10th erd_df : {p} 저장")
+        
+        # ERD_exclusive.csv 파일 생성/업데이트 (24_ERD_Column_Setup.py 기능 통합)
+        self.create_or_update_exclusive_file(erd_df if erd_df is not None and not erd_df.empty else final_df)
 
         return final_df, erd_df
 
@@ -1210,7 +1215,40 @@ class Initializing_Main_Class:
             else:
                 return ""
         
+        def build_relationship_path_internal(row):
+            """Level 관계를 문자열로 합치기 (제외 대상 MasterType 제외)"""
+            EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+            path_parts = []
+            for i in range(1, max_level + 1):
+                file_col = f"Level{i}_File"
+                col_col = f"Level{i}_Column"
+                master_type_col = f"Level{i}_MasterType"
+                
+                if file_col in row and col_col in row:
+                    # MasterType이 제외 대상인 경우 skip
+                    master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                    if master_type in EXCLUDED_MASTER_TYPES:
+                        continue
+                    
+                    file_val_raw = row[file_col]
+                    col_val_raw = row[col_col]
+                    
+                    if pd.notna(file_val_raw) and pd.notna(col_val_raw):
+                        file_val = str(file_val_raw).strip()
+                        col_val = str(col_val_raw).strip()
+                        
+                        if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                            col_val and col_val.lower() not in ['nan', 'none', '']):
+                            if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                                path_parts.append(f"{file_val}.{col_val}")
+            
+            if path_parts:
+                return " -> ".join(path_parts)
+            else:
+                return ""
+        
         df["Level_Relationship"] = df.apply(build_relationship_path, axis=1)
+        df["Level_Relationship_Internal"] = df.apply(build_relationship_path_internal, axis=1)
         
         # Level_Depth 컬럼 생성
         def calculate_level_depth(row):
@@ -1232,9 +1270,39 @@ class Initializing_Main_Class:
         
         df["Level_Depth"] = df.apply(calculate_level_depth, axis=1)
         
-        # Level_Relationship, Level_Depth 컬럼을 Level 컬럼들 다음에 추가
+        # Level_Depth_Internal 계산 (제외 대상 MasterType 제외)
+        def calculate_level_depth_internal(row):
+            """Level 관계의 깊이 계산 (제외 대상 MasterType 제외)"""
+            EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+            max_depth = -1
+            for i in range(0, max_level + 1):
+                file_col = f"Level{i}_File"
+                col_col = f"Level{i}_Column"
+                master_type_col = f"Level{i}_MasterType"
+                
+                if file_col in row and col_col in row:
+                    # MasterType이 제외 대상인 경우 skip
+                    master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                    if master_type in EXCLUDED_MASTER_TYPES:
+                        continue
+                    
+                    file_val = str(row[file_col]).strip()
+                    col_val = str(row[col_col]).strip()
+                    
+                    if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                        col_val and col_val.lower() not in ['nan', 'none', '']):
+                        if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                            max_depth = i
+            
+            return max_depth if max_depth >= 0 else 0
+        
+        df["Level_Depth_Internal"] = df.apply(calculate_level_depth_internal, axis=1)
+        
+        # Level_Relationship, Level_Relationship_Internal, Level_Depth, Level_Depth_Internal 컬럼을 Level 컬럼들 다음에 추가
         ordered_cols.append("Level_Relationship")
+        ordered_cols.append("Level_Relationship_Internal")
         ordered_cols.append("Level_Depth")
+        ordered_cols.append("Level_Depth_Internal")
         df = df[ordered_cols]
 
         return df
@@ -1485,6 +1553,34 @@ class Initializing_Main_Class:
                 
                 erd_df['Level_Depth'] = erd_df.apply(recalculate_level_depth, axis=1)
                 
+                # Level_Depth_Internal 재계산 (제외 대상 MasterType 제외)
+                def recalculate_level_depth_internal(row):
+                    """Level 관계의 깊이 재계산 (제외 대상 MasterType 제외, Level0부터 Level4까지)"""
+                    EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+                    max_depth = -1
+                    for i in range(0, 5):
+                        file_col = f"Level{i}_File"
+                        col_col = f"Level{i}_Column"
+                        master_type_col = f"Level{i}_MasterType"
+                        
+                        if file_col in row and col_col in row:
+                            # MasterType이 제외 대상인 경우 skip
+                            master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                            if master_type in EXCLUDED_MASTER_TYPES:
+                                continue
+                            
+                            file_val = str(row.get(file_col, '')).strip() if pd.notna(row.get(file_col, '')) else ''
+                            col_val = str(row.get(col_col, '')).strip() if pd.notna(row.get(col_col, '')) else ''
+                            
+                            if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                                col_val and col_val.lower() not in ['nan', 'none', '']):
+                                if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                                    max_depth = i
+                    
+                    return max_depth if max_depth >= 0 else 0
+                
+                erd_df['Level_Depth_Internal'] = erd_df.apply(recalculate_level_depth_internal, axis=1)
+                
                 # Level_Relationship 재계산
                 for i in range(1, 5):
                     file_col = f"Level{i}_File"
@@ -1521,10 +1617,48 @@ class Initializing_Main_Class:
                     else:
                         return ""
                 
+                def recalculate_level_relationship_internal(row):
+                    """Level 관계를 문자열로 합치기 (제외 대상 MasterType 제외, Level1부터 Level4까지)"""
+                    EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+                    path_parts = []
+                    for i in range(1, 5):
+                        file_col = f"Level{i}_File"
+                        col_col = f"Level{i}_Column"
+                        master_type_col = f"Level{i}_MasterType"
+                        
+                        # MasterType이 제외 대상인 경우 skip
+                        try:
+                            master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                            if master_type in EXCLUDED_MASTER_TYPES:
+                                continue
+                        except (KeyError, IndexError):
+                            pass
+                        
+                        try:
+                            file_val_raw = row[file_col] if file_col in row else ''
+                            col_val_raw = row[col_col] if col_col in row else ''
+                        except (KeyError, IndexError):
+                            continue
+                        
+                        if pd.notna(file_val_raw) and pd.notna(col_val_raw):
+                            file_val = str(file_val_raw).strip()
+                            col_val = str(col_val_raw).strip()
+                            
+                            if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                                col_val and col_val.lower() not in ['nan', 'none', '']):
+                                if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                                    path_parts.append(f"{file_val}.{col_val}")
+                    
+                    if path_parts:
+                        return " -> ".join(path_parts)
+                    else:
+                        return ""
+                
                 erd_df['Level_Relationship'] = erd_df.apply(recalculate_level_relationship, axis=1)
+                erd_df['Level_Relationship_Internal'] = erd_df.apply(recalculate_level_relationship_internal, axis=1)
             
             # Level 컬럼 정렬
-            level_cols = [col for col in erd_df.columns if col.startswith("Level") and col not in ["Level_Depth", "Level_Relationship"]]
+            level_cols = [col for col in erd_df.columns if col.startswith("Level") and col not in ["Level_Depth", "Level_Depth_Internal", "Level_Relationship", "Level_Relationship_Internal"]]
             level_cols = sorted(level_cols, key=lambda x: (
                 int(x.split("_")[0].replace("Level", "")) if x.split("_")[0].replace("Level", "").isdigit() else 999,
                 x
@@ -1532,8 +1666,10 @@ class Initializing_Main_Class:
             
             # 최종 컬럼 순서
             level_depth_col = ["Level_Depth"] if "Level_Depth" in erd_df.columns else []
+            level_depth_internal_col = ["Level_Depth_Internal"] if "Level_Depth_Internal" in erd_df.columns else []
             level_relationship_col = ["Level_Relationship"] if "Level_Relationship" in erd_df.columns else []
-            final_cols = base_cols + level_depth_col + level_relationship_col + level_cols + code_cols_to_merge
+            level_relationship_internal_col = ["Level_Relationship_Internal"] if "Level_Relationship_Internal" in erd_df.columns else []
+            final_cols = base_cols + level_depth_col + level_depth_internal_col + level_relationship_col + level_relationship_internal_col + level_cols + code_cols_to_merge
             final_cols = [col for col in final_cols if col in erd_df.columns]
             erd_df = erd_df[final_cols]
             
@@ -1543,6 +1679,117 @@ class Initializing_Main_Class:
             print(f"[build_erd_mapping] 오류 발생: {e}")
             print(traceback.format_exc())
             return pd.DataFrame()
+    
+    def create_or_update_exclusive_file(self, df: pd.DataFrame):
+        """
+        ERD_exclusive.csv 파일 생성/업데이트 (24_ERD_Column_Setup.py 기능 통합)
+        df: CodeMapping_erd.csv 또는 CodeMapping.csv 데이터프레임
+        """
+        try:
+            # 필수 컬럼 확인
+            required_cols = ['FileName', 'ColumnName']
+            if not all(col in df.columns for col in required_cols):
+                print(f"[create_or_update_exclusive_file] 필수 컬럼이 없습니다: {required_cols}")
+                return
+            
+            # CodeMapping.csv에서 OracleType 정보 가져오기 (24_ERD_Column_Setup.py와 동일)
+            df_cm = None
+            if CODEMAPPING_FILE.exists():
+                try:
+                    df_cm = pd.read_csv(CODEMAPPING_FILE, encoding='utf-8-sig', dtype=str).fillna('')
+                    # 컬럼 정리
+                    for col in df_cm.columns:
+                        df_cm[col] = df_cm[col].astype(str).str.strip()
+                    print(f"[create_or_update_exclusive_file] CodeMapping.csv 로드 완료: {len(df_cm)}행")
+                except Exception as e:
+                    print(f"[create_or_update_exclusive_file] CodeMapping.csv 로드 실패: {e}")
+            
+            # CodeMapping.csv가 있으면 OracleType 정보 병합
+            if df_cm is not None and not df_cm.empty and 'OracleType' in df_cm.columns:
+                # df와 df_cm을 FileName, ColumnName으로 병합하여 OracleType 정보 추가
+                merge_keys = ['FileName', 'ColumnName']
+                if all(col in df.columns for col in merge_keys):
+                    df = pd.merge(df, df_cm[merge_keys + ['OracleType']], on=merge_keys, how='left', suffixes=('', '_cm'))
+                    # OracleType이 비어있으면 _cm 버전 사용
+                    if 'OracleType_cm' in df.columns:
+                        df['OracleType'] = df['OracleType'].fillna(df['OracleType_cm'])
+                        df = df.drop(columns=['OracleType_cm'])
+                else:
+                    # df에 FileName, ColumnName이 없으면 df_cm을 직접 사용
+                    df = df_cm.copy()
+            elif df_cm is not None and not df_cm.empty:
+                # df_cm에 OracleType이 없으면 df_cm을 직접 사용
+                df = df_cm.copy()
+            
+            # MasterType이 'Master'인 데이터만 필터링 (24_ERD_Column_Setup.py와 동일)
+            if 'MasterType' in df.columns:
+                df_filtered = df[df['MasterType'] == 'Master'].copy()
+            else:
+                df_filtered = df.copy()
+            
+            if df_filtered.empty:
+                print("[create_or_update_exclusive_file] 필터링된 데이터가 비어있습니다.")
+                return
+            
+            # 컬럼별 통계 생성
+            col_to_tables = defaultdict(set)
+            col_types = {}
+            
+            for _, row in df_filtered.iterrows():
+                c_name = str(row['ColumnName']).strip()
+                f_name = str(row['FileName']).strip()
+                o_type = str(row.get('OracleType', '')).strip().upper() if pd.notna(row.get('OracleType')) else ""
+                
+                if c_name and f_name:
+                    col_to_tables[c_name].add(f_name)
+                    # DATE, TIMESTAMP, DATETIME 타입 우선 선택
+                    if c_name not in col_types or o_type in ['DATE', 'TIMESTAMP', 'DATETIME']:
+                        col_types[c_name] = o_type
+            
+            # 통계 데이터프레임 생성
+            stats_data = []
+            for col, tables in col_to_tables.items():
+                curr_type = col_types.get(col, "")
+                stats_data.append({
+                    "ColumnName": col,
+                    "OracleType": curr_type,
+                    "ConnectionCount": len(tables),
+                    "exclusive": 1 if curr_type in ['DATE', 'TIMESTAMP', 'DATETIME'] else 0
+                })
+            
+            current_stats_df = pd.DataFrame(stats_data)
+            
+            # 기존 파일이 있으면 병합, 없으면 새로 생성
+            if EXCLUSIVE_FILE.exists():
+                try:
+                    old_df = pd.read_csv(EXCLUSIVE_FILE, encoding='utf-8-sig')
+                    if 'exclusive' in old_df.columns:
+                        # 필요한 컬럼만 추출하여 merge 시 충돌 방지
+                        old_settings = old_df[['ColumnName', 'exclusive']].drop_duplicates('ColumnName')
+                        final_df = pd.merge(current_stats_df, old_settings, on='ColumnName', how='left', suffixes=('_init', ''))
+                        # 기존 설정이 있으면 쓰고, 없으면 초기값(_init) 사용
+                        final_df['exclusive'] = final_df['exclusive'].fillna(final_df['exclusive_init']).astype(int)
+                        final_df = final_df.drop(columns=['exclusive_init'])
+                    else:
+                        final_df = current_stats_df
+                except Exception as e:
+                    print(f"[create_or_update_exclusive_file] 기존 파일 읽기 오류: {e}")
+                    final_df = current_stats_df
+            else:
+                final_df = current_stats_df
+            
+            # ConnectionCount 기준 정렬
+            final_df = final_df.sort_values(by="ConnectionCount", ascending=False)
+            
+            # 파일 저장
+            OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+            final_df.to_csv(EXCLUSIVE_FILE, index=False, encoding='utf-8-sig')
+            print(f"[create_or_update_exclusive_file] ERD_exclusive.csv 생성/업데이트 완료: {EXCLUSIVE_FILE}")
+            print(f"[create_or_update_exclusive_file] 총 {len(final_df)}개 컬럼, 제외 설정 {len(final_df[final_df['exclusive'] == 1])}개")
+            
+        except Exception as e:
+            print(f"[create_or_update_exclusive_file] 오류 발생: {e}")
+            print(traceback.format_exc())
 
 # 메인 실행부
 if __name__ == "__main__":

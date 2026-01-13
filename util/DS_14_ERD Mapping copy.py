@@ -3,33 +3,38 @@
 DS_14_Code Recursive Mapping 
 2025.11.16 Qliker
 - 코드 매핑 결과를 재귀적으로 분석하여 2nd Mapping 을 자동 생성한다.
-- CLI 제거: YAML 기반 자동 실행
+- YAML 파일 없이 상수로 처리
 """
 
 from __future__ import annotations
+import pandas as pd
 import os
 import sys
 import time
 import logging
 
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List, Set
-
-import pandas as pd
 # -------------------------------------------------------------------
 # 기본 경로
 # -------------------------------------------------------------------
-ROOT_PATH = Path(__file__).resolve().parents[2]
-if str(ROOT_PATH) not in sys.path:
+
+if getattr(sys, 'frozen', False):  # A. 실행파일(.exe) 상태일 때: .exe 파일이 있는 위치가 루트입니다.
+    ROOT_PATH = Path(sys.executable).parent
+else:  # B. 소스코드(.py) 상태일 때: 현재 파일(util/..)의 상위 폴더가 루트입니다.   
+    ROOT_PATH = Path(__file__).resolve().parents[1]
+
+if str(ROOT_PATH) not in sys.path: # # 시스템 경로에 루트 추가 (어디서 실행해도 모듈을 찾을 수 있게 함)
     sys.path.insert(0, str(ROOT_PATH))
 
-YAML_PATH = ROOT_PATH / "DataSense" / "util" / "DS_Master.yaml"
-
-from DataSense.util.io import Load_Yaml_File
-# from DataSense.util.io import clean_headers, normalize_str
-
+# -------------------------------------------------------------------
+# 상수 정의 (YAML 파일 대신 사용)
+# -------------------------------------------------------------------
+OUTPUT_DIR = ROOT_PATH / 'DS_Output'
+CODEMAPPING_FILE = OUTPUT_DIR / 'CodeMapping.csv'
+OUTPUT_FILE = OUTPUT_DIR / 'CodeMapping_relationship.csv'
+CODEMAPPING_ERD_FILE = OUTPUT_DIR / 'CodeMapping_erd.csv'  # 통합에서 사용할 예정 
 # ================================================================
 # 도우미 함수 (DataSense.util.io 에서 가져옴)
 # ================================================================
@@ -47,43 +52,14 @@ def clean_headers(df: pd.DataFrame) -> pd.DataFrame:
     return new
 
 # ================================================================
-# 설정용 데이터클래스
-# ================================================================
-@dataclass
-class DirectoriesConfig:
-    root_path: Path
-    input_dir: Path
-    output_dir: Path
-    meta_dir: Path
-
-@dataclass
-class FilesConfig:
-    codemapping: Path
-
-# ================================================================
 # 초기화 클래스
 # ================================================================
 class Initializing_Main_Class:
-    def __init__(self, yaml_path: Optional[Path] = None):
+    def __init__(self):
         self.logger = None
-        self.config = {}
-        self.directories_config: Optional[DirectoriesConfig] = None
-        self.files_config: Optional[FilesConfig] = None
         self.loaded_data: Dict[str, pd.DataFrame] = {}
 
         self._setup_logger()
-
-        yaml_path = yaml_path or YAML_PATH
-        if not yaml_path.exists():
-            raise FileNotFoundError(f"YAML 파일 없음: {yaml_path}")
-
-        self.config = Load_Yaml_File(str(yaml_path))
-
-        if "ROOT_PATH" not in self.config:   # YAML 파일에 ROOT_PATH가 없으면 자동으로 설정
-            self.config["ROOT_PATH"] = str(ROOT_PATH)
-
-        self.directories_config = self._setup_directories()
-        self.files_config = self._setup_files()
         self.loaded_data = self._load_files()
 
     # -----------------------------------------------------------
@@ -91,7 +67,7 @@ class Initializing_Main_Class:
         log_dir = ROOT_PATH / "logs"
         log_dir.mkdir(exist_ok=True)
 
-        logfile = log_dir / f"recursive_mapping_{datetime.now():%Y%m%d_%H%M%S}.log"
+        logfile = log_dir / f"ERD_Mapping_{datetime.now():%Y%m%d_%H%M%S}.log"
 
         logging.basicConfig(
             level=logging.INFO,
@@ -102,33 +78,7 @@ class Initializing_Main_Class:
             ]
         )
 
-        self.logger = logging.getLogger("RecursiveMapping")
-
-    # -----------------------------------------------------------
-    def _setup_directories(self) -> DirectoriesConfig:
-        root = Path(self.config["ROOT_PATH"])
-        dirs = self.config.get("directories", {})
-
-        input_dir = root / dirs.get("input", "DS_Input")
-        output_dir = root / dirs.get("output", "DS_Output")
-        meta_dir = root / dirs.get("meta", "DS_Meta")
-
-        output_dir.mkdir(exist_ok=True)
-
-        return DirectoriesConfig(
-            root_path=root,
-            input_dir=input_dir,
-            output_dir=output_dir,
-            meta_dir=meta_dir
-        )
-
-    # -----------------------------------------------------------
-    def _setup_files(self) -> FilesConfig:
-        root = Path(self.config["ROOT_PATH"])
-        files = self.config.get("files", {})
-        return FilesConfig(
-            codemapping=root / files.get("codemapping", "DS_Output/CodeMapping.csv")
-        )
+        self.logger = logging.getLogger("ERD_Mapping")
 
     # -----------------------------------------------------------
     def _resolve_read(self, filepath: Path) -> pd.DataFrame:
@@ -149,8 +99,8 @@ class Initializing_Main_Class:
 
     # -----------------------------------------------------------
     def _load_files(self) -> Dict[str, pd.DataFrame]:
-        codemapping_df = self._resolve_read(self.files_config.codemapping)
-        self.logger.info(f"CodeMapping 로딩: {self.files_config.codemapping}")
+        codemapping_df = self._resolve_read(CODEMAPPING_FILE)
+        self.logger.info(f"CodeMapping 로딩: {CODEMAPPING_FILE}")
         return {"codemapping": codemapping_df}
 
     # ===============================================================
@@ -771,10 +721,9 @@ class Initializing_Main_Class:
             
             final_df['Level_Relationship'] = final_df.apply(recalculate_level_relationship, axis=1)
         
-        out_path = self.directories_config.output_dir / "CodeMapping_relationship.csv"
+        out_path = OUTPUT_FILE
         final_df.to_csv(out_path, index=False, encoding="utf-8-sig")
-
-        self.logger.info(f"저장 완료: {out_path}")
+        self.logger.info(f"저장 완료: {OUTPUT_FILE}")
 
 # ================================================================
 # main()

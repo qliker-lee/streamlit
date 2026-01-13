@@ -212,6 +212,7 @@ class MasterCodeFormatEngine:
             'ColumnCnt': column_cnt,
             'SamplingRows': actual_sample_size,
             'Sampling(%)': sampling_pct,
+            'FileSize': self._get_file_size_mb(file_path),
             'WorkDate': datetime.now().strftime('%Y-%m-%d')
         }]
         
@@ -246,6 +247,7 @@ class MasterCodeFormatEngine:
             'ColumnCnt': len(df.columns),
             'SamplingRows': actual_sample_size,
             'Sampling(%)': sampling_pct,
+            'FileSize': self._get_file_size_mb(file_path),
             'WorkDate': datetime.now().strftime('%Y-%m-%d')
         })
         

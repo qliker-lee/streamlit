@@ -33,7 +33,8 @@ if str(ROOT_PATH) not in sys.path: # # 시스템 경로에 루트 추가 (어디
 # -------------------------------------------------------------------
 OUTPUT_DIR = ROOT_PATH / 'DS_Output'
 CODEMAPPING_FILE = OUTPUT_DIR / 'CodeMapping.csv'
-OUTPUT_FILE = OUTPUT_DIR / 'CodeMapping_relationship.csv'
+OUTPUT_FILE = OUTPUT_DIR / 'CodeMapping_relationship_2.csv'
+CODEMAPPING_ERD_FILE = OUTPUT_DIR / 'CodeMapping_erd.csv'  # 통합에서 사용할 예정 
 # ================================================================
 # 도우미 함수 (DataSense.util.io 에서 가져옴)
 # ================================================================
@@ -113,11 +114,15 @@ class Initializing_Main_Class:
         """
 
         # ----------------------------------------
-        # 1. MasterType이 'Rule'인 경우 제외
+        # 1. MasterType이 제외 대상인 경우 제외
         # ----------------------------------------
-        codemapping_df = codemapping_df[codemapping_df["MasterType"] != "Rule"].copy()
+        EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+        codemapping_df = codemapping_df[~codemapping_df["MasterType"].isin(EXCLUDED_MASTER_TYPES)].copy()
 
-        codemapping_df["CodeFile_1"] = codemapping_df["CodeFile_1"].apply(lambda x: x if x != "Rule" else "")
+        # CodeFile_1의 CodeType_1이 제외 대상인 경우도 빈 문자열로 처리
+        for excluded_type in EXCLUDED_MASTER_TYPES:
+            mask = codemapping_df["CodeType_1"] == excluded_type
+            codemapping_df.loc[mask, "CodeFile_1"] = ""
 
         # ----------------------------------------
         # 2. 그래프 구성 및 Matched(%) 정보 저장
@@ -130,13 +135,13 @@ class Initializing_Main_Class:
             parent = (str(r["FileName"]), str(r["ColumnName"]), str(r["MasterType"]))
             child = None
 
-            # child 존재 여부 및 CodeType_1이 'Rule'이 아닌 경우만 포함
+            # child 존재 여부 및 CodeType_1이 제외 대상이 아닌 경우만 포함
+            EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
             if pd.notna(r.get("CodeFile_1", "")) and str(r["CodeFile_1"]).strip() != "":
                 code_type_1 = str(r.get("CodeType_1", "")).strip()
-                # CodeType_1이 'Rule'이 아닌 경우만 child로 등록
-                # if code_type_1 != "Rule":  # Debugging
-                #     child = (str(r["CodeFile_1"]), str(r["CodeColumn_1"]), code_type_1)
-                child = (str(r["CodeFile_1"]), str(r["CodeColumn_1"]), code_type_1)
+                # CodeType_1이 제외 대상이 아닌 경우만 child로 등록
+                if code_type_1 not in EXCLUDED_MASTER_TYPES:
+                    child = (str(r["CodeFile_1"]), str(r["CodeColumn_1"]), code_type_1)
 
             # parent 등록
             nodes_info[parent] = {
@@ -146,7 +151,7 @@ class Initializing_Main_Class:
             }
             graph.setdefault(parent, [])
 
-            # child 등록 및 Matched(%) 정보 저장 (Rule이 아닌 경우만)
+            # child 등록 및 Matched(%) 정보 저장 (제외 대상이 아닌 경우만)
             if child:
                 nodes_info[child] = {
                     "file": child[0],
@@ -171,10 +176,16 @@ class Initializing_Main_Class:
             last = path[-1]
             children = graph.get(last, [])
 
-            # Matched(%) 50 초과인 child만 필터링
+            # Matched(%) 50 초과이고 MasterType이 제외 대상이 아닌 child만 필터링
+            EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
             valid_children = []
             for child in children:
                 if child not in path:  # cycle 방지
+                    # child의 MasterType이 제외 대상인 경우 skip
+                    child_master_type = child[2] if len(child) > 2 else ""
+                    if child_master_type in EXCLUDED_MASTER_TYPES:
+                        continue  # 제외 대상 MasterType은 skip
+                    
                     # Matched(%) 값이 50 이하인 경우 skip
                     matched_key = (last, child)
                     matched_val_str = edge_matched.get(matched_key, "")
@@ -291,14 +302,54 @@ class Initializing_Main_Class:
             else:
                 return ""
         
+        def build_relationship_path_internal(row):
+            """Level 관계를 문자열로 합치기 (제외 대상 MasterType 제외): Level1_File.Level1_Column -> Level2_File.Level2_Column -> ..."""
+            EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+            path_parts = []
+            # Level1부터 최대 Level까지 확인 (Level0은 제외)
+            for i in range(1, max_level + 1):
+                file_col = f"Level{i}_File"
+                col_col = f"Level{i}_Column"
+                master_type_col = f"Level{i}_MasterType"
+                
+                if file_col in row and col_col in row:
+                    # MasterType이 제외 대상인 경우 skip
+                    master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                    if master_type in EXCLUDED_MASTER_TYPES:
+                        continue
+                    
+                    # 값 가져오기
+                    file_val_raw = row[file_col]
+                    col_val_raw = row[col_col]
+                    
+                    # NaN 체크 및 문자열 변환
+                    if pd.notna(file_val_raw) and pd.notna(col_val_raw):
+                        file_val = str(file_val_raw).strip()
+                        col_val = str(col_val_raw).strip()
+                        
+                        # 빈 값, NaN, nan 문자열 제거
+                        if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                            col_val and col_val.lower() not in ['nan', 'none', '']):
+                            # nan.nan 형식 제거
+                            if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                                path_parts.append(f"{file_val}.{col_val}")
+            
+            # 화살표로 연결
+            if path_parts:
+                return " -> ".join(path_parts)
+            else:
+                return ""
+        
         # Level 관계 경로 컬럼 생성
         df["Level_Relationship"] = df.apply(build_relationship_path, axis=1)
+        df["Level_Relationship_Internal"] = df.apply(build_relationship_path_internal, axis=1)
+        df["Level_Relationship_Internal"] = df.apply(build_relationship_path_internal, axis=1)
         
         # Level_Depth 컬럼 생성 (실제로 값이 있는 Level의 최대 깊이)
         def calculate_level_depth(row):
             """Level 관계의 깊이 계산 (Level0부터 시작하여 실제 값이 있는 최대 Level 인덱스)"""
             max_depth = -1  # Level0부터 시작하므로 -1로 초기화
-            for i in range(0, max_level + 1):
+            for i in range(0, max_level + 1): # 2026. 01. 09 추가: Level3 까지 계산하도록 수정
                 file_col = f"Level{i}_File"
                 col_col = f"Level{i}_Column"
                 
@@ -316,8 +367,9 @@ class Initializing_Main_Class:
         
         df["Level_Depth"] = df.apply(calculate_level_depth, axis=1)
         
-        # Level_Relationship, Level_Depth 컬럼을 Level 컬럼들 다음에 추가
+        # Level_Relationship, Level_Relationship_Internal, Level_Depth 컬럼을 Level 컬럼들 다음에 추가
         ordered_cols.append("Level_Relationship")
+        ordered_cols.append("Level_Relationship_Internal")
         ordered_cols.append("Level_Depth")
         df = df[ordered_cols]
 
@@ -380,9 +432,13 @@ class Initializing_Main_Class:
 
             if has_child:
                 # 자식이 있으면 DFS 계속 진행하고 현재 레코드는 저장하지 않는다
+                EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
                 for nxt in graph[last]:
                     if nxt not in path:  # cycle 방지
-                        dfs(path + [nxt], depth + 1)
+                        # nxt의 MasterType이 제외 대상인 경우 skip
+                        nxt_master_type = nodes_info.get(nxt, {}).get("MasterType", "")
+                        if nxt_master_type not in EXCLUDED_MASTER_TYPES:
+                            dfs(path + [nxt], depth + 1)
             else:
                 # leaf 노드 → 최종 레코드만 저장
                 record = {}
@@ -396,9 +452,13 @@ class Initializing_Main_Class:
                 results.append(record)
             # 다음 단계 DFS
             if last in graph:
+                EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
                 for nxt in graph[last]:
                     if nxt not in path:  # cycle 방지
-                        dfs(path + [nxt], depth + 1)
+                        # nxt의 MasterType이 제외 대상인 경우 skip
+                        nxt_master_type = nodes_info.get(nxt, {}).get("MasterType", "")
+                        if nxt_master_type not in EXCLUDED_MASTER_TYPES:
+                            dfs(path + [nxt], depth + 1)
 
         # ================================
         # 4) DFS 시작
@@ -419,6 +479,7 @@ class Initializing_Main_Class:
     # ===============================================================
     def run_pipeline(self):
         df = self.loaded_data["codemapping"]
+        df = df[(df["MasterType"] != "Rule") & ((df["MasterType"] != "Reference") & (df["MasterType"] != "Validation"))].copy()
 
         # result = self.recursive_mapping(df)
         result = self.build_recursive_mapping_full(df)
@@ -437,20 +498,21 @@ class Initializing_Main_Class:
 
         final_df = pd.merge(final_df, result_2nd, on=["FileName", "ColumnName", "MasterType"], how="left")
         
-        # Level_Depth, Level_Relationship 컬럼을 PK, FK 컬럼 다음에 위치시키기
+        # Level_Depth, Level_Relationship, Level_Relationship_Internal 컬럼을 PK, FK 컬럼 다음에 위치시키기
         level_depth_col = ["Level_Depth"] if "Level_Depth" in final_df.columns else []
         level_relationship_col = ["Level_Relationship"] if "Level_Relationship" in final_df.columns else []
+        level_relationship_internal_col = ["Level_Relationship_Internal"] if "Level_Relationship_Internal" in final_df.columns else []
         
-        # Level 컬럼들 추출 (Level_Depth, Level_Relationship 제외)
+        # Level 컬럼들 추출 (Level_Depth, Level_Relationship, Level_Relationship_Internal 제외)
         level_cols = [col for col in final_df.columns 
-                     if col.startswith("Level") and col not in ["Level_Depth", "Level_Relationship"]]
+                     if col.startswith("Level") and col not in ["Level_Depth", "Level_Relationship", "Level_Relationship_Internal"]]
         level_cols = sorted(level_cols, key=lambda x: (
             int(x.split("_")[0].replace("Level", "")) if x.split("_")[0].replace("Level", "").isdigit() else 999,
             x
         ))
         
-        # 최종 컬럼 순서: 기본 컬럼 + Level_Depth + Level_Relationship + Level 컬럼들
-        final_cols = base_cols + level_depth_col + level_relationship_col + level_cols
+        # 최종 컬럼 순서: 기본 컬럼 + Level_Depth + Level_Relationship + Level_Relationship_Internal + Level 컬럼들
+        final_cols = base_cols + level_depth_col + level_relationship_col + level_relationship_internal_col + level_cols
         
         # 존재하는 컬럼만 선택
         final_cols = [col for col in final_cols if col in final_df.columns]
@@ -718,7 +780,52 @@ class Initializing_Main_Class:
                 else:
                     return ""
             
+            def recalculate_level_relationship_internal(row):
+                """Level 관계를 문자열로 합치기 (제외 대상 MasterType 제외, Level1부터 Level4까지)"""
+                EXCLUDED_MASTER_TYPES = ['Rule', 'Reference', 'Validation', 'Common']
+                path_parts = []
+                # Level1부터 Level4까지 확인 (Level0은 제외)
+                for i in range(1, 5):  # Level1부터 Level4까지
+                    file_col = f"Level{i}_File"
+                    col_col = f"Level{i}_Column"
+                    master_type_col = f"Level{i}_MasterType"
+                    
+                    # MasterType이 제외 대상인 경우 skip
+                    try:
+                        master_type = str(row.get(master_type_col, "")).strip() if pd.notna(row.get(master_type_col, "")) else ""
+                        if master_type in EXCLUDED_MASTER_TYPES:
+                            continue
+                    except (KeyError, IndexError):
+                        pass
+                    
+                    # 값 가져오기 (컬럼이 없으면 빈 문자열)
+                    try:
+                        file_val_raw = row[file_col] if file_col in row else ''
+                        col_val_raw = row[col_col] if col_col in row else ''
+                    except (KeyError, IndexError):
+                        continue
+                    
+                    # NaN 체크 및 문자열 변환
+                    if pd.notna(file_val_raw) and pd.notna(col_val_raw):
+                        file_val = str(file_val_raw).strip()
+                        col_val = str(col_val_raw).strip()
+                        
+                        # 빈 값, NaN, nan 문자열 제거
+                        if (file_val and file_val.lower() not in ['nan', 'none', ''] and 
+                            col_val and col_val.lower() not in ['nan', 'none', '']):
+                            # nan.nan 형식 제거
+                            if not (file_val.lower() == 'nan' and col_val.lower() == 'nan'):
+                                path_parts.append(f"{file_val}.{col_val}")
+                
+                # 화살표로 연결
+                if path_parts:
+                    return " -> ".join(path_parts)
+                else:
+                    return ""
+            
             final_df['Level_Relationship'] = final_df.apply(recalculate_level_relationship, axis=1)
+            final_df['Level_Relationship_Internal'] = final_df.apply(recalculate_level_relationship_internal, axis=1)
+            final_df['Level_Relationship_Internal'] = final_df.apply(recalculate_level_relationship_internal, axis=1)
         
         out_path = OUTPUT_FILE
         final_df.to_csv(out_path, index=False, encoding="utf-8-sig")
