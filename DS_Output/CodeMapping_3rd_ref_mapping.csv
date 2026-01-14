@@ -131,14 +131,11 @@ DS_Input/Internal\조직코드관리.csv,조직코드관리.csv,지부명,Master
 DS_Input/Internal\조직터미널마스터.csv,조직터미널마스터.csv,unitiz_goal,Master,DS_Input/Reference\전화국가번호.csv,전화국가번호.csv,Reference,전화국가번호,0,18,38,47.37
 DS_Input/Internal\조직터미널마스터.csv,조직터미널마스터.csv,터미널영문코드,Master,DS_Input/Reference\Airline_IATA.csv,Airline_IATA.csv,Reference,Airline_IATA,0,258,264,97.73
 DS_Input/Internal\조직터미널마스터.csv,조직터미널마스터.csv,터미널영문코드,Master,DS_Input/Reference\Country_ISO2.csv,Country_ISO2.csv,Reference,Country_ISO2,2,116,264,43.94
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Master,DS_Input/Reference\업종명2.csv,업종명2.csv,Reference,업종명2,2,114,561,20.32
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,법인번호,Master,DS_Input/Reference\법인번호7.csv,법인번호7.csv,Reference,법인번호7,7,395,492,80.28
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,Master,DS_Input/Reference\우편번호3.csv,우편번호3.csv,Reference,우편번호3,3,377,490,76.94
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,254,490,51.84
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,Master,DS_Input/Reference\사업자등록번호3.csv,사업자등록번호3.csv,Reference,유효사업자번호3,3,611,795,76.86
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량3,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,17,28,60.71
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,Master,DS_Input/Reference\우편번호3.csv,우편번호3.csv,Reference,우편번호3,3,411,523,78.59
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,255,523,48.76
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Master,DS_Input/Reference\업종명2.csv,업종명2.csv,Reference,업종명2,2,116,550,21.09
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구지우편번호,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,247,320,77.19
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,249,329,75.68
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Master,DS_Input/Reference\업종명2.csv,업종명2.csv,Reference,업종명2,2,334,1138,29.35
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,Master,DS_Input/Reference\사업자등록번호3.csv,사업자등록번호3.csv,Reference,유효사업자번호3,3,208,241,86.31
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,X좌표,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,72,207,34.78
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,Y좌표,Master,DS_Input/Reference\우편번호구3.csv,우편번호구3.csv,Reference,우편번호구3,3,88,233,37.77
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,사업자등록번호,Master,DS_Input/Reference\사업자등록번호3.csv,사업자등록번호3.csv,Reference,유효사업자번호3,3,396,491,80.65

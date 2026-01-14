@@ -1836,180 +1836,64 @@ DS_Input/Internal\택배BI_조직.csv,택배BI_조직.csv,터미널명,Text,Mast
 DS_Input/Internal\택배BI_조직.csv,택배BI_조직.csv,터미널명,Text,Master,39.0,467.0,KKKK,강동고덕,화성우정,부천송내,109.0,4.05,3
 DS_Input/Internal\택배BI_조직.csv,택배BI_조직.csv,터미널코드,,Master,2.0,475.0,nnn,000,999,422,2688.0,99.96,1
 DS_Input/Internal\택배BI_조직.csv,택배BI_조직.csv,터미널코드,,Master,2.0,475.0,nn,86,86,86,1.0,0.04,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,1ST_STREET,,Master,194.0,211.0,aaaaa aaaaaa,first street,first street,first street,10.0,4.5,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,1ST_STREET,,Master,194.0,211.0,nnn-nn AAAAAAA-AAAA,206-17 NONHYUN-DONG,647-23 JUNGGOK-DONG,230-13 JUNGGOK-DONG,5.0,2.25,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,1ST_STREET,,Master,194.0,211.0,nnn-n AAAAAA-AAAA,199-6 ANYANG-DONG,619-8 JAKJUN-DONG,433-1 JANGAN-DONG,4.0,1.8,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,2ND_STREET,,Master,90.0,168.0,AAAAAAA-AA,CHONGRO-GU,YONGSAN-GU,KANGNAM-KU,17.0,8.21,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,2ND_STREET,,Master,90.0,168.0,AAAA-AA,DONG-KU,SOSA-KU,JUNG-KU,13.0,6.28,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,2ND_STREET,,Master,90.0,168.0,AAAAAA-AA,DALSEO-GU,SONGPA-GU,SEOCHO-GU,10.0,4.83,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,3PL사용여부,YN_Flag,Master,1.0,2.0,A,N,Y,N,9068.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,CITY,,Master,21.0,54.0,AAAAA,BUSAN,ULSAN,SEOUL,133.0,62.15,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,CITY,,Master,21.0,54.0,AAAAAA,INCHON,TAEJON,INCHON,17.0,7.94,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,CITY,,Master,21.0,54.0,AAAAAAA,BUCHEON,SUNGNAM,INCHEON,16.0,7.48,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,COD금액,,Master,3.0,3.0,n,0,0,0,830.0,99.76,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,COD금액,,Master,3.0,3.0,nnn,500,500,500,1.0,0.12,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,COD금액,,Master,3.0,3.0,nnnn,1000,1000,1000,1.0,0.12,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,CTI_IVR_반품접수여부,True_False_Flag,Master,1.0,2.0,n,0,1,0,8861.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,EDI사용여부,Num_Flag,Master,1.0,2.0,n,1,2,1,5.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,ES방문시간,,Master,3.0,16.0,nnnn,0900,2000,1700,60.0,96.77,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,ES방문시간,,Master,3.0,16.0,nnK,17시,17시,17시,1.0,1.61,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,ES방문시간,,Master,3.0,16.0,nnA,15H,15H,15H,1.0,1.61,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,ETL일시,TIMESTAMP,Master,1.0,1.0,nnnn-nn-nn nn:nn:nn.,2023-12-26 01:12:08.073000,2023-12-26 01:12:08.073000,2023-12-26 01:12:08.073000,10000.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,GSFOCUS사용여부,YN_Flag,Master,1.0,2.0,A,N,Y,N,9999.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT수금점소,,Master,4.0,117.0,AAAAA,ADGDD,YSNKE,PDGBR,9751.0,98.31,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT수금점소,,Master,4.0,117.0,AAAAn,CJUB1,TAEB1,SCOB1,152.0,1.53,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT수금점소,,Master,4.0,117.0,AAAnn,KPO72,TAE89,SEK13,15.0,0.15,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT청구점소,,Master,4.0,111.0,AAAAA,ADGDD,YSNKE,PGTBX,9834.0,99.14,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT청구점소,,Master,4.0,111.0,AAAAn,KWGB1,TAEB1,SEEB1,71.0,0.72,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,HJT청구점소,,Master,4.0,111.0,AAAnn,QWJ20,TAE89,SEK13,13.0,0.13,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,PROVINCE,,Master,16.0,23.0,AAAAA,KOREA,ULSAN,KOREA,91.0,72.8,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,PROVINCE,,Master,16.0,23.0,Aaaaaaaa,Province,Province,Province,10.0,8.0,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,PROVINCE,,Master,16.0,23.0,AAAAAAA,CHUNNAM,KYUNGKI,KYUNGGI,8.0,6.4,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,SVC_CHARGE 금액,Num_Flag,Master,1.0,1.0,n,0,0,0,839.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,SVC_CHARGE횟수,Num_Flag,Master,1.0,1.0,n,0,0,0,839.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,UPDATE일자,DATECHAR,Master,1.0,2595.0,nnnnnnnn,20060920,20231226,20180129,7678.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발수수료이용여부,True_False_Flag,Master,1.0,2.0,n,0,1,0,7668.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발수수료적용일,DATECHAR,Master,2.0,372.0,nnnnnnnn,20040430,20211109,20140625,390.0,94.2,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발수수료적용일,DATECHAR,Master,2.0,372.0,nnnnnnn,1161031,1190923,1171024,24.0,5.8,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발영업소,,Master,3.0,416.0,nnnn,0000,9998,4150,1344.0,99.63,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발영업소,,Master,3.0,416.0,AAn,AT1,NY1,AT1,4.0,0.3,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개발영업소,,Master,3.0,416.0,nnn,860,860,860,1.0,0.07,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,개인기업고객구분,Alpha_Flag,Master,1.0,2.0,A,C,P,C,9664.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,거래중지여부,True_False_Flag,Master,1.0,2.0,n,0,1,1,9974.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약기간종료일,DATECHAR,Master,1.0,3730.0,nnnnnnnn,19991231,30170526,20161231,7735.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,,Master,5.0,205.0,nnnn,1000,9000,3000,8051.0,87.12,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,,Master,5.0,205.0,n,0,1,0,1080.0,11.69,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,,Master,5.0,205.0,nnnnn,10000,70000,23000,101.0,1.09,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,49.0,353.0,KK,경리,홍보,관리,1133.0,41.02,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,49.0,353.0,KKK,각매장,홍보팀,관리팀,968.0,35.05,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,49.0,353.0,.,.,.,.,256.0,9.27,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구지우편번호,YYMMDD,Master,2.0,3614.0,nnnnnn,100011,791947,410315,6451.0,84.14,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구지우편번호,YYMMDD,Master,2.0,3614.0,nnnnn,01070,63635,18387,1216.0,15.86,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객번호,UNIQUE,Master,2.0,10000.0,nnnnnnn,0000203,9127894,3007011,7735.0,77.35,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객번호,UNIQUE,Master,2.0,10000.0,Annnnnn,J128416,S183980,S148273,2265.0,22.65,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,2075.0,5439.0,nnn-n,103-3,995-1,405-6,543.0,8.75,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,2075.0,5439.0,nnn-nn,100-11,998-17,386-23,342.0,5.51,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,2075.0,5439.0,nnn,100,995,342,286.0,4.61,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소1,ADDRESS,Master,436.0,939.0,KK KKKK KKK nns nK,"서울 서대문구 통일로 87, 7층","서울 서대문구 통일로 87, 7층","서울 서대문구 통일로 87, 7층",110.0,8.42,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소1,ADDRESS,Master,436.0,939.0,KKK KKK KKK nnn,강원도 삼척시 교동로 133,서울시 강남구 언주로 870,서울시 강남구 언주로 870,80.0,6.13,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소1,ADDRESS,Master,436.0,939.0,KKKKK KKK KKKK nnn,대구광역시 달서구 상화북로 216,인천광역시 남동구 인주대로 747,서울특별시 성동구 왕십리로 115,38.0,2.91,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,국가코드,,Master,1.0,7.0,AA,AU,US,KR,9306.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,규격1,True_False_Flag,Master,1.0,2.0,n,0,1,0,6406.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,규격2,Num_Flag,Master,1.0,1.0,n,0,0,0,6404.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,규격3,Num_Flag,Master,1.0,6.0,n,0,5,0,7218.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,규격5,Num_Flag,Master,1.0,1.0,n,0,0,0,6404.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,그룹신용번호,,Master,1.0,12.0,nnnnnnn,0140815,9117159,2009071,136.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,기업택배예약이용여부,YN_Flag,Master,1.0,2.0,A,N,Y,N,5372.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,112.0,795.0,KK,강동,회계,관리,3062.0,48.23,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,112.0,795.0,KKK,가가몰,희망몰,관리팀,2022.0,31.85,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,112.0,795.0,.,.,.,.,360.0,5.67,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,등록일시,TIMESTAMP,Master,1.0,5855.0,nnnn-nn-nn nn:nn:nn.,1999-11-15 09:48:11.000000,2023-12-22 15:54:08.000000,2020-12-03 14:45:16.000000,5990.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,반품일,,Master,2.0,7.0,n,0,7,0,1014.0,99.31,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,반품일,,Master,2.0,7.0,nn,10,10,10,7.0,0.69,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,법인번호,,Master,1.0,910.0,nnnnnnnnnnnnn,0000000000000,2850110438578,1101117701356,1297.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,변경적용일자,DATECHAR,Master,1.0,2263.0,nnnnnnnn,20100927,20231108,20170913,4678.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업구분,Alpha_Flag,Master,1.0,2.0,A,D,I,D,9979.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록 주소,,Master,3084.0,7754.0,nnn-n,103-3,996-6,405-1,626.0,6.83,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록 주소,,Master,3084.0,7754.0,nnn-nn,100-12,998-17,381-69,390.0,4.25,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록 주소,,Master,3084.0,7754.0,nnn,100,995,301,377.0,4.11,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,,Master,3.0,3218.0,nnnnnn,100011,791947,407040,5961.0,83.35,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,,Master,3.0,3218.0,nnnnn,01325,63635,12982,1190.0,16.64,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,,Master,3.0,3218.0,nnn-n,577-2,577-2,577-2,1.0,0.01,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록주소1,ADDRESS,Master,1071.0,3167.0,KK KKKK KKK nns nK,"서울 서대문구 통일로 87, 7층","서울 서대문구 통일로 87, 7층","서울 서대문구 통일로 87, 7층",110.0,3.08,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록주소1,ADDRESS,Master,1071.0,3167.0,KKK KKK KKK nnn,강원도 삼척시 교동로 133,서울시 강남구 언주로 870,서울시 강남구 언주로 870,84.0,2.35,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록주소1,ADDRESS,Master,1071.0,3167.0,KK KKK KKK nnn,경기 광명시 옥길동 225,충북 충주시 봉현로 313,서울 강남구 삼성로 734,66.0,1.85,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,상업서류계약방식,Num_Flag,Master,1.0,3.0,n,1,3,2,35.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,상업서류일정DC율,,Master,2.0,4.0,n,0,0,0,839.0,99.17,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,상업서류일정DC율,,Master,2.0,4.0,nn,10,20,20,7.0,0.83,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,세금체크여부,YN_Flag,Master,1.0,2.0,A,N,Y,Y,7671.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,소화물계약방식,Num_Flag,Master,1.0,2.0,n,1,3,3,35.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,소화물일정DC율,,Master,2.0,6.0,n,0,0,0,828.0,97.99,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,소화물일정DC율,,Master,2.0,6.0,nn,20,45,35,17.0,2.01,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,수입조직,,Master,1.0,98.0,nnnn,1111,1613,1178,9922.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,수하인관리여부,True_False_Flag,Master,1.0,2.0,n,0,1,0,7663.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종구분,,Master,1.0,29.0,nn,01,99,08,5224.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,724.0,3800.0,KK,가구,휴지,의류,2771.0,29.16,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,724.0,3800.0,KKKK,가공상품,흡연용품,수입제품,1919.0,20.19,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,724.0,3800.0,KKK,가공육,휴대폰,운동화,1480.0,15.57,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,업체로고사용여부,True_False_Flag,Master,1.0,2.0,n,0,1,1,14.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,180.0,269.0,A,A,Y,I,17.0,6.14,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,180.0,269.0,AAAAAAA,CHUNGOK,WOOSHIN,KUMKANG,9.0,3.25,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,180.0,269.0,AAAAAA,BOGZON,ZERONE,PARSON,7.0,2.53,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,오류횟수,,Master,2.0,8.0,n,0,6,0,3980.0,99.97,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,오류횟수,,Master,2.0,8.0,nn,12,12,12,1.0,0.03,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,요율체크여부,YN_Flag,Master,1.0,2.0,A,N,Y,Y,7670.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,운송장등록요율미체크사유,,Master,17.0,23.0,KKKK,고향맛편,부대청구,골프택배,25.0,39.06,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,운송장등록요율미체크사유,,Master,17.0,23.0,KKKK KK,골프택배 전담,퀵플러스 택배,기타작업 청구,17.0,26.56,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,운송장등록요율미체크사유,,Master,17.0,23.0,KKKKKK,퀵플러스택배,퀵플러스택배,퀵플러스택배,5.0,7.81,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,205.0,nnn,100,900,250,5128.0,55.38,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,205.0,nnnn,1000,9000,2000,2194.0,23.69,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,205.0,nn,10,99,30,1182.0,12.76,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,인증코드,,Master,3.0,5.0,nnnn,0000,1234,0114,6.0,75.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,인증코드,,Master,3.0,5.0,.,.,.,.,1.0,12.5,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,인증코드,,Master,3.0,5.0,a,n,n,n,1.0,12.5,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,일정DC율,Num_Flag,Master,1.0,1.0,n,0,0,0,828.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,작업연장일자,DATECHAR,Master,1.0,2.0,nnnnnnnn,20090814,20100806,20100806,2.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,전략고객여부,True_False_Flag,Master,1.0,2.0,n,0,1,0,6441.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,전송완료여부,Alpha_Flag,Master,1.0,1.0,A,Y,Y,Y,279.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,,Master,3.0,8995.0,nnnnnnnnnn,0000000000,9999999999,2418801710,9714.0,99.98,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,,Master,3.0,8995.0,nnnnnnnnn,901100003,901100003,901100003,1.0,0.01,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,,Master,3.0,8995.0,nnnnnnnn,21881003,21881003,21881003,1.0,0.01,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량1,Num_Flag,Master,1.0,3.0,n,0,2,0,6502.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량2,Num_Flag,Master,1.0,1.0,n,0,0,0,6404.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량3,,Master,8.0,43.0,nnnnnn,100000,500000,500000,4104.0,60.4,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량3,,Master,8.0,43.0,n,0,1,0,2379.0,35.01,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량3,,Master,8.0,43.0,nn,10,80,50,142.0,2.09,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량4,Num_Flag,Master,1.0,6.0,n,0,5,0,6962.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량물이용여부,,Master,2.0,3.0,n,0,1,0,7046.0,99.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,중량물이용여부,,Master,2.0,3.0,A,N,N,N,71.0,1.0,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,지불조건,Num_Flag,Master,1.0,2.0,n,1,2,2,9926.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하점소,,Master,3.0,1170.0,nnnn,0000,9981,4507,9862.0,99.95,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하점소,,Master,3.0,1170.0,AAn,AT1,NY1,AT1,4.0,0.04,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하점소,,Master,3.0,1170.0,nnn,860,860,860,1.0,0.01,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,36.0,1385.0,nnn,000,999,395,1581.0,53.96,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,36.0,1385.0,nn,00,99,40,451.0,15.39,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,36.0,1385.0,nnnn,1000,6814,1396,316.0,10.78,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,17.0,203.0,n,0,9,3,1069.0,57.75,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,17.0,203.0,nn,01,99,19,631.0,34.09,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,17.0,203.0,nnn,032,999,250,100.0,5.4,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,,Master,3.0,6339.0,nnnnnn,100011,791910,415800,6172.0,62.71,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,,Master,3.0,6339.0,nnnnn,01002,63641,18463,3669.0,37.28,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,,Master,3.0,6339.0,nnnn,4051,4051,4051,1.0,0.01,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지주소구분,Num_Flag,Master,1.0,2.0,n,1,2,2,3917.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소,,Master,3163.0,7266.0,nK,1동,9층,2동,358.0,4.32,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소,,Master,3163.0,7266.0,(KKK),(가능동),(흑석동),(송촌동),297.0,3.58,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소,,Master,3163.0,7266.0,nnnK,101호,906호,302호,206.0,2.48,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소1,ADDRESS,Master,1210.0,5645.0,KKKKK KKK KKK,광주광역시 광산구 비아동,인천광역시 연수구 청학동,서울특별시 금천구 가산동,348.0,5.4,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소1,ADDRESS,Master,1210.0,5645.0,KKK KKK KKK KKK,강원도 강릉시 사천면 방동리,경기도 화성시 향남읍 행정리,경기도 수원시 영통구 이의동,187.0,2.9,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지한글주소1,ADDRESS,Master,1210.0,5645.0,KKK KKK KKK,강원도 강릉시 송정동,경기도 화성시 황계동,경기도 시흥시 논곡동,148.0,2.3,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,청구처화주코드,SEQUENCE,Master,1.0,1.0,nnnnnnn,0120342,0120342,0120342,3.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종변경일시,TIMESTAMP,Master,1.0,1.0,nnnn-nn-nn nn:nn:nn.,2023-12-26 01:12:08.073000,2023-12-26 01:12:08.073000,2023-12-26 01:12:08.073000,10000.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종변경자사번,,Master,5.0,593.0,nnnnnnn,0010021,9999999,1520061,9715.0,97.7,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종변경자사번,,Master,5.0,593.0,AAAAAAA,BUEBRHT,TJNBRHT,KWJBRHT,154.0,1.55,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종변경자사번,,Master,5.0,593.0,AAAAA,BUSAN,SEWSE,SENSE,68.0,0.68,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종수정일시,TIMESTAMP,Master,1.0,5007.0,nnnn-nn-nn nn:nn:nn.,2004-04-28 10:03:44.000000,2023-12-26 00:30:01.000000,2018-04-19 00:30:03.000000,7836.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,카페24MAILID,UNIQUE,Master,17.0,31.0,aaaaaaaaaa,bareundish,luminancee,kasiiworld,4.0,12.9,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,카페24MAILID,UNIQUE,Master,17.0,31.0,aaaannnn,jane2021,srbs0623,ohjw1107,3.0,9.68,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,카페24MAILID,UNIQUE,Master,17.0,31.0,aaaaannnn,aflot1129,entia0716,denny8933,3.0,9.68,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,터미널체크여부,YN_Flag,Master,1.0,2.0,A,N,Y,Y,7670.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매원사번,,Master,2.0,1003.0,nnnnnnn,0010010,9999999,1477011,7645.0,99.97,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매원사번,,Master,2.0,1003.0,AAAnnnn,HJT0103,HJT0103,HJT0103,2.0,0.03,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매유형,Num_Flag,Master,1.0,3.0,n,1,3,3,9929.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매일,DATECHAR,Master,1.0,4082.0,nnnnnnnn,19981231,20240101,20170713,9968.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,95.0,AAAAA,BKKBR,ULSBR,KWJBR,6004.0,60.32,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,95.0,AAAAAAA,ANDOCHT,YSUDSHT,KBKOCHT,3565.0,35.82,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,95.0,AAAAAA,HQREPT,SUWCHT,PDGBRG,380.0,3.82,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,포커스사용여부,,Master,2.0,4.0,n,0,2,1,9923.0,99.94,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,포커스사용여부,,Master,2.0,4.0,A,C,C,C,6.0,0.06,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,724.0,9197.0,KKK,가가몰,히트맨,안다솜,2699.0,27.08,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,724.0,9197.0,KKKK,가공식품,힙합보이,씨앤에스,1298.0,13.02,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,724.0,9197.0,KKKKK,가람삼업사,효수산유통,아리랑과학,719.0,7.21,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한덱스관련여부,YN_Flag,Master,1.0,2.0,A,N,Y,N,43.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한진홈페이지ID,UNIQUE,Master,166.0,2264.0,aaannnn,aba7722,zxc6835,llz1540,177.0,7.82,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한진홈페이지ID,UNIQUE,Master,166.0,2264.0,aaaaaaaa,adeotech,zyoodays,lapoesie,138.0,6.1,2
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,한진홈페이지ID,UNIQUE,Master,166.0,2264.0,aaaaannnn,aflot1129,zhsks0414,mihye1101,130.0,5.74,3
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,행낭이용여부,True_False_Flag,Master,1.0,2.0,n,0,1,1,9239.0,100.0,1
-DS_Input/Internal\택배_고객.csv,택배_고객.csv,화주구분,Num_Flag,Master,1.0,2.0,n,1,2,1,6626.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,ETL일시,TIME,Master,1.0,1.0,nn:nn.n,12:08.1,12:08.1,12:08.1,10000.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,개인기업고객구분,Alpha_Flag,Master,1.0,2.0,A,C,P,C,9949.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,YEAR,Master,5.0,181.0,nnnn,1000,9500,2500,7749.0,90.96,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,YEAR,Master,5.0,181.0,n,0,2,0,592.0,6.95,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,계약단가,YEAR,Master,5.0,181.0,nnnnn,10000,70000,23000,162.0,1.9,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,83.0,665.0,KK,개인,한성,관리,2696.0,42.28,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,83.0,665.0,KKK,개발부,효민관,관리팀,2260.0,35.44,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구부서,Text,Master,83.0,665.0,.,.,.,.,502.0,7.87,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구지우편번호,,Master,2.0,3287.0,nnnnnn,070070,791943,402200,9715.0,98.42,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객 청구지우편번호,,Master,2.0,3287.0,nnnnn,01779,63581,14279,156.0,1.58,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객번호,UNIQUE,Master,1.0,10000.0,nnnnnnn,0000105,9117159,2006909,10000.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,1883.0,6367.0,nnn-n,100-5,994-6,413-5,1018.0,13.96,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,1883.0,6367.0,nnn-nn,100-45,994-33,395-11,546.0,7.49,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,고객청구지주소,,Master,1883.0,6367.0,nnn,100,984,327,528.0,7.24,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,국가코드,,Master,1.0,3.0,AA,IL,TH,KR,8519.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,128.0,1128.0,KK,개인,회계,관리,3913.0,44.02,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,128.0,1128.0,KKK,가전팀,효민관,관리팀,3020.0,33.97,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,담당부서,Text,Master,128.0,1128.0,.,.,.,.,632.0,7.11,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,반품일,,Master,2.0,8.0,n,1,7,7,198.0,96.59,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,반품일,,Master,2.0,8.0,nn,10,22,10,7.0,3.41,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업구분,Alpha_Flag,Master,1.0,2.0,A,D,I,D,9960.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,,Master,2.0,3207.0,nnnnnn,100011,791943,400340,9533.0,97.32,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,사업자등록우편번호,,Master,2.0,3207.0,nnnnn,01895,63581,10881,263.0,2.68,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,수입조직,,Master,1.0,98.0,nnnn,1111,1517,1178,9908.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종구분,,Master,1.0,29.0,nn,01,99,08,8402.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,377.0,2708.0,KK,가구,히터,의류,2903.0,32.41,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,377.0,2708.0,KKKK,가공김치,훈제오리,소형완구,1944.0,21.7,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,업종상세내역,Text,Master,377.0,2708.0,KKK,가공란,흑마늘,인쇄물,1637.0,18.27,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,312.0,525.0,A,A,Y,K,53.0,9.3,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,312.0,525.0,AAA,ANA,TRS,NAM,18.0,3.16,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,영문고객명,,Master,312.0,525.0,AAAA,AIGI,WITH,KAMC,17.0,2.98,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,206.0,nnn,100,900,300,4760.0,56.08,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,206.0,nnnn,1000,9500,2000,2526.0,29.76,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,월예상물량,,Master,7.0,206.0,nnnnn,10000,99999,15000,476.0,5.61,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,,Master,2.0,8942.0,nnnnnnnnnn,1010122172,9999999999,2041479159,9941.0,99.99,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,주민_사업자등록번호,,Master,2.0,8942.0,nnnnnnnn,21881003,21881003,21881003,1.0,0.01,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,40.0,2221.0,nnn,000,999,413,3673.0,54.59,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,40.0,2221.0,nn,00,99,41,1049.0,15.59,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지대번지,,Master,40.0,2221.0,nnnn,1000,5113,1365,722.0,10.73,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,19.0,352.0,n,0,9,3,2572.0,59.04,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,19.0,352.0,nn,00,99,20,1411.0,32.39,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지소번지,,Master,19.0,352.0,nnn,030,999,227,249.0,5.72,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,YYMMDD,Master,2.0,3952.0,nnnnnn,100011,791945,410314,9644.0,99.02,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,집하지우편번호,YYMMDD,Master,2.0,3952.0,nnnnn,01779,63264,17180,95.0,0.98,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,최종변경일시,TIME,Master,1.0,1.0,nn:nn.n,12:08.1,12:08.1,12:08.1,10000.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매원사번,,Master,2.0,659.0,nnnnnnn,0010010,9999999,1020040,9782.0,99.93,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매원사번,,Master,2.0,659.0,AAAnnnn,HJT0103,HJT0103,HJT0103,7.0,0.07,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매일,DATECHAR,Master,1.0,3218.0,nnnnnnnn,19940613,26601123,20090417,9937.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,98.0,AAAAA,BKKBR,YSNBR,KWJBR,9664.0,97.48,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,98.0,AAAAAAA,ANDOCHT,YSUDSHT,KSOOCHT,203.0,2.05,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,판매점소,,Master,4.0,98.0,AAAAAA,HQRLMS,SUWCHT,PDGBRG,38.0,0.38,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,포커스사용여부,,Master,2.0,3.0,n,0,1,1,9902.0,99.93,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,포커스사용여부,,Master,2.0,3.0,A,C,C,C,7.0,0.07,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,799.0,8944.0,KKKK,가교물류,힐스토리,신우유통,1642.0,16.51,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,799.0,8944.0,KKKKK,가나안교역,흥해과일청,아이스타일,1011.0,10.17,2
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,한글고객명,Text,Master,799.0,8944.0,KKK,간지룸,휴앤즈,아이오,649.0,6.53,3
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,행낭이용여부,True_False_Flag,Master,1.0,2.0,n,0,1,0,8549.0,100.0,1
+DS_Input/Internal\택배_고객.csv,택배_고객.csv,화주구분,Num_Flag,Master,1.0,2.0,n,1,2,1,9359.0,100.0,1
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,ERP코드,,Master,2.0,47.0,AAAAA,ASNKE,YSNKE,KUMKE,46.0,95.83,1
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,ERP코드,,Master,2.0,47.0,AAAAAA,SELESA,SELGDE,SELGDE,2.0,4.17,2
 DS_Input/Internal\택배_조직도.csv,택배_조직도.csv,X좌표,,Master,5.0,758.0,nnnnnn,236609,540042,321278,685.0,56.61,1
